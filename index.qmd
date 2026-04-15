@@ -33,6 +33,34 @@ When you click the **Render** button a presentation will be generated that inclu
 ## {#collab-slide background-color="#eef2f7"}
 
 ```{=html}
+<span class="fragment" id="appear-fragment" style="position:absolute;pointer-events:none"></span>
+<span class="fragment" id="start-fragment"  style="position:absolute;pointer-events:none"></span>
+<span class="fragment" id="layout-fragment" style="position:absolute;pointer-events:none"></span>
+
+<div id="fake-editor" class="fake-editor">
+  <div class="fe-titlebar">
+    <span class="fe-dot"></span><span class="fe-dot"></span><span class="fe-dot"></span>
+    <span class="fe-title">index.qmd</span>
+  </div>
+  <div class="fe-body">
+    <div class="fe-line"><span class="fe-ln">1</span><span class="fe-punct">---</span></div>
+    <div class="fe-line"><span class="fe-ln">2</span><span class="fe-key">format: </span><span class="fe-val">revealjs</span></div>
+    <div class="fe-line"><span class="fe-ln">3</span><span class="fe-key">filters:</span></div>
+    <div class="fe-line"><span class="fe-ln">4</span><span class="fe-val">&nbsp;&nbsp;- editable</span></div>
+    <div class="fe-line"><span class="fe-ln">5</span><span class="fe-punct">---</span></div>
+    <div class="fe-line"><span class="fe-ln">6</span></div>
+    <div class="fe-line" id="fe-line-header"><span class="fe-ln">7</span><span class="fe-h2">##&nbsp;</span><span id="fe-header-text" class="fe-dyn">lizard lizard lizard</span></div>
+    <div class="fe-line"><span class="fe-ln">8</span></div>
+    <div class="fe-line" id="fe-line-text"><span class="fe-ln">9</span><span class="fe-attr">:::{style="top: </span><span id="fe-text-top" class="fe-dyn">200</span><span class="fe-attr">px"}</span></div>
+    <div class="fe-line"><span class="fe-ln">10</span><span class="fe-text">In today's fast-paced digital</span></div>
+    <div class="fe-line"><span class="fe-ln">11</span><span class="fe-text">landscape, leveraging up-to-date</span></div>
+    <div class="fe-line"><span class="fe-ln">12</span><span class="fe-text">memes is critical.</span></div>
+    <div class="fe-line"><span class="fe-ln">13</span><span class="fe-attr">:::</span></div>
+    <div class="fe-line"><span class="fe-ln">14</span></div>
+    <div class="fe-line" id="fe-line-img"><span class="fe-ln">15</span><span class="fe-img">![lizard](lizard.gif)</span><span class="fe-attr">{width=</span><span id="fe-img-width" class="fe-dyn">300</span><span class="fe-attr">px}</span></div>
+  </div>
+</div>
+
 <div class="collab-scene">
   <div class="collab-layout">
     <h2 class="collab-header" id="cblock-header">lizard lizard lizard</h2>

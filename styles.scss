@@ -39,6 +39,13 @@ $body-color: theme-color("black");
   justify-content: center;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
+  padding-left: 0;
+  transition: padding-left 0.6s ease;
+}
+
+.collab-scene.right-half {
+  padding-left: 640px;
 }
 
 .collab-layout {
@@ -46,6 +53,11 @@ $body-color: theme-color("black");
   flex-direction: column;
   width: 700px;
   gap: 24px;
+  transition: width 0.6s ease;
+}
+
+.right-half .collab-layout {
+  width: 560px;
 }
 
 .collab-header {
@@ -85,6 +97,86 @@ $body-color: theme-color("black");
     display: block;
   }
 }
+
+/* Fake editor */
+
+.fake-editor {
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 560px;
+  background: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.fe-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.fe-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  &:nth-child(1) { background: #ff5f56; }
+  &:nth-child(2) { background: #ffbd2e; }
+  &:nth-child(3) { background: #27c93f; }
+}
+
+.fe-title {
+  font-size: 13px;
+  color: #aaa;
+  margin-left: 8px;
+  font-family: -apple-system, sans-serif;
+}
+
+.fe-body {
+  padding: 10px 0 14px;
+}
+
+.fe-line {
+  display: flex;
+  align-items: baseline;
+  padding: 1px 16px 1px 0;
+  line-height: 1.65;
+  border-left: 2px solid transparent;
+}
+
+.fe-line--active {
+  background: rgba(255,255,255,0.06);
+  border-left-color: #4285f4;
+}
+
+.fe-ln {
+  color: #555;
+  font-size: 13px;
+  width: 36px;
+  text-align: right;
+  margin-right: 16px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.fe-punct { color: #808080; font-size: 14px; }
+.fe-key   { color: #9cdcfe; font-size: 14px; }
+.fe-val   { color: #ce9178; font-size: 14px; }
+.fe-h2    { color: #569cd6; font-size: 14px; font-weight: 700; }
+.fe-h3    { color: #569cd6; font-size: 14px; }
+.fe-meta  { color: #9cdcfe; font-size: 14px; }
+.fe-text  { color: #d4d4d4; font-size: 14px; }
+.fe-img   { color: #ce9178; font-size: 14px; }
+.fe-attr  { color: #9cdcfe; font-size: 14px; }
+.fe-dyn   { color: #dcdcaa; font-size: 14px; }
 
 /* Cursor nodes are injected by JS */
 .collab-cursor-node {

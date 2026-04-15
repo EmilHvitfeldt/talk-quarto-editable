@@ -31,7 +31,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-40e332e992920e37ec90bbcbf40c0d88.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-4eb865621288911db0d56d45c186e42f.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -152,6 +152,34 @@
 </section>
 <section id="collab-slide" class="slide level2" data-background-color="#eef2f7">
 <h2></h2>
+<span class="fragment" id="appear-fragment" style="position:absolute;pointer-events:none"></span>
+<span class="fragment" id="start-fragment" style="position:absolute;pointer-events:none"></span>
+<span class="fragment" id="layout-fragment" style="position:absolute;pointer-events:none"></span>
+
+<div id="fake-editor" class="fake-editor">
+  <div class="fe-titlebar">
+    <span class="fe-dot"></span><span class="fe-dot"></span><span class="fe-dot"></span>
+    <span class="fe-title">index.qmd</span>
+  </div>
+  <div class="fe-body">
+    <div class="fe-line"><span class="fe-ln">1</span><span class="fe-punct">---</span></div>
+    <div class="fe-line"><span class="fe-ln">2</span><span class="fe-key">format: </span><span class="fe-val">revealjs</span></div>
+    <div class="fe-line"><span class="fe-ln">3</span><span class="fe-key">filters:</span></div>
+    <div class="fe-line"><span class="fe-ln">4</span><span class="fe-val">&nbsp;&nbsp;- editable</span></div>
+    <div class="fe-line"><span class="fe-ln">5</span><span class="fe-punct">---</span></div>
+    <div class="fe-line"><span class="fe-ln">6</span></div>
+    <div class="fe-line" id="fe-line-header"><span class="fe-ln">7</span><span class="fe-h2">##&nbsp;</span><span id="fe-header-text" class="fe-dyn">lizard lizard lizard</span></div>
+    <div class="fe-line"><span class="fe-ln">8</span></div>
+    <div class="fe-line" id="fe-line-text"><span class="fe-ln">9</span><span class="fe-attr">:::{style="top: </span><span id="fe-text-top" class="fe-dyn">200</span><span class="fe-attr">px"}</span></div>
+    <div class="fe-line"><span class="fe-ln">10</span><span class="fe-text">In today's fast-paced digital</span></div>
+    <div class="fe-line"><span class="fe-ln">11</span><span class="fe-text">landscape, leveraging up-to-date</span></div>
+    <div class="fe-line"><span class="fe-ln">12</span><span class="fe-text">memes is critical.</span></div>
+    <div class="fe-line"><span class="fe-ln">13</span><span class="fe-attr">:::</span></div>
+    <div class="fe-line"><span class="fe-ln">14</span></div>
+    <div class="fe-line" id="fe-line-img"><span class="fe-ln">15</span><span class="fe-img">![lizard](lizard.gif)</span><span class="fe-attr">{width=</span><span id="fe-img-width" class="fe-dyn">300</span><span class="fe-attr">px}</span></div>
+  </div>
+</div>
+
 <div class="collab-scene">
   <div class="collab-layout">
     <h2 class="collab-header" id="cblock-header">lizard lizard lizard</h2>
@@ -432,39 +460,98 @@
       let running   = false;
       let loopTimer = null;
       let currentTl = null;
+      let isShifted = false;
 
-      function stopAnim() {
+      function cleanHeader() {
+        const h  = document.getElementById('cblock-header');
+        const fh = document.getElementById('fe-header-text');
+        if (h  && h.textContent.endsWith('|'))  h.textContent  = h.textContent.slice(0, -1);
+        if (fh && fh.textContent.endsWith('|')) fh.textContent = fh.textContent.slice(0, -1);
+      }
+
+      function stopAnim(flyOut) {
         running = false;
         clearTimeout(loopTimer);
         if (currentTl) { currentTl.pause(); currentTl = null; }
+        cleanHeader();
         const t = document.getElementById('cblock-text');
         const i = document.getElementById('cblock-img');
         if (t) anime.set(t, { translateY: 0, scale: 1 });
         if (i) anime.set(i, { width: '300px' });
+
+        if (flyOut) {
+          const cursors = ['cur-alice', 'cur-bob', 'cur-carol']
+            .map(id => document.getElementById(id)).filter(Boolean);
+          if (cursors.length) {
+            anime({ targets: cursors, opacity: 0, translateY: '+=300',
+                    duration: 500, easing: 'easeInQuad' });
+          }
+        }
       }
 
-      // ── Main animation ────────────────────────────────────────────────────────
+      // ── Cursor appearance ─────────────────────────────────────────────────────
 
-      function runAnim() {
-        if (running) return;
-        running = true;
-
+      function appearAnim() {
         const section = document.getElementById('collab-slide');
-        if (!section) { running = false; return; }
+        if (!section) return;
 
         [
           { id: 'cur-alice', name: 'Kari',   color: '#4285f4' },
           { id: 'cur-bob',   name: 'John',   color: '#e53935' },
           { id: 'cur-carol', name: 'Hailey', color: '#2e7d32' },
         ].forEach(({ id, name, color }) => {
-          if (!document.getElementById(id)) {
-            section.appendChild(makeCursor(id, name, color));
-          }
+          if (!document.getElementById(id)) section.appendChild(makeCursor(id, name, color));
         });
 
         const alice = document.getElementById('cur-alice');
         const bob   = document.getElementById('cur-bob');
         const carol = document.getElementById('cur-carol');
+        const aliceIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
+        const R = { x: 1100, y: 300 };
+        const B = { x: 640,  y: 660 };
+
+        anime.set(alice, { translateX: isShifted ? 1480 : -200, translateY: aliceIdle.y, opacity: 0 });
+        anime.set(bob,   { translateX: 1480, translateY: R.y, opacity: 0 });
+        anime.set(carol, { translateX:  640, translateY: 900, opacity: 0 });
+
+        const entry = anime.timeline({ easing: 'easeOutCubic' });
+        currentTl = entry;
+        entry
+          .add({ targets: alice, opacity: 1, translateX: aliceIdle.x, translateY: aliceIdle.y, duration: 700 }, 0)
+          .add({ targets: bob,   opacity: 1, translateX: R.x, translateY: R.y, duration: 700 }, 150)
+          .add({ targets: carol, opacity: 1, translateX: B.x, translateY: B.y, duration: 700 }, 300);
+      }
+
+      // ── Main animation loop ───────────────────────────────────────────────────
+
+      function runAnim() {
+        if (running) return;
+        running = true;
+
+        // Stop any in-progress animation (e.g. appearAnim's entry timeline)
+        if (currentTl) { currentTl.pause(); currentTl = null; }
+
+        const section = document.getElementById('collab-slide');
+        if (!section) { running = false; return; }
+
+        // Ensure cursors exist (e.g. when restarting after layout shift)
+        [
+          { id: 'cur-alice', name: 'Kari',   color: '#4285f4' },
+          { id: 'cur-bob',   name: 'John',   color: '#e53935' },
+          { id: 'cur-carol', name: 'Hailey', color: '#2e7d32' },
+        ].forEach(({ id, name, color }) => {
+          if (!document.getElementById(id)) section.appendChild(makeCursor(id, name, color));
+        });
+
+        const alice = document.getElementById('cur-alice');
+        const bob   = document.getElementById('cur-bob');
+        const carol = document.getElementById('cur-carol');
+
+        // Restore visibility and snap to idle positions in case shiftLayout interrupted the loop
+        const aliceSnap = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
+        anime.set(alice, { opacity: 1, translateX: aliceSnap.x, translateY: aliceSnap.y });
+        anime.set(bob,   { opacity: 1, translateX: 1100,        translateY: 300 });
+        anime.set(carol, { opacity: 1, translateX: 640,         translateY: 660 });
 
         const textEl   = document.getElementById('cblock-text');
         const imgEl    = document.getElementById('cblock-img');
@@ -473,9 +560,7 @@
         anime.set(textEl, { translateY: 0, scale: 1 });
         anime.set(imgEl,  { width: '300px' });
 
-        anime.set(alice, { translateX: -200, translateY: 340, opacity: 0 });
-        anime.set(bob,   { translateX: 1480, translateY: 300, opacity: 0 });
-        anime.set(carol, { translateX:  640, translateY: 900, opacity: 0 });
+        const aliceIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
 
         const tp = posIn(textEl, section);
         const ip = posIn(imgEl,  section);
@@ -485,13 +570,14 @@
         const INITIAL_IMG_CSS = 300; // matches .collab-image width in CSS
         const cssToSlide = ip.w / INITIAL_IMG_CSS;
 
-        let textTY  = 0;
-        let imgCSS  = INITIAL_IMG_CSS; // tracked CSS width of imgEl
+        let textTY     = 0;
+        let textTopCSS = 200; // tracked value shown in fe-text-top
+        let imgCSS     = INITIAL_IMG_CSS; // tracked CSS width of imgEl
 
         const NUDGE  = 40;  // translateY px for text nudge
         const RESIZE = 120; // CSS px to grow/shrink the image
 
-        const L = { x: 120,  y: 340 };
+        const L = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
         const R = { x: 1100, y: 300 };
         const B = { x: 640,  y: 660 };
 
@@ -508,6 +594,22 @@
                    duration: 900, easing: 'easeInOutSine' }, startAt + 890);
           tl.add({ targets: el, translateY: currentTY + deltaTY,
                    duration: 900, easing: 'easeInOutSine' }, startAt + 890);
+
+          // sync fe-text-top when nudging the text element
+          if (el === textEl) {
+            const feTextTop  = document.getElementById('fe-text-top');
+            const feLineText = document.getElementById('fe-line-text');
+            const snapTop    = textTopCSS;
+            const tState     = { n: snapTop };
+            tl.add({ targets: tState, n: snapTop + deltaTY,
+                     duration: 900, easing: 'easeInOutSine',
+                     begin:    () => { feLineText && feLineText.classList.add('fe-line--active'); },
+                     update:   () => { if (feTextTop) feTextTop.textContent = Math.round(tState.n); },
+                     complete: () => { feLineText && feLineText.classList.remove('fe-line--active'); },
+                   }, startAt + 890);
+            textTopCSS += deltaTY;
+          }
+
           tl.add({ targets: el, scale: 1,
                    duration: 220, easing: 'easeOutBounce' }, startAt + 1790);
           tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
@@ -517,24 +619,31 @@
         }
 
         // ── addResize ─────────────────────────────────────────────────────────────
-        // Cursor moves to the right edge of the image and drags it wider or narrower.
-        // deltaCSSWidth > 0 = grow, < 0 = shrink.
         function addResize(tl, startAt, cursor, deltaCSSWidth, afterPos) {
-          // Right-centre edge of image in slide coords given current imgCSS width
           const edgeX = ip.x + imgCSS * cssToSlide;
           const edgeY = ip.y + ip.h * 0.5;
+          const snapImgCSS = imgCSS;
 
-          // cursor glides to the right edge
           tl.add({ targets: cursor, translateX: edgeX, translateY: edgeY,
                    duration: 750, easing: 'easeInOutCubic' }, startAt);
-
-          // image width and cursor X animate together
-          tl.add({ targets: imgEl, width: (imgCSS + deltaCSSWidth) + 'px',
+          tl.add({ targets: imgEl, width: (snapImgCSS + deltaCSSWidth) + 'px',
                    duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
           tl.add({ targets: cursor, translateX: edgeX + deltaCSSWidth * cssToSlide,
                    duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
 
-          // cursor retreats
+          // sync editor width number
+          const feImgWidth = document.getElementById('fe-img-width');
+          const feLineImg  = document.getElementById('fe-line-img');
+          if (feImgWidth) {
+            const wState = { n: snapImgCSS };
+            tl.add({ targets: wState, n: snapImgCSS + deltaCSSWidth,
+                     duration: 1000, easing: 'easeInOutSine',
+                     begin:    () => { feLineImg && feLineImg.classList.add('fe-line--active'); },
+                     update:   () => { feImgWidth.textContent = Math.round(wState.n); },
+                     complete: () => { feLineImg && feLineImg.classList.remove('fe-line--active'); },
+                   }, startAt + 900);
+          }
+
           tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
                    duration: 600, easing: 'easeInOutQuad' }, startAt + 1900);
 
@@ -551,15 +660,33 @@
           tl.add({ targets: cursor, translateX: hp.x + 20, translateY: hp.y + hp.h * 0.5,
                    duration: 750, easing: 'easeInOutCubic' }, startAt);
 
+          const feHeaderText = document.getElementById('fe-header-text');
+          const feLineHeader = document.getElementById('fe-line-header');
+
+          // delete — updates slide header and editor in sync
           const del = { n: fromText.length };
           tl.add({ targets: del, n: 0, duration: deleteMs, easing: 'linear',
-                   update: () => { headerEl.textContent = fromText.slice(0, Math.round(del.n)) + '|'; },
+                   begin:  () => { feLineHeader && feLineHeader.classList.add('fe-line--active'); },
+                   update: () => {
+                     const t = fromText.slice(0, Math.round(del.n));
+                     headerEl.textContent = t + '|';
+                     if (feHeaderText) feHeaderText.textContent = t + '|';
+                   },
                  }, startAt + 900);
 
+          // type — updates slide header and editor in sync
           const typ = { n: 0 };
           tl.add({ targets: typ, n: toText.length, duration: typeMs, easing: 'linear',
-                   update:   () => { headerEl.textContent = toText.slice(0, Math.round(typ.n)) + '|'; },
-                   complete: () => { headerEl.textContent = toText; },
+                   update: () => {
+                     const t = toText.slice(0, Math.round(typ.n));
+                     headerEl.textContent = t + '|';
+                     if (feHeaderText) feHeaderText.textContent = t + '|';
+                   },
+                   complete: () => {
+                     headerEl.textContent = toText;
+                     if (feHeaderText) feHeaderText.textContent = toText;
+                     feLineHeader && feLineHeader.classList.remove('fe-line--active');
+                   },
                  }, startAt + 900 + deleteMs + 80);
 
           const done = startAt + 900 + deleteMs + 80 + typeMs;
@@ -569,20 +696,12 @@
           return done + 400;
         }
 
-        // ── Entry ─────────────────────────────────────────────────────────────────
-        const entry = anime.timeline({ easing: 'easeOutCubic' });
-        currentTl = entry;
-        entry
-          .add({ targets: alice, opacity: 1, translateX: L.x, translateY: L.y, duration: 700 }, 0)
-          .add({ targets: bob,   opacity: 1, translateX: R.x, translateY: R.y, duration: 700 }, 150)
-          .add({ targets: carol, opacity: 1, translateX: B.x, translateY: B.y, duration: 700 }, 300);
-
-        entry.finished.then(() => { if (running) doLoop(); });
-
         const ORIGINAL_TEXT = headerEl.textContent;
         const TEXT_A = 'LIZARD LIZARD LIZARD';
         const TEXT_B = 'Lizard? Lizard? Lizard?';
         const TEXT_C = ORIGINAL_TEXT;
+
+        doLoop();
 
         // ── Self-cancelling 7-move loop ───────────────────────────────────────────
         // Move 1: Alice nudges text up             → textTY = -NUDGE
@@ -615,6 +734,41 @@
         }
       }
 
+      // ── Fragment shift ────────────────────────────────────────────────────────
+
+      function shiftLayout(toRight) {
+        isShifted = toRight;
+        stopAnim();
+
+        const cursors = ['cur-alice', 'cur-bob', 'cur-carol']
+          .map(id => document.getElementById(id)).filter(Boolean);
+        const scene  = document.querySelector('#collab-slide .collab-scene');
+        const editor = document.getElementById('fake-editor');
+
+        anime({
+          targets: cursors, opacity: 0, duration: 250, easing: 'easeOutQuad',
+          complete: () => {
+            scene.classList.toggle('right-half', toRight);
+            anime({ targets: editor, opacity: toRight ? 1 : 0,
+                    duration: 500, easing: 'easeOutQuad' });
+            setTimeout(runAnim, 700);
+          }
+        });
+      }
+
+      // ── Stop loop only (keep cursors visible) ────────────────────────────────
+
+      function stopLoop() {
+        running = false;
+        clearTimeout(loopTimer);
+        if (currentTl) { currentTl.pause(); currentTl = null; }
+        cleanHeader();
+        const t = document.getElementById('cblock-text');
+        const i = document.getElementById('cblock-img');
+        if (t) anime.set(t, { translateY: 0, scale: 1 });
+        if (i) anime.set(i, { width: '300px' });
+      }
+
       // ── RevealJS wiring ───────────────────────────────────────────────────────
 
       function boot() {
@@ -622,11 +776,35 @@
           return setTimeout(boot, 80);
         }
         Reveal.on('slidechanged', ({ currentSlide }) => {
-          if (currentSlide && currentSlide.id === 'collab-slide') runAnim();
-          else stopAnim();
+          if (currentSlide && currentSlide.id === 'collab-slide') {
+            // restore correct state on back-navigation
+            const af = document.getElementById('appear-fragment');
+            const sf = document.getElementById('start-fragment');
+            const appeared = af && af.classList.contains('visible');
+            const started  = sf && sf.classList.contains('visible');
+            if (started)       runAnim();
+            else if (appeared) appearAnim();
+          } else {
+            stopAnim();
+          }
+        });
+        Reveal.on('fragmentshown', ({ fragment }) => {
+          if (fragment.id === 'appear-fragment') appearAnim();
+          if (fragment.id === 'start-fragment')  runAnim();
+          if (fragment.id === 'layout-fragment') shiftLayout(true);
+        });
+        Reveal.on('fragmenthidden', ({ fragment }) => {
+          if (fragment.id === 'start-fragment')  stopLoop();   // cursors stay, loop stops
+          if (fragment.id === 'appear-fragment') stopAnim(true); // cursors fly out
+          if (fragment.id === 'layout-fragment') shiftLayout(false);
         });
         const cur = Reveal.getCurrentSlide && Reveal.getCurrentSlide();
-        if (cur && cur.id === 'collab-slide') runAnim();
+        if (cur && cur.id === 'collab-slide') {
+          const af = document.getElementById('appear-fragment');
+          const sf = document.getElementById('start-fragment');
+          if (sf && sf.classList.contains('visible'))       runAnim();
+          else if (af && af.classList.contains('visible'))  appearAnim();
+        }
       }
 
       document.addEventListener('DOMContentLoaded', boot);
