@@ -1,0 +1,249 @@
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+<script type="text/javascript">
+(function () {
+  'use strict';
+
+  // ── Cursor factory ────────────────────────────────────────────────────────
+
+  function makeCursor(id, name, color) {
+    const el = document.createElement('div');
+    el.id = id;
+    el.className = 'collab-cursor-node';
+    el.innerHTML = `
+      <svg width="28" height="34" viewBox="0 0 11 14" xmlns="http://www.w3.org/2000/svg"
+           style="filter:drop-shadow(0 1px 3px rgba(0,0,0,.4));flex-shrink:0">
+        <path d="M0 0 L0 12 L3.2 8.8 L5.4 14 L7.2 13.3 L5 7.8 L9 7.8 Z"
+              fill="${color}" stroke="white" stroke-width=".7" stroke-linejoin="round"/>
+      </svg>
+      <span style="
+        background:${color};color:#fff;
+        font:700 11px/1 -apple-system,sans-serif;
+        padding:3px 8px;border-radius:0 4px 4px 4px;
+        margin-top:16px;margin-left:1px;
+        white-space:nowrap;
+        box-shadow:0 1px 4px rgba(0,0,0,.25);
+      ">${name}</span>
+    `;
+    return el;
+  }
+
+  // ── Coordinate helper ─────────────────────────────────────────────────────
+
+  function posIn(el, section) {
+    const er = el.getBoundingClientRect();
+    const sr = section.getBoundingClientRect();
+    const sx = 1280 / sr.width;
+    const sy = 720  / sr.height;
+    return {
+      x: (er.left - sr.left) * sx,
+      y: (er.top  - sr.top)  * sy,
+      w: er.width  * sx,
+      h: er.height * sy,
+    };
+  }
+
+  // ── State ─────────────────────────────────────────────────────────────────
+
+  let running   = false;
+  let loopTimer = null;
+  let currentTl = null;
+
+  function stopAnim() {
+    running = false;
+    clearTimeout(loopTimer);
+    if (currentTl) { currentTl.pause(); currentTl = null; }
+    const t = document.getElementById('cblock-text');
+    const i = document.getElementById('cblock-img');
+    if (t) anime.set(t, { translateY: 0, scale: 1 });
+    if (i) anime.set(i, { width: '300px' });
+  }
+
+  // ── Main animation ────────────────────────────────────────────────────────
+
+  function runAnim() {
+    if (running) return;
+    running = true;
+
+    const section = document.getElementById('collab-slide');
+    if (!section) { running = false; return; }
+
+    [
+      { id: 'cur-alice', name: 'Kari',   color: '#4285f4' },
+      { id: 'cur-bob',   name: 'John',   color: '#e53935' },
+      { id: 'cur-carol', name: 'Hailey', color: '#2e7d32' },
+    ].forEach(({ id, name, color }) => {
+      if (!document.getElementById(id)) {
+        section.appendChild(makeCursor(id, name, color));
+      }
+    });
+
+    const alice = document.getElementById('cur-alice');
+    const bob   = document.getElementById('cur-bob');
+    const carol = document.getElementById('cur-carol');
+
+    const textEl   = document.getElementById('cblock-text');
+    const imgEl    = document.getElementById('cblock-img');
+    const headerEl = document.getElementById('cblock-header');
+
+    anime.set(textEl, { translateY: 0, scale: 1 });
+    anime.set(imgEl,  { width: '300px' });
+
+    anime.set(alice, { translateX: -200, translateY: 340, opacity: 0 });
+    anime.set(bob,   { translateX: 1480, translateY: 300, opacity: 0 });
+    anime.set(carol, { translateX:  640, translateY: 900, opacity: 0 });
+
+    const tp = posIn(textEl, section);
+    const ip = posIn(imgEl,  section);
+
+    // ip.w is the slide-coord width of the image at its initial CSS size (300px).
+    // We use this ratio to convert CSS px deltas → slide coord deltas for cursor tracking.
+    const INITIAL_IMG_CSS = 300; // matches .collab-image width in CSS
+    const cssToSlide = ip.w / INITIAL_IMG_CSS;
+
+    let textTY  = 0;
+    let imgCSS  = INITIAL_IMG_CSS; // tracked CSS width of imgEl
+
+    const NUDGE  = 40;  // translateY px for text nudge
+    const RESIZE = 120; // CSS px to grow/shrink the image
+
+    const L = { x: 120,  y: 340 };
+    const R = { x: 1100, y: 300 };
+    const B = { x: 640,  y: 660 };
+
+    // ── addNudge ──────────────────────────────────────────────────────────────
+    function addNudge(tl, startAt, cursor, el, elBasePos, currentTY, deltaTY, afterPos) {
+      const grabX = elBasePos.x + elBasePos.w * 0.4;
+      const grabY = elBasePos.y + currentTY + elBasePos.h * 0.4;
+
+      tl.add({ targets: cursor, translateX: grabX, translateY: grabY,
+               duration: 750, easing: 'easeInOutCubic' }, startAt);
+      tl.add({ targets: el, scale: 1.02,
+               duration: 140, easing: 'easeOutQuad' }, startAt + 750);
+      tl.add({ targets: cursor, translateY: grabY + deltaTY,
+               duration: 900, easing: 'easeInOutSine' }, startAt + 890);
+      tl.add({ targets: el, translateY: currentTY + deltaTY,
+               duration: 900, easing: 'easeInOutSine' }, startAt + 890);
+      tl.add({ targets: el, scale: 1,
+               duration: 220, easing: 'easeOutBounce' }, startAt + 1790);
+      tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
+               duration: 600, easing: 'easeInOutQuad' }, startAt + 2010);
+
+      return startAt + 2100;
+    }
+
+    // ── addResize ─────────────────────────────────────────────────────────────
+    // Cursor moves to the right edge of the image and drags it wider or narrower.
+    // deltaCSSWidth > 0 = grow, < 0 = shrink.
+    function addResize(tl, startAt, cursor, deltaCSSWidth, afterPos) {
+      // Right-centre edge of image in slide coords given current imgCSS width
+      const edgeX = ip.x + imgCSS * cssToSlide;
+      const edgeY = ip.y + ip.h * 0.5;
+
+      // cursor glides to the right edge
+      tl.add({ targets: cursor, translateX: edgeX, translateY: edgeY,
+               duration: 750, easing: 'easeInOutCubic' }, startAt);
+
+      // image width and cursor X animate together
+      tl.add({ targets: imgEl, width: (imgCSS + deltaCSSWidth) + 'px',
+               duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
+      tl.add({ targets: cursor, translateX: edgeX + deltaCSSWidth * cssToSlide,
+               duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
+
+      // cursor retreats
+      tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
+               duration: 600, easing: 'easeInOutQuad' }, startAt + 1900);
+
+      imgCSS += deltaCSSWidth;
+      return startAt + 2100;
+    }
+
+    // ── addTextEdit ───────────────────────────────────────────────────────────
+    function addTextEdit(tl, startAt, cursor, fromText, toText, afterPos) {
+      const hp = posIn(headerEl, section);
+      const deleteMs = Math.max(fromText.length * 65, 200);
+      const typeMs   = Math.max(toText.length   * 65, 200);
+
+      tl.add({ targets: cursor, translateX: hp.x + 20, translateY: hp.y + hp.h * 0.5,
+               duration: 750, easing: 'easeInOutCubic' }, startAt);
+
+      const del = { n: fromText.length };
+      tl.add({ targets: del, n: 0, duration: deleteMs, easing: 'linear',
+               update: () => { headerEl.textContent = fromText.slice(0, Math.round(del.n)) + '|'; },
+             }, startAt + 900);
+
+      const typ = { n: 0 };
+      tl.add({ targets: typ, n: toText.length, duration: typeMs, easing: 'linear',
+               update:   () => { headerEl.textContent = toText.slice(0, Math.round(typ.n)) + '|'; },
+               complete: () => { headerEl.textContent = toText; },
+             }, startAt + 900 + deleteMs + 80);
+
+      const done = startAt + 900 + deleteMs + 80 + typeMs;
+      tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
+               duration: 600, easing: 'easeInOutQuad' }, done + 150);
+
+      return done + 400;
+    }
+
+    // ── Entry ─────────────────────────────────────────────────────────────────
+    const entry = anime.timeline({ easing: 'easeOutCubic' });
+    currentTl = entry;
+    entry
+      .add({ targets: alice, opacity: 1, translateX: L.x, translateY: L.y, duration: 700 }, 0)
+      .add({ targets: bob,   opacity: 1, translateX: R.x, translateY: R.y, duration: 700 }, 150)
+      .add({ targets: carol, opacity: 1, translateX: B.x, translateY: B.y, duration: 700 }, 300);
+
+    entry.finished.then(() => { if (running) doLoop(); });
+
+    const ORIGINAL_TEXT = headerEl.textContent;
+    const TEXT_A = 'LIZARD LIZARD LIZARD';
+    const TEXT_B = 'Lizard? Lizard? Lizard?';
+    const TEXT_C = ORIGINAL_TEXT;
+
+    // ── Self-cancelling 7-move loop ───────────────────────────────────────────
+    // Move 1: Alice nudges text up             → textTY = -NUDGE
+    // Move 2: Bob   nudges text back down      → textTY = 0
+    // Move 3: Carol drags image wider          → imgCSS += RESIZE
+    // Move 4: Alice drags image back narrower  → imgCSS -= RESIZE
+    // Move 5: Bob   types TEXT_A
+    // Move 6: Carol types TEXT_B
+    // Move 7: Alice types TEXT_C (original)    → header restored
+
+    function doLoop() {
+      if (!running) return;
+
+      const tl = anime.timeline();
+      currentTl = tl;
+      let t = 100;
+
+      t = addNudge(tl, t, alice, textEl, tp, textTY, -NUDGE, L); textTY -= NUDGE;
+      t = addNudge(tl, t, bob,   textEl, tp, textTY, +NUDGE, R); textTY += NUDGE;
+      t = addResize(tl, t, carol, +RESIZE, B);
+      t = addResize(tl, t, alice, -RESIZE, L);
+      t = addTextEdit(tl, t, bob,   TEXT_C, TEXT_A, R);
+      t = addTextEdit(tl, t, carol, TEXT_A, TEXT_B, B);
+      t = addTextEdit(tl, t, alice, TEXT_B, TEXT_C, L);
+
+      tl.finished.then(() => {
+        if (!running) return;
+        loopTimer = setTimeout(doLoop, 300);
+      });
+    }
+  }
+
+  // ── RevealJS wiring ───────────────────────────────────────────────────────
+
+  function boot() {
+    if (typeof Reveal === 'undefined' || !Reveal.isReady()) {
+      return setTimeout(boot, 80);
+    }
+    Reveal.on('slidechanged', ({ currentSlide }) => {
+      if (currentSlide && currentSlide.id === 'collab-slide') runAnim();
+      else stopAnim();
+    });
+    const cur = Reveal.getCurrentSlide && Reveal.getCurrentSlide();
+    if (cur && cur.id === 'collab-slide') runAnim();
+  }
+
+  document.addEventListener('DOMContentLoaded', boot);
+})();
+</script>

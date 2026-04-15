@@ -1,0 +1,99 @@
+$colors: (
+  "white": #FFFFFF,
+  "black": #222222
+);
+
+/*-- scss:functions --*/
+
+@function theme-color($color) {
+  @return map-get($colors, $color);
+}
+
+/*-- scss:defaults --*/
+
+$body-bg: theme-color("white");
+$body-color: theme-color("black");
+
+/*-- scss:rules --*/
+
+@each $name, $color in $colors {
+  .text-#{$name} {
+    color: $color;
+  }
+
+  .bg-#{$name} {
+    background-color: $color;
+  }
+}
+
+/*-- collab animation slide --*/
+
+#collab-slide {
+  position: relative;
+  overflow: hidden;
+}
+
+.collab-scene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.collab-layout {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  gap: 24px;
+}
+
+.collab-header {
+  font-size: 40px;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.collab-main {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.collab-text {
+  flex: 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #444;
+  will-change: transform;
+
+  p { margin: 0 0 0.8em; }
+  p:last-child { margin-bottom: 0; }
+}
+
+.collab-image {
+  width: 300px;
+  flex-shrink: 0;
+  will-change: transform;
+
+  img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+  }
+}
+
+/* Cursor nodes are injected by JS */
+.collab-cursor-node {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 900;
+  display: flex;
+  align-items: flex-start;
+}
+

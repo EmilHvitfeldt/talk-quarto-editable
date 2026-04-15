@@ -1,0 +1,50 @@
+---
+format:
+  revealjs: 
+    theme: [default, styles.scss]
+    width: 1280
+    height: 720
+    include-after-body: 
+      - "all-the-js-code.html"
+pagetitle: Title of Talk
+echo: false
+code-line-numbers: false
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+## Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+## {#collab-slide background-color="#eef2f7"}
+
+```{=html}
+<div class="collab-scene">
+  <div class="collab-layout">
+    <h2 class="collab-header" id="cblock-header">lizard lizard lizard</h2>
+    <div class="collab-main">
+      <div class="collab-text" id="cblock-text">
+        <p>In today's fast-paced digital landscape, leveraging up-to-date memes is critical. Outdated memes signal cultural irrelevance and erode audience trust within milliseconds.</p>
+        <p>Studies show that meme freshness directly correlates with engagement. Always cite your sources — unless the meme is funnier without them.</p>
+      </div>
+      <div class="collab-image" id="cblock-img">
+        <img src="lizard.gif" alt="lizard" />
+      </div>
+    </div>
+  </div>
+</div>
+```
