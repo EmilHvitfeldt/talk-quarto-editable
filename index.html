@@ -31,7 +31,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-4eb865621288911db0d56d45c186e42f.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-4517f66dafd3bfb9039f2f309e13f91e.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -129,29 +129,17 @@
     <div class="slides">
 
 
-<section id="quarto" class="slide level2">
-<h2>Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <a href="https://quarto.org/docs/presentations/" class="uri">https://quarto.org/docs/presentations/</a>.</p>
-</section>
-<section id="bullets" class="slide level2">
-<h2>Bullets</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes:</p>
-<ul>
-<li>Content authored with markdown</li>
-<li>Output from executable code</li>
-</ul>
-</section>
-<section id="code" class="slide level2">
-<h2>Code</h2>
-<p>When you click the <strong>Render</strong> button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
+<section class="slide level2">
+
+<div class="float-slide">
+
 </div>
 </section>
-<section id="collab-slide" class="slide level2" data-background-color="#eef2f7">
+<section id="section" class="slide level2">
 <h2></h2>
+<div class="collab-slide">
+
+</div>
 <span class="fragment" id="appear-fragment" style="position:absolute;pointer-events:none"></span>
 <span class="fragment" id="start-fragment" style="position:absolute;pointer-events:none"></span>
 <span class="fragment" id="layout-fragment" style="position:absolute;pointer-events:none"></span>
@@ -440,6 +428,12 @@
         return el;
       }
 
+      function ensureCursors(section, defs) {
+        defs.forEach(({ id, name, color }) => {
+          if (!document.getElementById(id)) section.appendChild(makeCursor(id, name, color));
+        });
+      }
+
       // ── Coordinate helper ─────────────────────────────────────────────────────
 
       function posIn(el, section) {
@@ -455,7 +449,83 @@
         };
       }
 
-      // ── State ─────────────────────────────────────────────────────────────────
+      // ── Float behavior factory ─────────────────────────────────────────────────
+
+      function edgePos() {
+        const region = Math.floor(Math.random() * 4);
+        switch (region) {
+          case 0: return { x: Math.random() * 250 + 30,   y: Math.random() * 660 + 30  }; // left
+          case 1: return { x: Math.random() * 250 + 1000, y: Math.random() * 660 + 30  }; // right
+          case 2: return { x: Math.random() * 1220 + 30,  y: Math.random() * 130 + 30  }; // top
+          default: return { x: Math.random() * 1220 + 30, y: Math.random() * 100 + 590 }; // bottom
+        }
+      }
+
+      function makeFloatBehavior(cursorDefs) {
+        let running = false;
+
+        function floatOne(el) {
+          if (!running) return;
+          const { x, y } = edgePos();
+          anime({
+            targets: el, translateX: x, translateY: y,
+            duration: 2000 + Math.random() * 3000,
+            delay: Math.random() * 800,
+            easing: 'easeInOutQuad',
+            complete: () => floatOne(el),
+          });
+        }
+
+        return {
+          start(section) {
+            if (running) return;
+            running = true;
+            ensureCursors(section, cursorDefs);
+            cursorDefs.forEach(({ id }) => {
+              const el = document.getElementById(id);
+              const { x, y } = edgePos();
+              anime.set(el, { translateX: x, translateY: y, opacity: 1 });
+              floatOne(el);
+            });
+          },
+          stop() {
+            running = false;
+            const targets = cursorDefs.map(c => document.getElementById(c.id)).filter(Boolean);
+            anime.remove(targets);
+            anime({ targets, opacity: 0, duration: 300, easing: 'easeOutQuad' });
+          },
+        };
+      }
+
+      // ── Cursor definitions ────────────────────────────────────────────────────
+
+      const FLOAT_CURSORS = [
+        { id: 'fc-0',  name: 'Alice',   color: '#e91e8c' },
+        { id: 'fc-1',  name: 'Bob',     color: '#1565c0' },
+        { id: 'fc-2',  name: 'Carol',   color: '#f9a825' },
+        { id: 'fc-3',  name: 'Dave',    color: '#2e7d32' },
+        { id: 'fc-4',  name: 'Eve',     color: '#6a1b9a' },
+        { id: 'fc-5',  name: 'Frank',   color: '#c62828' },
+        { id: 'fc-6',  name: 'Grace',   color: '#00838f' },
+        { id: 'fc-7',  name: 'Hank',    color: '#e65100' },
+        { id: 'fc-8',  name: 'Iris',    color: '#4527a0' },
+        { id: 'fc-9',  name: 'Jack',    color: '#1b5e20' },
+        { id: 'fc-10', name: 'Kari',    color: '#880e4f' },
+        { id: 'fc-11', name: 'Lena',    color: '#01579b' },
+        { id: 'fc-12', name: 'Mike',    color: '#bf360c' },
+        { id: 'fc-13', name: 'Nina',    color: '#33691e' },
+        { id: 'fc-14', name: 'Oscar',   color: '#4a148c' },
+      ];
+
+      const COLLAB_CURSORS = [
+        { id: 'cur-kari',   name: 'Kari',   color: '#e91e8c' },
+        { id: 'cur-john',   name: 'John',   color: '#1565c0' },
+        { id: 'cur-hailey', name: 'Hailey', color: '#f9a825' },
+      ];
+
+      const floatBehavior = makeFloatBehavior(FLOAT_CURSORS);
+
+      // ── Collab slide state ────────────────────────────────────────────────────
 
       let running   = false;
       let loopTimer = null;
@@ -480,8 +550,7 @@
         if (i) anime.set(i, { width: '300px' });
 
         if (flyOut) {
-          const cursors = ['cur-alice', 'cur-bob', 'cur-carol']
-            .map(id => document.getElementById(id)).filter(Boolean);
+          const cursors = COLLAB_CURSORS.map(c => document.getElementById(c.id)).filter(Boolean);
           if (cursors.length) {
             anime({ targets: cursors, opacity: 0, translateY: '+=300',
                     duration: 500, easing: 'easeInQuad' });
@@ -492,34 +561,28 @@
       // ── Cursor appearance ─────────────────────────────────────────────────────
 
       function appearAnim() {
-        const section = document.getElementById('collab-slide');
+        const section = document.querySelector('.collab-slide')?.closest('section');
         if (!section) return;
 
-        [
-          { id: 'cur-alice', name: 'Kari',   color: '#e91e8c' },
-          { id: 'cur-bob',   name: 'John',   color: '#1565c0' },
-          { id: 'cur-carol', name: 'Hailey', color: '#f9a825' },
-        ].forEach(({ id, name, color }) => {
-          if (!document.getElementById(id)) section.appendChild(makeCursor(id, name, color));
-        });
+        ensureCursors(section, COLLAB_CURSORS);
 
-        const alice = document.getElementById('cur-alice');
-        const bob   = document.getElementById('cur-bob');
-        const carol = document.getElementById('cur-carol');
-        const aliceIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
+        const kari = document.getElementById('cur-kari');
+        const john   = document.getElementById('cur-john');
+        const hailey = document.getElementById('cur-hailey');
+        const kariIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
         const R = { x: 1100, y: 300 };
         const B = { x: 640,  y: 660 };
 
-        anime.set(alice, { translateX: isShifted ? 1480 : -200, translateY: aliceIdle.y, opacity: 0 });
-        anime.set(bob,   { translateX: 1480, translateY: R.y, opacity: 0 });
-        anime.set(carol, { translateX:  640, translateY: 900, opacity: 0 });
+        anime.set(kari, { translateX: isShifted ? 1480 : -200, translateY: kariIdle.y, opacity: 0 });
+        anime.set(john, { translateX: 1480, translateY: R.y, opacity: 0 });
+        anime.set(hailey, { translateX:  640, translateY: 900, opacity: 0 });
 
         const entry = anime.timeline({ easing: 'easeOutCubic' });
         currentTl = entry;
         entry
-          .add({ targets: alice, opacity: 1, translateX: aliceIdle.x, translateY: aliceIdle.y, duration: 700 }, 0)
-          .add({ targets: bob,   opacity: 1, translateX: R.x, translateY: R.y, duration: 700 }, 150)
-          .add({ targets: carol, opacity: 1, translateX: B.x, translateY: B.y, duration: 700 }, 300);
+          .add({ targets: kari, opacity: 1, translateX: kariIdle.x, translateY: kariIdle.y, duration: 700 }, 0)
+          .add({ targets: john,   opacity: 1, translateX: R.x, translateY: R.y, duration: 700 }, 150)
+          .add({ targets: hailey, opacity: 1, translateX: B.x, translateY: B.y, duration: 700 }, 300);
       }
 
       // ── Main animation loop ───────────────────────────────────────────────────
@@ -528,30 +591,21 @@
         if (running) return;
         running = true;
 
-        // Stop any in-progress animation (e.g. appearAnim's entry timeline)
         if (currentTl) { currentTl.pause(); currentTl = null; }
 
-        const section = document.getElementById('collab-slide');
+        const section = document.querySelector('.collab-slide')?.closest('section');
         if (!section) { running = false; return; }
 
-        // Ensure cursors exist (e.g. when restarting after layout shift)
-        [
-          { id: 'cur-alice', name: 'Kari',   color: '#e91e8c' },
-          { id: 'cur-bob',   name: 'John',   color: '#1565c0' },
-          { id: 'cur-carol', name: 'Hailey', color: '#f9a825' },
-        ].forEach(({ id, name, color }) => {
-          if (!document.getElementById(id)) section.appendChild(makeCursor(id, name, color));
-        });
+        ensureCursors(section, COLLAB_CURSORS);
 
-        const alice = document.getElementById('cur-alice');
-        const bob   = document.getElementById('cur-bob');
-        const carol = document.getElementById('cur-carol');
+        const kari = document.getElementById('cur-kari');
+        const john   = document.getElementById('cur-john');
+        const hailey = document.getElementById('cur-hailey');
 
-        // Restore visibility and snap to idle positions in case shiftLayout interrupted the loop
-        const aliceSnap = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
-        anime.set(alice, { opacity: 1, translateX: aliceSnap.x, translateY: aliceSnap.y });
-        anime.set(bob,   { opacity: 1, translateX: 1100,        translateY: 300 });
-        anime.set(carol, { opacity: 1, translateX: 640,         translateY: 660 });
+        const kariSnap = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
+        anime.set(kari, { opacity: 1, translateX: kariSnap.x, translateY: kariSnap.y });
+        anime.set(john, { opacity: 1, translateX: 1100,        translateY: 300 });
+        anime.set(hailey, { opacity: 1, translateX: 640,         translateY: 660 });
 
         const textEl   = document.getElementById('cblock-text');
         const imgEl    = document.getElementById('cblock-img');
@@ -560,22 +614,20 @@
         anime.set(textEl, { translateY: 0, scale: 1 });
         anime.set(imgEl,  { width: '300px' });
 
-        const aliceIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
+        const kariIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
 
         const tp = posIn(textEl, section);
         const ip = posIn(imgEl,  section);
 
-        // ip.w is the slide-coord width of the image at its initial CSS size (300px).
-        // We use this ratio to convert CSS px deltas → slide coord deltas for cursor tracking.
-        const INITIAL_IMG_CSS = 300; // matches .collab-image width in CSS
+        const INITIAL_IMG_CSS = 300;
         const cssToSlide = ip.w / INITIAL_IMG_CSS;
 
         let textTY     = 0;
-        let textTopCSS = 200; // tracked value shown in fe-text-top
-        let imgCSS     = INITIAL_IMG_CSS; // tracked CSS width of imgEl
+        let textTopCSS = 200;
+        let imgCSS     = INITIAL_IMG_CSS;
 
-        const NUDGE  = 40;  // translateY px for text nudge
-        const RESIZE = 120; // CSS px to grow/shrink the image
+        const NUDGE  = 40;
+        const RESIZE = 120;
 
         const L = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
         const R = { x: 1100, y: 300 };
@@ -595,7 +647,6 @@
           tl.add({ targets: el, translateY: currentTY + deltaTY,
                    duration: 900, easing: 'easeInOutSine' }, startAt + 890);
 
-          // sync fe-text-top when nudging the text element
           if (el === textEl) {
             const feTextTop  = document.getElementById('fe-text-top');
             const feLineText = document.getElementById('fe-line-text');
@@ -631,7 +682,6 @@
           tl.add({ targets: cursor, translateX: edgeX + deltaCSSWidth * cssToSlide,
                    duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
 
-          // sync editor width number
           const feImgWidth = document.getElementById('fe-img-width');
           const feLineImg  = document.getElementById('fe-line-img');
           if (feImgWidth) {
@@ -663,7 +713,6 @@
           const feHeaderText = document.getElementById('fe-header-text');
           const feLineHeader = document.getElementById('fe-line-header');
 
-          // delete — updates slide header and editor in sync
           const del = { n: fromText.length };
           tl.add({ targets: del, n: 0, duration: deleteMs, easing: 'linear',
                    begin:  () => { feLineHeader && feLineHeader.classList.add('fe-line--active'); },
@@ -674,7 +723,6 @@
                    },
                  }, startAt + 900);
 
-          // type — updates slide header and editor in sync
           const typ = { n: 0 };
           tl.add({ targets: typ, n: toText.length, duration: typeMs, easing: 'linear',
                    update: () => {
@@ -704,13 +752,13 @@
         doLoop();
 
         // ── Self-cancelling 7-move loop ───────────────────────────────────────────
-        // Move 1: Alice nudges text up             → textTY = -NUDGE
-        // Move 2: Bob   nudges text back down      → textTY = 0
-        // Move 3: Carol drags image wider          → imgCSS += RESIZE
-        // Move 4: Alice drags image back narrower  → imgCSS -= RESIZE
-        // Move 5: Bob   types TEXT_A
-        // Move 6: Carol types TEXT_B
-        // Move 7: Alice types TEXT_C (original)    → header restored
+        // Move 1: Kari   nudges text up             → textTY = -NUDGE
+        // Move 2: John   nudges text back down      → textTY = 0
+        // Move 3: Hailey drags image wider          → imgCSS += RESIZE
+        // Move 4: Kari   drags image back narrower  → imgCSS -= RESIZE
+        // Move 5: John   types TEXT_A
+        // Move 6: Hailey types TEXT_B
+        // Move 7: Kari   types TEXT_C (original)    → header restored
 
         function doLoop() {
           if (!running) return;
@@ -719,13 +767,13 @@
           currentTl = tl;
           let t = 100;
 
-          t = addNudge(tl, t, alice, textEl, tp, textTY, -NUDGE, L); textTY -= NUDGE;
-          t = addNudge(tl, t, bob,   textEl, tp, textTY, +NUDGE, R); textTY += NUDGE;
-          t = addResize(tl, t, carol, +RESIZE, B);
-          t = addResize(tl, t, alice, -RESIZE, L);
-          t = addTextEdit(tl, t, bob,   TEXT_C, TEXT_A, R);
-          t = addTextEdit(tl, t, carol, TEXT_A, TEXT_B, B);
-          t = addTextEdit(tl, t, alice, TEXT_B, TEXT_C, L);
+          t = addNudge(tl, t, kari, textEl, tp, textTY, -NUDGE, L); textTY -= NUDGE;
+          t = addNudge(tl, t, john,   textEl, tp, textTY, +NUDGE, R); textTY += NUDGE;
+          t = addResize(tl, t, hailey, +RESIZE, B);
+          t = addResize(tl, t, kari, -RESIZE, L);
+          t = addTextEdit(tl, t, john,   TEXT_C, TEXT_A, R);
+          t = addTextEdit(tl, t, hailey, TEXT_A, TEXT_B, B);
+          t = addTextEdit(tl, t, kari, TEXT_B, TEXT_C, L);
 
           tl.finished.then(() => {
             if (!running) return;
@@ -740,9 +788,8 @@
         isShifted = toRight;
         stopAnim();
 
-        const cursors = ['cur-alice', 'cur-bob', 'cur-carol']
-          .map(id => document.getElementById(id)).filter(Boolean);
-        const scene  = document.querySelector('#collab-slide .collab-scene');
+        const cursors = COLLAB_CURSORS.map(c => document.getElementById(c.id)).filter(Boolean);
+        const scene  = document.querySelector('.collab-slide')?.closest('section')?.querySelector('.collab-scene');
         const editor = document.getElementById('fake-editor');
 
         anime({
@@ -775,9 +822,10 @@
         if (typeof Reveal === 'undefined' || !Reveal.isReady()) {
           return setTimeout(boot, 80);
         }
-        Reveal.on('slidechanged', ({ currentSlide }) => {
-          if (currentSlide && currentSlide.id === 'collab-slide') {
-            // restore correct state on back-navigation
+        Reveal.on('slidechanged', ({ currentSlide, previousSlide }) => {
+          if (previousSlide && previousSlide.querySelector('.float-slide')) floatBehavior.stop();
+          if (currentSlide && currentSlide.querySelector('.float-slide')) floatBehavior.start(currentSlide);
+          if (currentSlide && currentSlide.querySelector('.collab-slide')) {
             const af = document.getElementById('appear-fragment');
             const sf = document.getElementById('start-fragment');
             const appeared = af && af.classList.contains('visible');
@@ -794,12 +842,13 @@
           if (fragment.id === 'layout-fragment') shiftLayout(true);
         });
         Reveal.on('fragmenthidden', ({ fragment }) => {
-          if (fragment.id === 'start-fragment')  stopLoop();   // cursors stay, loop stops
-          if (fragment.id === 'appear-fragment') stopAnim(true); // cursors fly out
+          if (fragment.id === 'start-fragment')  stopLoop();
+          if (fragment.id === 'appear-fragment') stopAnim(true);
           if (fragment.id === 'layout-fragment') shiftLayout(false);
         });
         const cur = Reveal.getCurrentSlide && Reveal.getCurrentSlide();
-        if (cur && cur.id === 'collab-slide') {
+        if (cur && cur.querySelector('.float-slide')) floatBehavior.start(cur);
+        if (cur && cur.querySelector('.collab-slide')) {
           const af = document.getElementById('appear-fragment');
           const sf = document.getElementById('start-fragment');
           if (sf && sf.classList.contains('visible'))       runAnim();
@@ -810,44 +859,6 @@
       document.addEventListener('DOMContentLoaded', boot);
     })();
     </script>
-    
-    <script>
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-      // slide changes (different for each slide format).
-      (function () {
-        // dispatch for htmlwidgets
-        function fireSlideEnter() {
-          const event = window.document.createEvent("Event");
-          event.initEvent("slideenter", true, true);
-          window.document.dispatchEvent(event);
-        }
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-          fireSlideEnter();
-
-          // dispatch for shiny
-          if (window.jQuery) {
-            if (previousSlide) {
-              window.jQuery(previousSlide).trigger("hidden");
-            }
-            if (currentSlide) {
-              window.jQuery(currentSlide).trigger("shown");
-            }
-          }
-        }
-
-        // hookup for slidy
-        if (window.w3c_slidy) {
-          window.w3c_slidy.add_observer(function (slide_num) {
-            // slide_num starts at position 1
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-          });
-        }
-
-      })();
-    </script>
-
     <script id="quarto-html-after-body" type="application/javascript">
       window.document.addEventListener("DOMContentLoaded", function (event) {
         const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")

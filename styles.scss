@@ -28,7 +28,7 @@ $body-color: theme-color("black");
 
 /*-- collab animation slide --*/
 
-#collab-slide {
+section:has(.collab-slide) {
   position: relative;
   overflow: hidden;
 }
