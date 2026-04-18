@@ -16,7 +16,111 @@ code-line-numbers: false
 
 ##
 
+It starts with the bluesky post from Chelsea
+will need to be doctored a little bit
+
+##
+
+Maybe show my reply?
+nevertheless, it sparked an idea
+
+##
+
+Why this was needed?
+
+try an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat
+
+##
+
+Small changes takes a lot of time.
+feels like 100x slower than in other slidecrafting tools
+
+##
+
+The first draft of editable
+
+outline of the initial algorithm
+
+- inject all of source document into the slides
+- add class to image
+- have code so it can be moved around, tracking the values
+- have save button
+  - it parses the source document (using regex)
+  - finds all moved images
+  - updates the source document with new x and y
+  - prompts the user to save the document as a file
+  - user save it in the same folder with the same name
+
+##
+
+list pros and cons
+
+pros:
+much faster
+intuitive controls
+
+cons:
+still slower than powerpoint
+requires regex
+fragile like crazy
+so much more logic to make everything work, espeically with multiple changes
+requires overwriting the source document
+all the bugs
+
+##
+
+mention quartohub here?
+seems right (we can mention that there are dual implementaitons depending on the quarto version)
+
+##
+
+Now since quarto renders so much faster,
+and we have the automerge stuff
+we get almost instant changes because it renders so fast
+the logic is so much smaller because we don't have to keep all changes, they happen one at a time
+and it only modifies the part of the document it needs,
+instead of modifing the whole thing
+
+##
+
+Show other things
+
+- text editing
+- image reszing, cropping
+- arrows
+- other things that will be implemented by then
+
+##
+
+Show that we no longer needs to tag something as editable
+
+(we are basically at parity with powerpoint now)
+
+##
+
+Show that since we have quartopub,
+we are not limited to just one person
+
 ::: {.collab-slide}
 :::
 
 {{< include collab-slide.qmd >}}
+
+##
+
+with quartopub we as data people can now colaborate with non-data people, in the manner and interface that suits them best
+
+##
+
+But wait, there is more
+
+all of this is based on html editing
+
+##
+
+Show that it works with all html formats
+
+##
+
+thanks
+
