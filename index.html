@@ -123,37 +123,37 @@
       margin-right: 0; 
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 
-<section class="slide level2">
-
-<div class="float-slide">
-
-</div>
-</section>
-<section id="section" class="slide level2">
+<section id="section" class="slide level2 float-slide">
 <h2></h2>
-<p>It starts with the bluesky post from Chelsea will need to be doctored a little bit</p>
-<p>https://bsky.app/profile/chelseaparlett.bsky.social/post/3loufhkxnkc2x</p>
 </section>
 <section id="section-1" class="slide level2">
 <h2></h2>
-<p>Maybe show my reply? nevertheless, it sparked an idea</p>
+<p>fine-control of elements of slides are hard</p>
+<p>Small changes takes a lot of time. feels like 100x slower than in other slidecrafting tools</p>
 </section>
 <section id="section-2" class="slide level2">
 <h2></h2>
-<p>Why this was needed?</p>
-<p>try an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat</p>
+<p>It starts with the bluesky post from Chelsea will need to be doctored a little bit</p>
+<p>https://bsky.app/profile/chelseaparlett.bsky.social/post/3loufhkxnkc2x</p>
+<p>she is right, this sucks, can we fix it?</p>
+<p>if start with post, still show the pain</p>
 </section>
 <section id="section-3" class="slide level2">
 <h2></h2>
-<p>Small changes takes a lot of time. feels like 100x slower than in other slidecrafting tools</p>
+<p>Maybe show my reply? nevertheless, it sparked an idea</p>
 </section>
 <section id="section-4" class="slide level2">
+<h2></h2>
+<p>try an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat</p>
+</section>
+<section id="section-5" class="slide level2">
 <h2></h2>
 <p>The first draft of editable</p>
 <p>outline of the initial algorithm</p>
@@ -171,21 +171,21 @@
 </ul></li>
 </ul>
 </section>
-<section id="section-5" class="slide level2">
-<h2></h2>
-<p>list pros and cons</p>
-<p>pros: much faster intuitive controls</p>
-<p>cons: still slower than powerpoint requires regex fragile like crazy so much more logic to make everything work, espeically with multiple changes requires overwriting the source document all the bugs</p>
-</section>
 <section id="section-6" class="slide level2">
 <h2></h2>
-<p>mention quartohub here? seems right (we can mention that there are dual implementaitons depending on the quarto version)</p>
+<p>list pros and cons</p>
+<p>pros: much faster intuitive controls using quarto as the data person</p>
+<p>cons: still slower than powerpoint requires regex fragile like crazy so much more logic to make everything work, espeically with multiple changes requires overwriting the source document all the bugs</p>
 </section>
 <section id="section-7" class="slide level2">
 <h2></h2>
-<p>Now since quarto renders so much faster, and we have the automerge stuff we get almost instant changes because it renders so fast the logic is so much smaller because we don’t have to keep all changes, they happen one at a time and it only modifies the part of the document it needs, instead of modifing the whole thing</p>
+<p>mention quartohub here? seems right (we can mention that there are dual implementaitons depending on the quarto version)</p>
 </section>
 <section id="section-8" class="slide level2">
+<h2></h2>
+<p>Now since quarto renders so much faster, and we have the automerge stuff we get almost instant changes because it renders so fast the logic is so much smaller because we don’t have to keep all changes, they happen one at a time and it only modifies the part of the document it needs, instead of modifing the whole thing</p>
+</section>
+<section id="section-9" class="slide level2">
 <h2></h2>
 <p>Show other things</p>
 <ul>
@@ -195,17 +195,14 @@
 <li>other things that will be implemented by then</li>
 </ul>
 </section>
-<section id="section-9" class="slide level2">
+<section id="section-10" class="slide level2">
 <h2></h2>
 <p>Show that we no longer needs to tag something as editable</p>
 <p>(we are basically at parity with powerpoint now)</p>
 </section>
-<section id="section-10" class="slide level2">
+<section id="section-11" class="slide level2 collab-slide">
 <h2></h2>
 <p>Show that since we have quartopub, we are not limited to just one person</p>
-<div class="collab-slide">
-
-</div>
 <span class="fragment" id="appear-fragment" style="position:absolute;pointer-events:none"></span>
 <span class="fragment" id="start-fragment" style="position:absolute;pointer-events:none"></span>
 <span class="fragment" id="layout-fragment" style="position:absolute;pointer-events:none"></span>
@@ -249,20 +246,20 @@
   </div>
 </div>
 </section>
-<section id="section-11" class="slide level2">
+<section id="section-12" class="slide level2">
 <h2></h2>
 <p>with quartopub we as data people can now colaborate with non-data people, in the manner and interface that suits them best</p>
 </section>
-<section id="section-12" class="slide level2">
+<section id="section-13" class="slide level2">
 <h2></h2>
-<p>But wait, there is more</p>
+<p>But wait, there is more NOTE: do this as adding things to the pro section</p>
 <p>all of this is based on html editing</p>
 </section>
-<section id="section-13" class="slide level2">
+<section id="section-14" class="slide level2">
 <h2></h2>
 <p>Show that it works with all html formats</p>
 </section>
-<section id="section-14" class="slide level2">
+<section id="section-15" class="slide level2">
 <h2></h2>
 <p>thanks</p>
 
@@ -281,6 +278,7 @@
   <script src="index_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-anime/revealjs-anime.js"></script>
   <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -473,7 +471,7 @@
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealAnime, QuartoSupport,
 
           RevealMath,
           RevealNotes,
@@ -482,10 +480,12 @@
         ]
       });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
     <script type="text/javascript">
     (function () {
       'use strict';
+
+      // anime.js is loaded via include-in-header; RevealJS lifecycle wiring comes
+      // from the revealjs-anime plugin (window.RevealAnime).
 
       // ── Cursor factory ────────────────────────────────────────────────────────
 
@@ -518,18 +518,11 @@
       }
 
       // ── Coordinate helper ─────────────────────────────────────────────────────
+      // RevealAnime.slideCoordsOf converts screen pixels to slide-internal units.
 
       function posIn(el, section) {
-        const er = el.getBoundingClientRect();
-        const sr = section.getBoundingClientRect();
-        const sx = 1280 / sr.width;
-        const sy = 720  / sr.height;
-        return {
-          x: (er.left - sr.left) * sx,
-          y: (er.top  - sr.top)  * sy,
-          w: er.width  * sx,
-          h: er.height * sy,
-        };
+        const c = RevealAnime.slideCoordsOf(section, el);
+        return { x: c.x, y: c.y, w: c.width, h: c.height };
       }
 
       // ── Float behavior factory ─────────────────────────────────────────────────
@@ -653,8 +646,7 @@
 
       // ── Cursor appearance ─────────────────────────────────────────────────────
 
-      function appearAnim() {
-        const section = document.querySelector('.collab-slide')?.closest('section');
+      function appearAnim(section) {
         if (!section) return;
 
         ensureCursors(section, COLLAB_CURSORS);
@@ -680,13 +672,12 @@
 
       // ── Main animation loop ───────────────────────────────────────────────────
 
-      function runAnim() {
+      function runAnim(section) {
         if (running) return;
         running = true;
 
         if (currentTl) { currentTl.pause(); currentTl = null; }
 
-        const section = document.querySelector('.collab-slide')?.closest('section');
         if (!section) { running = false; return; }
 
         ensureCursors(section, COLLAB_CURSORS);
@@ -706,8 +697,6 @@
 
         anime.set(textEl, { translateY: 0, scale: 1 });
         anime.set(imgEl,  { width: '300px' });
-
-        const kariIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
 
         const tp = posIn(textEl, section);
         const ip = posIn(imgEl,  section);
@@ -877,12 +866,12 @@
 
       // ── Fragment shift ────────────────────────────────────────────────────────
 
-      function shiftLayout(toRight) {
+      function shiftLayout(section, toRight) {
         isShifted = toRight;
         stopAnim();
 
         const cursors = COLLAB_CURSORS.map(c => document.getElementById(c.id)).filter(Boolean);
-        const scene  = document.querySelector('.collab-slide')?.closest('section')?.querySelector('.collab-scene');
+        const scene  = section.querySelector('.collab-scene');
         const editor = document.getElementById('fake-editor');
 
         anime({
@@ -891,7 +880,7 @@
             scene.classList.toggle('right-half', toRight);
             anime({ targets: editor, opacity: toRight ? 1 : 0,
                     duration: 500, easing: 'easeOutQuad' });
-            setTimeout(runAnim, 700);
+            setTimeout(() => runAnim(section), 700);
           }
         });
       }
@@ -911,45 +900,30 @@
 
       // ── RevealJS wiring ───────────────────────────────────────────────────────
 
-      function boot() {
-        if (typeof Reveal === 'undefined' || !Reveal.isReady()) {
-          return setTimeout(boot, 80);
-        }
-        Reveal.on('slidechanged', ({ currentSlide, previousSlide }) => {
-          if (previousSlide && previousSlide.querySelector('.float-slide')) floatBehavior.stop();
-          if (currentSlide && currentSlide.querySelector('.float-slide')) floatBehavior.start(currentSlide);
-          if (currentSlide && currentSlide.querySelector('.collab-slide')) {
-            const af = document.getElementById('appear-fragment');
-            const sf = document.getElementById('start-fragment');
-            const appeared = af && af.classList.contains('visible');
-            const started  = sf && sf.classList.contains('visible');
-            if (started)       runAnim();
-            else if (appeared) appearAnim();
-          } else {
-            stopAnim();
-          }
-        });
-        Reveal.on('fragmentshown', ({ fragment }) => {
-          if (fragment.id === 'appear-fragment') appearAnim();
-          if (fragment.id === 'start-fragment')  runAnim();
-          if (fragment.id === 'layout-fragment') shiftLayout(true);
-        });
-        Reveal.on('fragmenthidden', ({ fragment }) => {
-          if (fragment.id === 'start-fragment')  stopLoop();
-          if (fragment.id === 'appear-fragment') stopAnim(true);
-          if (fragment.id === 'layout-fragment') shiftLayout(false);
-        });
-        const cur = Reveal.getCurrentSlide && Reveal.getCurrentSlide();
-        if (cur && cur.querySelector('.float-slide')) floatBehavior.start(cur);
-        if (cur && cur.querySelector('.collab-slide')) {
-          const af = document.getElementById('appear-fragment');
-          const sf = document.getElementById('start-fragment');
-          if (sf && sf.classList.contains('visible'))       runAnim();
-          else if (af && af.classList.contains('visible'))  appearAnim();
-        }
-      }
+      RevealAnime.defineSlide('float-slide', {
+        enter: (section) => {
+          floatBehavior.start(section);
+          return () => floatBehavior.stop();
+        },
+      });
 
-      document.addEventListener('DOMContentLoaded', boot);
+      RevealAnime.defineSlide('collab-slide', {
+        leave: () => stopAnim(),
+        fragments: {
+          'appear-fragment': (section) => {
+            appearAnim(section);
+            return () => stopAnim(true);
+          },
+          'start-fragment': (section) => {
+            runAnim(section);
+            return () => stopLoop();
+          },
+          'layout-fragment': {
+            show: (section) => { shiftLayout(section, true);  },
+            hide: (section) => { shiftLayout(section, false); },
+          },
+        },
+      });
     })();
     </script>
     <script id="quarto-html-after-body" type="application/javascript">

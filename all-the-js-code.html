@@ -1,7 +1,9 @@
-<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
 <script type="text/javascript">
 (function () {
   'use strict';
+
+  // anime.js is loaded via include-in-header; RevealJS lifecycle wiring comes
+  // from the revealjs-anime plugin (window.RevealAnime).
 
   // ── Cursor factory ────────────────────────────────────────────────────────
 
@@ -34,18 +36,11 @@
   }
 
   // ── Coordinate helper ─────────────────────────────────────────────────────
+  // RevealAnime.slideCoordsOf converts screen pixels to slide-internal units.
 
   function posIn(el, section) {
-    const er = el.getBoundingClientRect();
-    const sr = section.getBoundingClientRect();
-    const sx = 1280 / sr.width;
-    const sy = 720  / sr.height;
-    return {
-      x: (er.left - sr.left) * sx,
-      y: (er.top  - sr.top)  * sy,
-      w: er.width  * sx,
-      h: er.height * sy,
-    };
+    const c = RevealAnime.slideCoordsOf(section, el);
+    return { x: c.x, y: c.y, w: c.width, h: c.height };
   }
 
   // ── Float behavior factory ─────────────────────────────────────────────────
@@ -169,8 +164,7 @@
 
   // ── Cursor appearance ─────────────────────────────────────────────────────
 
-  function appearAnim() {
-    const section = document.querySelector('.collab-slide')?.closest('section');
+  function appearAnim(section) {
     if (!section) return;
 
     ensureCursors(section, COLLAB_CURSORS);
@@ -196,13 +190,12 @@
 
   // ── Main animation loop ───────────────────────────────────────────────────
 
-  function runAnim() {
+  function runAnim(section) {
     if (running) return;
     running = true;
 
     if (currentTl) { currentTl.pause(); currentTl = null; }
 
-    const section = document.querySelector('.collab-slide')?.closest('section');
     if (!section) { running = false; return; }
 
     ensureCursors(section, COLLAB_CURSORS);
@@ -222,8 +215,6 @@
 
     anime.set(textEl, { translateY: 0, scale: 1 });
     anime.set(imgEl,  { width: '300px' });
-
-    const kariIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
 
     const tp = posIn(textEl, section);
     const ip = posIn(imgEl,  section);
@@ -393,12 +384,12 @@
 
   // ── Fragment shift ────────────────────────────────────────────────────────
 
-  function shiftLayout(toRight) {
+  function shiftLayout(section, toRight) {
     isShifted = toRight;
     stopAnim();
 
     const cursors = COLLAB_CURSORS.map(c => document.getElementById(c.id)).filter(Boolean);
-    const scene  = document.querySelector('.collab-slide')?.closest('section')?.querySelector('.collab-scene');
+    const scene  = section.querySelector('.collab-scene');
     const editor = document.getElementById('fake-editor');
 
     anime({
@@ -407,7 +398,7 @@
         scene.classList.toggle('right-half', toRight);
         anime({ targets: editor, opacity: toRight ? 1 : 0,
                 duration: 500, easing: 'easeOutQuad' });
-        setTimeout(runAnim, 700);
+        setTimeout(() => runAnim(section), 700);
       }
     });
   }
@@ -427,44 +418,29 @@
 
   // ── RevealJS wiring ───────────────────────────────────────────────────────
 
-  function boot() {
-    if (typeof Reveal === 'undefined' || !Reveal.isReady()) {
-      return setTimeout(boot, 80);
-    }
-    Reveal.on('slidechanged', ({ currentSlide, previousSlide }) => {
-      if (previousSlide && previousSlide.querySelector('.float-slide')) floatBehavior.stop();
-      if (currentSlide && currentSlide.querySelector('.float-slide')) floatBehavior.start(currentSlide);
-      if (currentSlide && currentSlide.querySelector('.collab-slide')) {
-        const af = document.getElementById('appear-fragment');
-        const sf = document.getElementById('start-fragment');
-        const appeared = af && af.classList.contains('visible');
-        const started  = sf && sf.classList.contains('visible');
-        if (started)       runAnim();
-        else if (appeared) appearAnim();
-      } else {
-        stopAnim();
-      }
-    });
-    Reveal.on('fragmentshown', ({ fragment }) => {
-      if (fragment.id === 'appear-fragment') appearAnim();
-      if (fragment.id === 'start-fragment')  runAnim();
-      if (fragment.id === 'layout-fragment') shiftLayout(true);
-    });
-    Reveal.on('fragmenthidden', ({ fragment }) => {
-      if (fragment.id === 'start-fragment')  stopLoop();
-      if (fragment.id === 'appear-fragment') stopAnim(true);
-      if (fragment.id === 'layout-fragment') shiftLayout(false);
-    });
-    const cur = Reveal.getCurrentSlide && Reveal.getCurrentSlide();
-    if (cur && cur.querySelector('.float-slide')) floatBehavior.start(cur);
-    if (cur && cur.querySelector('.collab-slide')) {
-      const af = document.getElementById('appear-fragment');
-      const sf = document.getElementById('start-fragment');
-      if (sf && sf.classList.contains('visible'))       runAnim();
-      else if (af && af.classList.contains('visible'))  appearAnim();
-    }
-  }
+  RevealAnime.defineSlide('float-slide', {
+    enter: (section) => {
+      floatBehavior.start(section);
+      return () => floatBehavior.stop();
+    },
+  });
 
-  document.addEventListener('DOMContentLoaded', boot);
+  RevealAnime.defineSlide('collab-slide', {
+    leave: () => stopAnim(),
+    fragments: {
+      'appear-fragment': (section) => {
+        appearAnim(section);
+        return () => stopAnim(true);
+      },
+      'start-fragment': (section) => {
+        runAnim(section);
+        return () => stopLoop();
+      },
+      'layout-fragment': {
+        show: (section) => { shiftLayout(section, true);  },
+        hide: (section) => { shiftLayout(section, false); },
+      },
+    },
+  });
 })();
 </script>

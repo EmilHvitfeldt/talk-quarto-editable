@@ -4,15 +4,19 @@ format:
     theme: [default, styles.scss]
     width: 1280
     height: 720
-    include-after-body: 
+    revealjs-plugins:
+      - revealjs-anime
+    include-in-header:
+      - text: |
+          <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+    include-after-body:
       - "all-the-js-code.html"
 pagetitle: Title of Talk
 echo: false
 code-line-numbers: false
 ---
 
-::: {.float-slide}
-:::
+## {.float-slide}
 
 ##
 
@@ -103,13 +107,10 @@ Show that we no longer needs to tag something as editable
 
 (we are basically at parity with powerpoint now)
 
-##
+## {.collab-slide}
 
 Show that since we have quartopub,
 we are not limited to just one person
-
-::: {.collab-slide}
-:::
 
 {{< include _collab-slide.qmd >}}
 
