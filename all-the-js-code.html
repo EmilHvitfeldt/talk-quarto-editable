@@ -7,25 +7,20 @@
 
   // ── Cursor factory ────────────────────────────────────────────────────────
 
+  // `name` is optional — omit it for a bare arrow with no label.
   function makeCursor(id, name, color) {
     const el = document.createElement('div');
-    el.id = id;
+    if (id) el.id = id;
     el.className = 'collab-cursor-node';
+    const tag = name
+      ? `<span class="collab-cursor-name" style="background:${color}">${name}</span>`
+      : '';
     el.innerHTML = `
       <svg width="28" height="34" viewBox="0 0 11 14" xmlns="http://www.w3.org/2000/svg"
-           style="filter:drop-shadow(0 1px 3px rgba(0,0,0,.4));flex-shrink:0">
+           class="collab-cursor-arrow">
         <path d="M0 0 L0 12 L3.2 8.8 L5.4 14 L7.2 13.3 L5 7.8 L9 7.8 Z"
               fill="${color}" stroke="white" stroke-width=".7" stroke-linejoin="round"/>
-      </svg>
-      <span style="
-        background:${color};color:#fff;
-        font:700 11px/1 -apple-system,sans-serif;
-        padding:3px 8px;border-radius:0 4px 4px 4px;
-        margin-top:16px;margin-left:1px;
-        white-space:nowrap;
-        box-shadow:0 1px 4px rgba(0,0,0,.25);
-      ">${name}</span>
-    `;
+      </svg>${tag}`;
     return el;
   }
 
@@ -416,7 +411,164 @@
     if (i) anime.set(i, { width: '300px' });
   }
 
+  // ── Drag-in fragments ─────────────────────────────────────────────────────
+  // Any `.fragment.drag-in` element gets hauled onto the slide by a cursor
+  // when its fragment is shown, and hauled back off when it is hidden.
+  // Optional attributes:
+  //
+  //   from="left|right|top|bottom"  edge to enter from
+  //                                 (default: nearest side edge)
+  //   cursor="Kari"                 name shown on the tag
+  //   color="#e91e8c"               cursor color
+  //   duration="900"                haul duration in ms
+  //
+  // Pandoc passes unknown div attributes straight through to the HTML, so
+  // these need no data- prefix. `data-*` spellings work too.
+
+  const DRAG_MARGIN = 80;
+  const DRAG_PALETTE = ['#e91e8c', '#1565c0', '#f9a825', '#2e7d32', '#6a1b9a'];
+  let dragPaletteAt = 0;
+
+  // Read `name`, falling back to `data-name`.
+  function dragAttr(el, name) {
+    return el.getAttribute(name) || el.getAttribute('data-' + name) || null;
+  }
+
+  function dragCursorFor(el) {
+    if (!el._dragCursor) {
+      const color = dragAttr(el, 'color')
+        || DRAG_PALETTE[dragPaletteAt++ % DRAG_PALETTE.length];
+      el._dragCursor = makeCursor(null, dragAttr(el, 'cursor'), color);
+    }
+    return el._dragCursor;
+  }
+
+  // Offscreen translate offset and grab point, both in slide coordinates.
+  // Must be called while the element sits at rest (no transform applied).
+  function dragGeometry(section, el) {
+    const c = posIn(el, section);
+    const from = dragAttr(el, 'from')
+      || (c.x + c.w / 2 < RevealAnime.SLIDE_W / 2 ? 'left' : 'right');
+
+    let dx = 0;
+    let dy = 0;
+    if (from === 'left')   dx = -(c.x + c.w + DRAG_MARGIN);
+    if (from === 'right')  dx = RevealAnime.SLIDE_W - c.x + DRAG_MARGIN;
+    if (from === 'top')    dy = -(c.y + c.h + DRAG_MARGIN);
+    if (from === 'bottom') dy = RevealAnime.SLIDE_H - c.y + DRAG_MARGIN;
+
+    // Grab inside the element but near its top-left corner — holding a wide
+    // block by its middle does not read as dragging.
+    return {
+      dx, dy,
+      gx: c.x + Math.min(c.w * 0.3, 140),
+      gy: c.y + Math.min(c.h * 0.35, 70),
+    };
+  }
+
+  function haulIn(section, el) {
+    const cursor = dragCursorFor(el);
+    if (!cursor.isConnected) section.appendChild(cursor);
+    anime.remove([el, cursor]);
+    el.classList.remove('drag-leaving');
+
+    anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
+    const { dx, dy, gx, gy } = dragGeometry(section, el);
+    const dur = Number(dragAttr(el, 'duration')) || 900;
+
+    anime.set(el, { translateX: dx, translateY: dy });
+    anime.set(cursor, { translateX: gx + dx, translateY: gy + dy, opacity: 0 });
+
+    // Overshoot as a fraction of the distance travelled. `easeOutBack` would
+    // do this in one tween, but its overshoot is hardcoded at ~13% in anime v3
+    // (the amount parameter is ignored), which reads as a rubber band at these
+    // distances. Explicit keyframes keep it tunable.
+    // Travel distance includes the element's own width, so a full-width block
+    // travels ~1300px and a bare percentage would still fling it. Cap it.
+    const OVERSHOOT = 0.04;
+    const OVERSHOOT_MAX = 18;
+    const past = (v) =>
+      -Math.sign(v) * Math.min(Math.abs(v) * OVERSHOOT, OVERSHOOT_MAX);
+
+    const glide = (to) => [
+      { translateX: to.x + past(dx), translateY: to.y + past(dy),
+        duration: dur * 0.8, easing: 'easeOutQuad' },
+      { translateX: to.x, translateY: to.y,
+        duration: dur * 0.2, easing: 'easeOutQuad' },
+    ];
+
+    const tl = anime.timeline();
+    el._dragTl = tl;
+    // Element and cursor share the motion, or the cursor visibly lets go
+    // mid-flight.
+    tl.add({ targets: cursor, opacity: 1, duration: 160, easing: 'easeOutQuad' }, 0)
+      .add({ targets: el, keyframes: glide({ x: 0, y: 0 }) }, 0)
+      .add({ targets: cursor, keyframes: glide({ x: gx, y: gy }) }, 0)
+      // release: the cursor lets go and drifts back out the way it came
+      .add({ targets: cursor, translateX: gx + dx * 0.35, translateY: gy + dy * 0.35,
+             opacity: 0, duration: 520, easing: 'easeInQuad' }, dur + 180);
+  }
+
+  function haulOut(section, el) {
+    const cursor = dragCursorFor(el);
+    if (!cursor.isConnected) section.appendChild(cursor);
+    anime.remove([el, cursor]);
+
+    // Reveal has already dropped the `visible` class, so hold the element on
+    // screen ourselves for the length of the animation.
+    el.classList.add('drag-leaving');
+    anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
+
+    const { dx, dy, gx, gy } = dragGeometry(section, el);
+    const dur = Number(dragAttr(el, 'duration')) || 900;
+
+    anime.set(cursor, { translateX: gx + dx * 0.35, translateY: gy + dy * 0.35, opacity: 0 });
+
+    const tl = anime.timeline();
+    el._dragTl = tl;
+    tl.add({ targets: cursor, translateX: gx, translateY: gy, opacity: 1,
+             duration: 420, easing: 'easeOutCubic' }, 0)
+      // grab squeeze — keyframes so the tween reliably lands back on scale 1.
+      // The drag must not start until this finishes: two concurrent tweens on
+      // the same element's transform leave a stale scale behind.
+      .add({ targets: el, easing: 'easeOutQuad',
+             keyframes: [{ scale: 1.03, duration: 140 }, { scale: 1, duration: 140 }] }, 420)
+      .add({ targets: el, translateX: dx, translateY: dy,
+             duration: dur, easing: 'easeInCubic' }, 700)
+      .add({ targets: cursor, translateX: gx + dx, translateY: gy + dy,
+             duration: dur, easing: 'easeInCubic' }, 700)
+      .add({ targets: cursor, opacity: 0, duration: 200, easing: 'linear' },
+            700 + dur - 200);
+
+    tl.finished.then(() => {
+      if (el._dragTl !== tl) return;      // superseded by a new haul
+      el.classList.remove('drag-leaving');
+      anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
+    });
+  }
+
+  // The marker may sit on the fragment itself or on elements inside it.
+  function dragTargets(fragment) {
+    return fragment.classList.contains('drag-in')
+      ? [fragment]
+      : Array.from(fragment.querySelectorAll('.drag-in'));
+  }
+
   // ── RevealJS wiring ───────────────────────────────────────────────────────
+
+  // Drag-in fragments are not tied to a single slide class, so they wire
+  // straight into Reveal rather than going through defineSlide.
+  (function whenReveal() {
+    if (typeof Reveal === 'undefined' || !Reveal.on) { setTimeout(whenReveal, 50); return; }
+    Reveal.on('fragmentshown', (e) => {
+      const section = e.fragment.closest('section');
+      dragTargets(e.fragment).forEach(el => haulIn(section, el));
+    });
+    Reveal.on('fragmenthidden', (e) => {
+      const section = e.fragment.closest('section');
+      dragTargets(e.fragment).forEach(el => haulOut(section, el));
+    });
+  })();
 
   RevealAnime.defineSlide('float-slide', {
     enter: (section) => {

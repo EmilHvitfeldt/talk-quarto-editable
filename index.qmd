@@ -18,6 +18,26 @@ code-line-numbers: false
 
 ## {.float-slide}
 
+## Dragged in
+
+::: {.fragment .drag-in from="left" cursor="Kari"}
+Content that a cursor hauls in from the left.
+:::
+
+::: {.fragment .drag-in from="right" cursor="John"}
+And another one, from the right.
+:::
+
+::: {.fragment .drag-in from="bottom" cursor="Hailey" duration="1200"}
+Slower, from the bottom.
+:::
+
+::: fragment
+![](lizard.gif){.drag-in from="top" width="200"}
+
+[Two things, one keypress.]{.drag-in from="bottom" cursor="Kari"}
+:::
+
 ##
 
 fine-control of elements of slides are hard

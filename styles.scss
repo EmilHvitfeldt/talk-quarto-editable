@@ -189,3 +189,48 @@ section:has(.collab-slide) {
   align-items: flex-start;
 }
 
+.collab-cursor-arrow {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+  flex-shrink: 0;
+}
+
+.collab-cursor-name {
+  color: #fff;
+  font: 700 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 3px 8px;
+  border-radius: 0 4px 4px 4px;
+  margin-top: 16px;
+  margin-left: 1px;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+/*-- drag-in fragments --*/
+
+/* Slides hosting dragged content must anchor the absolutely positioned
+   cursors, and must not clip content while it is still off-slide. */
+.reveal .slides section:has(.drag-in) {
+  position: relative;
+  overflow: visible;
+}
+
+/* Reveal's default fragment transition is `all`, which fights anime.js over
+   the transform. Restrict it to opacity and let anime own the movement. */
+.reveal .slides section .drag-in {
+  transition: opacity 0.15s ease;
+  will-change: transform;
+}
+
+/* `transform` does not apply to non-replaced inline elements, so an inline
+   span marked .drag-in would never move. */
+.reveal .slides section span.drag-in {
+  display: inline-block;
+}
+
+/* Held on screen by JS for the length of the drag-out, after Reveal has
+   already removed the `visible` class. */
+.reveal .slides section .drag-leaving {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
