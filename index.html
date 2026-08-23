@@ -138,6 +138,7 @@
 <section id="section" class="slide level2">
 <h2></h2>
 <p>It starts with the bluesky post from Chelsea will need to be doctored a little bit</p>
+<p>https://bsky.app/profile/chelseaparlett.bsky.social/post/3loufhkxnkc2x</p>
 </section>
 <section id="section-1" class="slide level2">
 <h2></h2>
@@ -533,14 +534,8 @@
 
       // ── Float behavior factory ─────────────────────────────────────────────────
 
-      function edgePos() {
-        const region = Math.floor(Math.random() * 4);
-        switch (region) {
-          case 0: return { x: Math.random() * 250 + 30,   y: Math.random() * 660 + 30  }; // left
-          case 1: return { x: Math.random() * 250 + 1000, y: Math.random() * 660 + 30  }; // right
-          case 2: return { x: Math.random() * 1220 + 30,  y: Math.random() * 130 + 30  }; // top
-          default: return { x: Math.random() * 1220 + 30, y: Math.random() * 100 + 590 }; // bottom
-        }
+      function randomPos() {
+        return { x: Math.random() * 1200 + 40, y: Math.random() * 640 + 40 };
       }
 
       function makeFloatBehavior(cursorDefs) {
@@ -548,13 +543,29 @@
 
         function floatOne(el) {
           if (!running) return;
-          const { x, y } = edgePos();
+          const start = randomPos();
+          const end   = randomPos();
+
+          // glide to click-start position
           anime({
-            targets: el, translateX: x, translateY: y,
-            duration: 2000 + Math.random() * 3000,
-            delay: Math.random() * 800,
+            targets: el,
+            translateX: start.x, translateY: start.y,
+            duration: 2000 + Math.random() * 1500,
             easing: 'easeInOutQuad',
-            complete: () => floatOne(el),
+            complete() {
+              if (!running) return;
+              // brief hover pause before dragging
+              setTimeout(() => {
+                if (!running) return;
+                anime({
+                  targets: el,
+                  translateX: end.x, translateY: end.y,
+                  duration: 2500 + Math.random() * 2500,
+                  easing: 'easeInOutSine',
+                  complete: () => floatOne(el),
+                });
+              }, 250 + Math.random() * 350);
+            },
           });
         }
 
@@ -565,7 +576,7 @@
             ensureCursors(section, cursorDefs);
             cursorDefs.forEach(({ id }) => {
               const el = document.getElementById(id);
-              const { x, y } = edgePos();
+              const { x, y } = randomPos();
               anime.set(el, { translateX: x, translateY: y, opacity: 1 });
               floatOne(el);
             });

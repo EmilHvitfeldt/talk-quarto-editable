@@ -16,8 +16,21 @@ code-line-numbers: false
 
 ##
 
+fine-control of elements of slides are hard
+
+Small changes takes a lot of time.
+feels like 100x slower than in other slidecrafting tools
+
+##
+
 It starts with the bluesky post from Chelsea
 will need to be doctored a little bit
+
+https://bsky.app/profile/chelseaparlett.bsky.social/post/3loufhkxnkc2x
+
+she is right, this sucks, can we fix it?
+
+if start with post, still show the pain
 
 ##
 
@@ -26,14 +39,7 @@ nevertheless, it sparked an idea
 
 ##
 
-Why this was needed?
-
 try an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat
-
-##
-
-Small changes takes a lot of time.
-feels like 100x slower than in other slidecrafting tools
 
 ##
 
@@ -58,6 +64,7 @@ list pros and cons
 pros:
 much faster
 intuitive controls
+using quarto as the data person
 
 cons:
 still slower than powerpoint
@@ -104,7 +111,7 @@ we are not limited to just one person
 ::: {.collab-slide}
 :::
 
-{{< include collab-slide.qmd >}}
+{{< include _collab-slide.qmd >}}
 
 ##
 
@@ -113,6 +120,7 @@ with quartopub we as data people can now colaborate with non-data people, in the
 ##
 
 But wait, there is more
+NOTE: do this as adding things to the pro section
 
 all of this is based on html editing
 

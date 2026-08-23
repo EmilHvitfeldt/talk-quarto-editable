@@ -1,0 +1,41 @@
+---
+title: "editable Example"
+format:
+  revealjs: default
+revealjs-plugins:
+  - editable
+filters:
+  - editable
+---
+
+## In the morning
+
+![](image.png){.absolute width=454.9px height=546.1px left=599.1px top=37.9px}
+
+::: {.absolute width=490px height=156px left=0px top=89px}
+I think that I shall never see
+
+A poem lovely as a tree.
+
+From "Trees" by Joyce Kilmer
+:::
+
+## text
+
+::: {.absolute width=1047px height=314px left=0px top=89px}
+Lorem ipsum dolor sit amet, `lm(mpg ~ disp, mtcars)` consectetur adipiscing elit. Praesent sed diam rutrum, porta nulla vitae, elementum lacus.
+
+**Donec** et congue sapien. *Praesent* quis dui nulla. ***Donec*** convallis, risus a sodales ~~luctus~~, diam eros dapibus ante, ac pharetra nulla odio at lorem.
+:::
+
+## Tests - backslashes are preserved
+
+Explicit spaces\ \ 
+
+```r
+"\\d"
+```
+
+```r
+rename_all(\(x))
+```
