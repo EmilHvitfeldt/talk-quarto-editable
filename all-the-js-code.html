@@ -422,6 +422,16 @@
   //   color="#e91e8c"               cursor color
   //   duration="900"                haul duration in ms
   //
+  // Add `fix="Name"` and the first cursor drops the content slightly off its
+  // mark, then a second cursor flies in and nudges it into place:
+  //
+  //   fix="John"                    name of the correcting cursor
+  //   fix-color="#1565c0"           its color
+  //   fix-delay="450"               beat between the drop and the correction
+  //   off="-70,38"                  how wrong the first drop is, "x,y" in
+  //                                 slide px (default: short of the mark,
+  //                                 plus a little cross-axis sloppiness)
+  //
   // Pandoc passes unknown div attributes straight through to the HTML, so
   // these need no data- prefix. `data-*` spellings work too.
 
@@ -443,8 +453,43 @@
     return el._dragCursor;
   }
 
+  function fixCursorFor(el) {
+    if (!el._fixCursor) {
+      const color = dragAttr(el, 'fix-color')
+        || DRAG_PALETTE[dragPaletteAt++ % DRAG_PALETTE.length];
+      el._fixCursor = makeCursor(null, dragAttr(el, 'fix'), color);
+    }
+    return el._fixCursor;
+  }
+
+  // Every cursor belonging to an element, so cleanup never misses one.
+  function allDragCursors(el) {
+    return [el._dragCursor, el._fixCursor].filter(Boolean);
+  }
+
+  // How badly the first cursor misses. Default: stops short along the axis it
+  // travelled, and drifts a little off it — the way a real sloppy drop reads.
+  function dropOffset(el, dx, dy) {
+    const explicit = dragAttr(el, 'off');
+    if (explicit) {
+      const [x, y] = explicit.split(',').map(n => Number(n.trim()) || 0);
+      return { x, y };
+    }
+    return dx !== 0
+      ? { x: Math.sign(dx) * 70, y: 38 }
+      : { x: 44, y: Math.sign(dy) * 60 };
+  }
+
+  // The element's current translate, so an interrupted haul can carry on from
+  // wherever it actually is instead of snapping.
+  function currentTranslate(el) {
+    const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
+    return { x: m.m41, y: m.m42 };
+  }
+
   // Offscreen translate offset and grab point, both in slide coordinates.
-  // Must be called while the element sits at rest (no transform applied).
+  // Must be called while the element sits at rest (no transform applied) —
+  // getBoundingClientRect() includes any transform currently on the element.
   function dragGeometry(section, el) {
     const c = posIn(el, section);
     const from = dragAttr(el, 'from')
@@ -469,8 +514,9 @@
   function haulIn(section, el) {
     const cursor = dragCursorFor(el);
     if (!cursor.isConnected) section.appendChild(cursor);
-    anime.remove([el, cursor]);
+    anime.remove([el, ...allDragCursors(el)]);
     el.classList.remove('drag-leaving');
+    if (el._fixCursor) anime.set(el._fixCursor, { opacity: 0 });
 
     anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
     const { dx, dy, gx, gy } = dragGeometry(section, el);
@@ -497,36 +543,86 @@
         duration: dur * 0.2, easing: 'easeOutQuad' },
     ];
 
+    // With a `fix` cursor the first drop lands off the mark and gets corrected;
+    // otherwise it lands square on it.
+    const fixName = dragAttr(el, 'fix');
+    const off = fixName ? dropOffset(el, dx, dy) : { x: 0, y: 0 };
+
     const tl = anime.timeline();
     el._dragTl = tl;
     // Element and cursor share the motion, or the cursor visibly lets go
     // mid-flight.
     tl.add({ targets: cursor, opacity: 1, duration: 160, easing: 'easeOutQuad' }, 0)
-      .add({ targets: el, keyframes: glide({ x: 0, y: 0 }) }, 0)
-      .add({ targets: cursor, keyframes: glide({ x: gx, y: gy }) }, 0)
+      .add({ targets: el, keyframes: glide(off) }, 0)
+      .add({ targets: cursor, keyframes: glide({ x: gx + off.x, y: gy + off.y }) }, 0)
       // release: the cursor lets go and drifts back out the way it came
-      .add({ targets: cursor, translateX: gx + dx * 0.35, translateY: gy + dy * 0.35,
+      .add({ targets: cursor, translateX: gx + off.x + dx * 0.35,
+             translateY: gy + off.y + dy * 0.35,
              opacity: 0, duration: 520, easing: 'easeInQuad' }, dur + 180);
+
+    if (!fixName) return;
+
+    // ── The correction ──────────────────────────────────────────────────────
+    // Appended to the same timeline rather than scheduled on a timer, so
+    // navigating away mid-sequence cancels it along with everything else.
+
+    const fixer = fixCursorFor(el);
+    if (!fixer.isConnected) section.appendChild(fixer);
+    anime.remove(fixer);
+
+    // The fixer arrives from whichever side of the slide it has room on, so it
+    // never retraces the first cursor's path.
+    const fromRight = gx + off.x < RevealAnime.SLIDE_W / 2;
+    const fixEntryX = fromRight ? RevealAnime.SLIDE_W + 90 : -140;
+    const grabX = gx + off.x;
+    const grabY = gy + off.y;
+
+    anime.set(fixer, { translateX: fixEntryX, translateY: grabY + 70, opacity: 0 });
+
+    const tFix = dur + 180 + (Number(dragAttr(el, 'fix-delay')) || 450);
+
+    tl.add({ targets: fixer, translateX: grabX, translateY: grabY, opacity: 1,
+             duration: 620, easing: 'easeOutCubic' }, tFix)
+      // grab, then nudge into place: crisp and without overshoot, because this
+      // is the move that reads as "actually correct now"
+      .add({ targets: el, easing: 'easeOutQuad',
+             keyframes: [{ scale: 1.02, duration: 130 }, { scale: 1, duration: 130 }] },
+            tFix + 620)
+      .add({ targets: el, translateX: 0, translateY: 0,
+             duration: 520, easing: 'easeInOutQuad' }, tFix + 880)
+      .add({ targets: fixer, translateX: gx, translateY: gy,
+             duration: 520, easing: 'easeInOutQuad' }, tFix + 880)
+      .add({ targets: fixer, translateX: fixEntryX * 0.6, opacity: 0,
+             duration: 520, easing: 'easeInQuad' }, tFix + 1560);
   }
 
   function haulOut(section, el) {
     const cursor = dragCursorFor(el);
     if (!cursor.isConnected) section.appendChild(cursor);
-    anime.remove([el, cursor]);
+    anime.remove([el, ...allDragCursors(el)]);
+
+    // A fix cursor may have been mid-flight when we were interrupted; park it.
+    if (el._fixCursor) anime.set(el._fixCursor, { opacity: 0 });
 
     // Reveal has already dropped the `visible` class, so hold the element on
     // screen ourselves for the length of the animation.
     el.classList.add('drag-leaving');
-    anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
 
+    // Measure at rest, then put the element back where it was: interrupting a
+    // correction leaves it off its mark, and it should leave from there.
+    const at = currentTranslate(el);
+    anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
     const { dx, dy, gx, gy } = dragGeometry(section, el);
+    anime.set(el, { translateX: at.x, translateY: at.y });
+
     const dur = Number(dragAttr(el, 'duration')) || 900;
 
-    anime.set(cursor, { translateX: gx + dx * 0.35, translateY: gy + dy * 0.35, opacity: 0 });
+    anime.set(cursor, { translateX: gx + at.x + dx * 0.35,
+                        translateY: gy + at.y + dy * 0.35, opacity: 0 });
 
     const tl = anime.timeline();
     el._dragTl = tl;
-    tl.add({ targets: cursor, translateX: gx, translateY: gy, opacity: 1,
+    tl.add({ targets: cursor, translateX: gx + at.x, translateY: gy + at.y, opacity: 1,
              duration: 420, easing: 'easeOutCubic' }, 0)
       // grab squeeze — keyframes so the tween reliably lands back on scale 1.
       // The drag must not start until this finishes: two concurrent tweens on
@@ -548,25 +644,515 @@
   }
 
   // The marker may sit on the fragment itself or on elements inside it.
-  function dragTargets(fragment) {
-    return fragment.classList.contains('drag-in')
+  function markedTargets(fragment, cls) {
+    return fragment.classList.contains(cls)
       ? [fragment]
-      : Array.from(fragment.querySelectorAll('.drag-in'));
+      : Array.from(fragment.querySelectorAll('.' + cls));
+  }
+
+  // ── Type-in fragments ─────────────────────────────────────────────────────
+  // A `.fragment.type-in` element has its text typed out by a cursor that
+  // flies in, does the typing, and leaves. Optional attributes:
+  //
+  //   cursor="Kari"   name shown on the tag
+  //   color="#e91e8c" cursor color
+  //   speed="55"      milliseconds per character
+  //   from="left"     edge the cursor arrives from (default: left)
+  //
+  // Plain text only: the element's markup is set aside during typing and put
+  // back at the end, so inline formatting survives but is not typed.
+
+  function typeCursorFor(el) {
+    if (!el._typeCursor) {
+      const color = dragAttr(el, 'color')
+        || DRAG_PALETTE[dragPaletteAt++ % DRAG_PALETTE.length];
+      el._typeCursor = makeCursor(null, dragAttr(el, 'cursor'), color);
+    }
+    return el._typeCursor;
+  }
+
+  function typeReset(el) {
+    if (el._typeOriginal != null) el.innerHTML = el._typeOriginal;
+    el.style.minHeight = '';
+  }
+
+  // Cache the untouched markup, pin the height so the slide does not jump as
+  // text grows, empty the element, and give it a caret. Returns the caret and
+  // the text to type, or null when there is nothing to type.
+  function typePrepare(el) {
+    if (el._typeOriginal == null) {
+      el._typeOriginal = el.innerHTML;
+      // Trimmed: a markdown div's textContent is padded with newlines, and
+      // typing those wastes keystrokes on invisible characters.
+      el._typeText = el.textContent.trim();
+    }
+    typeReset(el);
+
+    const text = el._typeText || '';
+    if (!text) return null;
+
+    // offsetHeight is layout px, unaffected by the transform Reveal puts on
+    // the slide.
+    el.style.minHeight = el.offsetHeight + 'px';
+
+    const caret = document.createElement('span');
+    caret.className = 'type-caret';
+    el.textContent = '';
+    el.appendChild(caret);
+
+    return { caret, text };
+  }
+
+  // Offscreen point a cursor flies in from, given where it is headed.
+  function cursorEntry(from, start) {
+    return from === 'right'  ? { x: RevealAnime.SLIDE_W + 90, y: start.y + 60 }
+         : from === 'top'    ? { x: start.x + 40, y: -140 }
+         : from === 'bottom' ? { x: start.x + 40, y: RevealAnime.SLIDE_H + 140 }
+         :                     { x: -140, y: start.y + 60 };
+  }
+
+  // A caret's position in slide coordinates, where the cursor should sit as if
+  // it had clicked into the text.
+  function caretPoint(section, caret) {
+    const c = posIn(caret, section);
+    return { x: c.x, y: c.y + c.h * 0.55 };
+  }
+
+  function typeIn(section, el) {
+    const cursor = typeCursorFor(el);
+    if (!cursor.isConnected) section.appendChild(cursor);
+    anime.remove([el, cursor]);
+    if (el._typeTl) el._typeTl.pause();
+
+    const prepared = typePrepare(el);
+    if (!prepared) return;
+    const { caret, text } = prepared;
+
+    const speed = Number(dragAttr(el, 'speed')) || 55;
+    const from = dragAttr(el, 'from') || 'left';
+
+    const atCaret = () => caretPoint(section, caret);
+    const start = atCaret();
+    const entry = cursorEntry(from, start);
+
+    anime.set(cursor, { translateX: entry.x, translateY: entry.y, opacity: 0 });
+
+    const typeMs = text.length * speed;
+    const state = { n: 0 };
+
+    const tl = anime.timeline();
+    el._typeTl = tl;
+    tl.add({ targets: cursor, translateX: start.x, translateY: start.y, opacity: 1,
+             duration: 620, easing: 'easeOutCubic' }, 0)
+      .add({ targets: state, n: text.length, duration: typeMs, easing: 'linear',
+             update: () => {
+               el.textContent = text.slice(0, Math.round(state.n));
+               el.appendChild(caret);
+               const at = atCaret();
+               anime.set(cursor, { translateX: at.x, translateY: at.y });
+             },
+             complete: () => {
+               el.textContent = text;
+               el.appendChild(caret);
+             },
+           }, 700)
+      // done: caret goes away and the cursor drifts off the way it came
+      .add({ targets: cursor, translateX: entry.x, translateY: entry.y,
+             opacity: 0, duration: 620, easing: 'easeInQuad',
+             begin: () => { if (caret.isConnected) caret.remove(); },
+           }, 700 + typeMs + 420);
+
+    tl.finished.then(() => {
+      if (el._typeTl !== tl) return;
+      typeReset(el);
+    });
+  }
+
+  function typeOut(section, el) {
+    const cursor = el._typeCursor;
+    if (el._typeTl) { el._typeTl.pause(); el._typeTl = null; }
+    anime.remove([el, cursor].filter(Boolean));
+    // Restore the text so the element is intact if it is shown again, and park
+    // the cursor. Reveal fades the element out on its own.
+    typeReset(el);
+    if (cursor) anime.set(cursor, { opacity: 0 });
+  }
+
+  // ── Multi-cursor fragments ────────────────────────────────────────────────
+  // A `.fragment.multi-cursor` container has every one of its lines typed at
+  // once, each by its own cursor, all driven from a single tween so the
+  // keystrokes land in lockstep. The thing no WYSIWYG tool can do.
+  //
+  //   cursors="Kari,John,Hailey"  names, cycled if there are fewer than lines
+  //   speed="55"                  milliseconds per character
+  //   from="left"                 edge the cursors arrive from
+  //
+  // Targets are elements marked `.mc-line` if any exist, otherwise the
+  // container's element children, otherwise the container itself.
+
+  // Resolved once and cached: this picks lines by whether they have text, and
+  // typing empties them, so recomputing later would resolve to the wrong
+  // elements and restore nothing.
+  function mcTargets(container) {
+    if (container._mcTargets) return container._mcTargets;
+
+    const marked = container.querySelectorAll('.mc-line');
+    let found;
+    if (marked.length) {
+      found = Array.from(marked);
+    } else {
+      // Descend through single wrappers, so a markdown div holding one <ul>
+      // resolves to the <li> elements rather than to the list as a whole.
+      let node = container;
+      while (node.children.length === 1 && node.children[0].children.length > 0) {
+        node = node.children[0];
+      }
+      const kids = Array.from(node.children).filter(k => k.textContent.trim());
+      found = kids.length ? kids : [node];
+    }
+
+    container._mcTargets = found;
+    return found;
+  }
+
+  function mcCursorFor(el, name, color) {
+    if (!el._mcCursor) el._mcCursor = makeCursor(null, name, color);
+    return el._mcCursor;
+  }
+
+  function multiTypeIn(section, container) {
+    if (container._mcTl) { container._mcTl.pause(); container._mcTl = null; }
+
+    const targets = mcTargets(container);
+    const names = (dragAttr(container, 'cursors') || '')
+      .split(',').map(s => s.trim()).filter(Boolean);
+    const speed = Number(dragAttr(container, 'speed')) || 55;
+    const from = dragAttr(container, 'from') || 'left';
+
+    const items = [];
+    targets.forEach((el, i) => {
+      const prepared = typePrepare(el);
+      if (!prepared) return;
+      const cursor = mcCursorFor(
+        el,
+        names.length ? names[i % names.length] : null,
+        DRAG_PALETTE[i % DRAG_PALETTE.length],
+      );
+      if (!cursor.isConnected) section.appendChild(cursor);
+      anime.remove([el, cursor]);
+
+      const start = caretPoint(section, prepared.caret);
+      const entry = cursorEntry(from, start);
+      anime.set(cursor, { translateX: entry.x, translateY: entry.y, opacity: 0 });
+
+      items.push({ el, cursor, caret: prepared.caret, text: prepared.text,
+                   start, entry, done: false });
+    });
+
+    if (!items.length) return;
+
+    const cursors = items.map(it => it.cursor);
+    const longest = Math.max(...items.map(it => it.text.length));
+    const typeMs = longest * speed;
+    const state = { n: 0 };
+
+    // A line shorter than the longest finishes early: its caret goes away and
+    // its cursor leaves, rather than hovering at a finished line.
+    function retire(it) {
+      it.done = true;
+      it.el.textContent = it.text;
+      if (it.caret.isConnected) it.caret.remove();
+      anime({ targets: it.cursor, translateX: it.entry.x, translateY: it.entry.y,
+              opacity: 0, duration: 620, easing: 'easeInQuad' });
+    }
+
+    const tl = anime.timeline();
+    container._mcTl = tl;
+    tl.add({ targets: cursors, opacity: 1,
+             translateX: (t, i) => items[i].start.x,
+             translateY: (t, i) => items[i].start.y,
+             duration: 620, easing: 'easeOutCubic',
+             delay: anime.stagger(70) }, 0)
+      .add({ targets: state, n: longest, duration: typeMs, easing: 'linear',
+             update: () => {
+               const n = Math.round(state.n);
+               items.forEach((it) => {
+                 if (it.done) return;
+                 it.el.textContent = it.text.slice(0, n);
+                 it.el.appendChild(it.caret);
+                 const at = caretPoint(section, it.caret);
+                 anime.set(it.cursor, { translateX: at.x, translateY: at.y });
+                 if (n >= it.text.length) retire(it);
+               });
+             },
+             complete: () => items.forEach(it => { if (!it.done) retire(it); }),
+           }, 760);
+
+    tl.finished.then(() => {
+      if (container._mcTl !== tl) return;
+      items.forEach(it => typeReset(it.el));
+    });
+  }
+
+  function multiTypeOut(section, container) {
+    if (container._mcTl) { container._mcTl.pause(); container._mcTl = null; }
+    mcTargets(container).forEach((el) => {
+      anime.remove([el, el._mcCursor].filter(Boolean));
+      typeReset(el);
+      if (el._mcCursor) anime.set(el._mcCursor, { opacity: 0 });
+    });
+  }
+
+  // ── Find-and-replace fragments ────────────────────────────────────────────
+  // A `.fragment.find-replace` container gets searched: a find bar drops in, a
+  // cursor types the term, every match on the slide highlights at once, and
+  // Replace All swaps them all simultaneously. The gesture is familiar; hitting
+  // every match at once is the part a WYSIWYG tool cannot do.
+  //
+  //   find="lizard"     term to search for (required)
+  //   replace="gecko"   replacement (required)
+  //   cursor="Kari"     name on the cursor tag
+  //   color="#e91e8c"   cursor color
+  //   speed="55"        milliseconds per character in the fields
+  //   bar="top|bottom"  where the find bar sits (default top, like a real
+  //                     editor, but it floats over the content, so use bottom
+  //                     when the text reaches the top-right corner)
+
+  const FR_BAR_HTML = `
+    <div class="fr-row">
+      <span class="fr-label">Find</span>
+      <span class="fr-field"><span class="fr-find"></span></span>
+      <span class="fr-count"></span>
+    </div>
+    <div class="fr-row">
+      <span class="fr-label">Replace</span>
+      <span class="fr-field"><span class="fr-repl"></span></span>
+      <span class="fr-btn">Replace All</span>
+    </div>`;
+
+  function frBarFor(container) {
+    if (!container._frBar) {
+      const bar = document.createElement('div');
+      bar.className = 'fr-bar';
+      bar.innerHTML = FR_BAR_HTML;
+      container._frBar = bar;
+    }
+    return container._frBar;
+  }
+
+  // Wrap every occurrence of `term` in its own span, walking text nodes so
+  // existing markup inside the container survives.
+  function frWrapMatches(container, term) {
+    const hits = [];
+    const lowerTerm = term.toLowerCase();
+
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach((node) => {
+      let cur = node;
+      for (;;) {
+        const i = cur.data.toLowerCase().indexOf(lowerTerm);
+        if (i === -1) break;
+        const match = cur.splitText(i);       // cur keeps the text before it
+        const rest = match.splitText(term.length);
+        const span = document.createElement('span');
+        span.className = 'fr-hit';
+        span.textContent = match.data;        // preserves the original casing
+        match.replaceWith(span);
+        hits.push(span);
+        cur = rest;
+      }
+    });
+
+    return hits;
+  }
+
+  function frReset(container) {
+    if (container._frOriginal != null) container.innerHTML = container._frOriginal;
+    if (container._frBar) container._frBar.remove();
+  }
+
+  function findReplaceIn(section, container) {
+    if (container._frTl) { container._frTl.pause(); container._frTl = null; }
+
+    const term = dragAttr(container, 'find');
+    const replacement = dragAttr(container, 'replace');
+    if (!term || replacement == null) return;
+
+    if (container._frOriginal == null) container._frOriginal = container.innerHTML;
+    frReset(container);
+
+    const speed = Number(dragAttr(container, 'speed')) || 55;
+    const cursor = typeCursorFor(container);
+    if (!cursor.isConnected) section.appendChild(cursor);
+    anime.remove([cursor]);
+
+    const hits = frWrapMatches(container, term);
+    if (!hits.length) return;
+    const hitOriginals = hits.map(h => h.textContent);
+
+    // Bar lives in the section so its coordinates match the cursor's.
+    const bar = frBarFor(container);
+    section.appendChild(bar);
+    const findField = bar.querySelector('.fr-find');
+    const replField = bar.querySelector('.fr-repl');
+    const countEl = bar.querySelector('.fr-count');
+    const btn = bar.querySelector('.fr-btn');
+    findField.textContent = '';
+    replField.textContent = '';
+    countEl.textContent = '';
+    countEl.classList.remove('fr-count--done');
+    btn.classList.remove('fr-btn--pressed');
+
+    const caret = document.createElement('span');
+    caret.className = 'type-caret';
+    findField.appendChild(caret);
+
+    const atBottom = dragAttr(container, 'bar') === 'bottom';
+    bar.classList.toggle('fr-bar--bottom', atBottom);
+    const barHidden = atBottom ? 90 : -90;
+
+    anime.set(bar, { translateY: barHidden, opacity: 0 });
+    anime.set(hits, { backgroundColor: 'rgba(255,213,0,0)' });
+
+    // Points the cursor visits, measured once the bar is laid out.
+    const pointAt = (el, fx, fy) => {
+      const c = posIn(el, section);
+      return { x: c.x + c.w * (fx == null ? 0.5 : fx),
+               y: c.y + c.h * (fy == null ? 0.6 : fy) };
+    };
+
+    const findMs = term.length * speed;
+    const replMs = replacement.length * speed;
+
+    const tl = anime.timeline();
+    container._frTl = tl;
+
+    // 1. the bar drops in
+    tl.add({ targets: bar, translateY: 0, opacity: 1,
+             duration: 420, easing: 'easeOutCubic' }, 0);
+
+    // 2. the cursor arrives at the find field. The target is a function so it
+    //    is read after the bar has been laid out, not while it is still
+    //    offscreen; the same trick is used for every later stop.
+    tl.add({ targets: cursor, opacity: 1,
+             translateX: () => pointAt(findField).x,
+             translateY: () => pointAt(findField).y,
+             duration: 620, easing: 'easeOutCubic',
+             begin: () => {
+               const p = pointAt(findField);
+               anime.set(cursor, { translateX: p.x - 220, translateY: p.y + 90,
+                                   opacity: 0 });
+             } }, 200);
+
+    // 3. the term is typed, cursor tracking the caret
+    const typed = { n: 0 };
+    tl.add({ targets: typed, n: term.length, duration: findMs, easing: 'linear',
+             update: () => {
+               findField.textContent = term.slice(0, Math.round(typed.n));
+               findField.appendChild(caret);
+               const at = caretPoint(section, caret);
+               anime.set(cursor, { translateX: at.x, translateY: at.y });
+             } }, 880);
+
+    // 4. every match lights up, near enough at once to read as one gesture
+    const tHit = 880 + findMs + 120;
+    tl.add({ targets: hits, backgroundColor: 'rgba(255,213,0,0.65)',
+             duration: 260, easing: 'easeOutQuad', delay: anime.stagger(22),
+             begin: () => { countEl.textContent = hits.length + ' results'; } },
+           tHit);
+
+    // 5. the replacement is typed
+    const tRepl = tHit + 260 + hits.length * 22 + 320;
+    tl.add({ targets: cursor,
+             translateX: () => pointAt(replField).x,
+             translateY: () => pointAt(replField).y,
+             duration: 460, easing: 'easeInOutQuad',
+             begin: () => { if (caret.isConnected) caret.remove();
+                            findField.textContent = term;
+                            replField.appendChild(caret); } }, tRepl);
+
+    const typed2 = { n: 0 };
+    tl.add({ targets: typed2, n: replacement.length, duration: replMs, easing: 'linear',
+             update: () => {
+               replField.textContent = replacement.slice(0, Math.round(typed2.n));
+               replField.appendChild(caret);
+               const at = caretPoint(section, caret);
+               anime.set(cursor, { translateX: at.x, translateY: at.y });
+             } }, tRepl + 480);
+
+    // 6. cursor moves to the button and presses it
+    const tBtn = tRepl + 480 + replMs + 260;
+    tl.add({ targets: cursor,
+             translateX: () => pointAt(btn).x,
+             translateY: () => pointAt(btn).y,
+             duration: 460, easing: 'easeInOutQuad',
+             begin: () => { if (caret.isConnected) caret.remove();
+                            replField.textContent = replacement; } }, tBtn);
+    tl.add({ targets: btn, scale: 0.94, duration: 110, easing: 'easeOutQuad',
+             begin: () => btn.classList.add('fr-btn--pressed') }, tBtn + 460);
+    tl.add({ targets: btn, scale: 1, duration: 140, easing: 'easeOutQuad',
+             complete: () => btn.classList.remove('fr-btn--pressed') }, tBtn + 570);
+
+    // 7. every match swaps at once. Driven off one counter rather than a timer
+    //    per hit, so it stays cancellable and the sweep is deterministic.
+    const tSwap = tBtn + 640;
+    const swap = { n: 0 };
+    tl.add({ targets: swap, n: hits.length,
+             duration: Math.max(hits.length * 26, 220), easing: 'linear',
+             update: () => {
+               const k = Math.round(swap.n);
+               hits.forEach((h, i) => {
+                 const want = i < k ? replacement : hitOriginals[i];
+                 if (h.textContent !== want) h.textContent = want;
+               });
+             },
+             complete: () => {
+               hits.forEach(h => { h.textContent = replacement; });
+               countEl.textContent = hits.length + ' replaced';
+               countEl.classList.add('fr-count--done');
+             } }, tSwap);
+    tl.add({ targets: hits, backgroundColor: 'rgba(56,193,114,0.6)',
+             duration: 220, easing: 'easeOutQuad', delay: anime.stagger(26) }, tSwap);
+
+    // 8. highlights fade, bar and cursor leave
+    const tEnd = tSwap + Math.max(hits.length * 26, 220) + 620;
+    tl.add({ targets: hits, backgroundColor: 'rgba(56,193,114,0)',
+             duration: 520, easing: 'easeOutQuad' }, tEnd);
+    tl.add({ targets: bar, translateY: barHidden, opacity: 0,
+             duration: 460, easing: 'easeInQuad' }, tEnd + 200);
+    tl.add({ targets: cursor, translateY: () => pointAt(btn).y + 160, opacity: 0,
+             duration: 520, easing: 'easeInQuad' }, tEnd + 200);
+  }
+
+  function findReplaceOut(section, container) {
+    if (container._frTl) { container._frTl.pause(); container._frTl = null; }
+    anime.remove([container._frBar, container._typeCursor].filter(Boolean));
+    frReset(container);
+    if (container._typeCursor) anime.set(container._typeCursor, { opacity: 0 });
   }
 
   // ── RevealJS wiring ───────────────────────────────────────────────────────
 
-  // Drag-in fragments are not tied to a single slide class, so they wire
+  // These fragment styles are not tied to a single slide class, so they wire
   // straight into Reveal rather than going through defineSlide.
   (function whenReveal() {
     if (typeof Reveal === 'undefined' || !Reveal.on) { setTimeout(whenReveal, 50); return; }
     Reveal.on('fragmentshown', (e) => {
       const section = e.fragment.closest('section');
-      dragTargets(e.fragment).forEach(el => haulIn(section, el));
+      markedTargets(e.fragment, 'drag-in').forEach(el => haulIn(section, el));
+      markedTargets(e.fragment, 'type-in').forEach(el => typeIn(section, el));
+      markedTargets(e.fragment, 'multi-cursor').forEach(el => multiTypeIn(section, el));
+      markedTargets(e.fragment, 'find-replace').forEach(el => findReplaceIn(section, el));
     });
     Reveal.on('fragmenthidden', (e) => {
       const section = e.fragment.closest('section');
-      dragTargets(e.fragment).forEach(el => haulOut(section, el));
+      markedTargets(e.fragment, 'drag-in').forEach(el => haulOut(section, el));
+      markedTargets(e.fragment, 'multi-cursor').forEach(el => multiTypeOut(section, el));
+      markedTargets(e.fragment, 'find-replace').forEach(el => findReplaceOut(section, el));
+      markedTargets(e.fragment, 'type-in').forEach(el => typeOut(section, el));
     });
   })();
 
