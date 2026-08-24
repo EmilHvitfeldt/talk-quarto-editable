@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="index_files/libs/clipboard/clipboard.min.js"></script>
-<script src="index_files/libs/quarto-html/tabby.min.js"></script>
-<script src="index_files/libs/quarto-html/popper.min.js"></script>
-<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
-<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-f48cb789c6bab3b4303eaeba73647581.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<script src="gallery_files/libs/clipboard/clipboard.min.js"></script>
+<script src="gallery_files/libs/quarto-html/tabby.min.js"></script>
+<script src="gallery_files/libs/quarto-html/popper.min.js"></script>
+<script src="gallery_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="gallery_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="gallery_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="gallery_files/libs/quarto-html/quarto-syntax-highlighting-f48cb789c6bab3b4303eaeba73647581.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.9.35">
 
-  <title>Title of Talk</title>
+  <title>Fragment gallery</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reset.css">
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/reveal.css">
+  <link rel="stylesheet" href="gallery_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="gallery_files/libs/revealjs/dist/reveal.css">
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -31,11 +31,11 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-7437faa8afeab2c8060789daec340116.css">
-  <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="index_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <link rel="stylesheet" href="gallery_files/libs/revealjs/dist/theme/quarto-7437faa8afeab2c8060789daec340116.css">
+  <link href="gallery_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="gallery_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="gallery_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="gallery_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
       margin: 0;
@@ -129,188 +129,146 @@
   <div class="reveal">
     <div class="slides">
 
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Fragment gallery</h1>
 
-<section id="section" class="slide level2 float-slide">
-<h2></h2>
+<div class="quarto-title-authors">
+</div>
+
 </section>
-<section id="dragged-in" class="slide level2">
-<h2>Dragged in</h2>
-<div class="fragment drag-in" data-from="left" data-cursor="Kari">
-<p>Content that a cursor hauls in from the left.</p>
+<section id="retype" class="slide level2">
+<h2>retype</h2>
+<div id="retype-target">
+<p>The plot shows a strong correlation between the two variables.</p>
 </div>
-<div class="fragment drag-in" data-from="right" data-cursor="John">
-<p>And another one, from the right.</p>
-</div>
-<div class="fragment drag-in" data-from="bottom" data-cursor="Hailey" data-duration="1200">
-<p>Slower, from the bottom.</p>
-</div>
-<div class="fragment">
-<p><img data-src="lizard.gif" class="drag-in" data-from="top" width="200"></p>
-<p><span class="drag-in" data-from="bottom" data-cursor="Kari">Two things, one keypress.</span></p>
+<div class="fragment retype" for="#retype-target" data-word="strong" data-to="weak" data-cursor="Hailey">
+
 </div>
 </section>
-<section id="corrected" class="slide level2">
-<h2>Corrected</h2>
-<div class="fragment drag-in" data-from="left" data-cursor="Kari" data-fix="John">
-<p>Kari drops this a bit short, and John nudges it into place.</p>
+<section id="nudge" class="slide level2">
+<h2>nudge</h2>
+<div id="nudge-target">
+<p>Fussed over, twice.</p>
+</div>
+<div class="fragment nudge" for="#nudge-target" data-by="26,0" data-cursor="Kari">
+
 </div>
 </section>
-<section id="typed" class="slide level2">
-<h2>Typed</h2>
-<div class="fragment type-in" data-cursor="Hailey">
-<p>Hailey types this out, then leaves.</p>
-</div>
-<div class="fragment type-in" data-cursor="John" data-from="right" data-speed="35">
-<p>John is a faster typist.</p>
+<section id="paste-in" class="slide level2">
+<h2>paste-in</h2>
+<div class="fragment paste-in" data-badge="⌘V">
+<p>Pasted straight in.</p>
 </div>
 </section>
-<section id="replace-all" class="slide level2">
-<h2>Replace all</h2>
-<div class="fragment find-replace" data-find="lizard" data-replace="gecko" data-cursor="Kari" data-bar="bottom">
-<p>The lizard sits on a rock. A second lizard joins the first lizard, and a third lizard watches. Every lizard here is a lizard, which is what makes the lizard count so high: lizard, lizard, lizard.</p>
+<section id="approve" class="slide level2">
+<h2>approve</h2>
+<div id="approve-target">
+<p>Someone else’s work.</p>
+</div>
+<div class="fragment approve" for="#approve-target" data-mark="✓" data-cursor="John">
+
 </div>
 </section>
-<section id="five-at-once" class="slide level2">
-<h2>Five at once</h2>
-<div class="fragment multi-cursor" data-cursors="Kari,John,Hailey,Dave,Iris">
+<section id="cursor-idle" class="slide level2">
+<h2>cursor-idle</h2>
+<p>The slide feels inhabited.</p>
+<div class="fragment cursor-idle" data-cursors="Kari,John,Hailey,Dave">
+
+</div>
+</section>
+<section id="race-in" class="slide level2">
+<h2>race-in</h2>
+<div class="fragment race-in" data-cursors="Kari,John,Hailey,Dave">
 <ul>
-<li>setosa</li>
-<li>versicolor</li>
-<li>virginica</li>
-<li>a fourth line</li>
-<li>and a fifth</li>
+<li>first point</li>
+<li>second point</li>
+<li>third point</li>
+<li>fourth point</li>
 </ul>
 </div>
 </section>
-<section id="section-1" class="slide level2">
-<h2></h2>
-<p>fine-control of elements of slides are hard</p>
-<p>Small changes takes a lot of time. feels like 100x slower than in other slidecrafting tools</p>
-</section>
-<section id="section-2" class="slide level2">
-<h2></h2>
-<p>It starts with the bluesky post from Chelsea will need to be doctored a little bit</p>
-<p>https://bsky.app/profile/chelseaparlett.bsky.social/post/3loufhkxnkc2x</p>
-<p>she is right, this sucks, can we fix it?</p>
-<p>if start with post, still show the pain</p>
-</section>
-<section id="section-3" class="slide level2">
-<h2></h2>
-<p>Maybe show my reply? nevertheless, it sparked an idea</p>
-</section>
-<section id="section-4" class="slide level2">
-<h2></h2>
-<p>try an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat</p>
-</section>
-<section id="section-5" class="slide level2">
-<h2></h2>
-<p>The first draft of editable</p>
-<p>outline of the initial algorithm</p>
-<ul>
-<li>inject all of source document into the slides</li>
-<li>add class to image</li>
-<li>have code so it can be moved around, tracking the values</li>
-<li>have save button
-<ul>
-<li>it parses the source document (using regex)</li>
-<li>finds all moved images</li>
-<li>updates the source document with new x and y</li>
-<li>prompts the user to save the document as a file</li>
-<li>user save it in the same folder with the same name</li>
-</ul></li>
-</ul>
-</section>
-<section id="section-6" class="slide level2">
-<h2></h2>
-<p>list pros and cons</p>
-<p>pros: much faster intuitive controls using quarto as the data person</p>
-<p>cons: still slower than powerpoint requires regex fragile like crazy so much more logic to make everything work, espeically with multiple changes requires overwriting the source document all the bugs</p>
-</section>
-<section id="section-7" class="slide level2">
-<h2></h2>
-<p>mention quartohub here? seems right (we can mention that there are dual implementaitons depending on the quarto version)</p>
-</section>
-<section id="section-8" class="slide level2">
-<h2></h2>
-<p>Now since quarto renders so much faster, and we have the automerge stuff we get almost instant changes because it renders so fast the logic is so much smaller because we don’t have to keep all changes, they happen one at a time and it only modifies the part of the document it needs, instead of modifing the whole thing</p>
-</section>
-<section id="section-9" class="slide level2">
-<h2></h2>
-<p>Show other things</p>
-<ul>
-<li>text editing</li>
-<li>image reszing, cropping</li>
-<li>arrows</li>
-<li>other things that will be implemented by then</li>
-</ul>
-</section>
-<section id="section-10" class="slide level2">
-<h2></h2>
-<p>Show that we no longer needs to tag something as editable</p>
-<p>(we are basically at parity with powerpoint now)</p>
-</section>
-<section id="section-11" class="slide level2 collab-slide">
-<h2></h2>
-<p>Show that since we have quartopub, we are not limited to just one person</p>
-<span class="fragment" id="appear-fragment" style="position:absolute;pointer-events:none"></span>
-<span class="fragment" id="start-fragment" style="position:absolute;pointer-events:none"></span>
-<span class="fragment" id="layout-fragment" style="position:absolute;pointer-events:none"></span>
-
-<div id="fake-editor" class="fake-editor">
-  <div class="fe-titlebar">
-    <span class="fe-dot"></span><span class="fe-dot"></span><span class="fe-dot"></span>
-    <span class="fe-title">index.qmd</span>
-  </div>
-  <div class="fe-body">
-    <div class="fe-line"><span class="fe-ln">1</span><span class="fe-punct">---</span></div>
-    <div class="fe-line"><span class="fe-ln">2</span><span class="fe-key">format: </span><span class="fe-val">revealjs</span></div>
-    <div class="fe-line"><span class="fe-ln">3</span><span class="fe-key">filters:</span></div>
-    <div class="fe-line"><span class="fe-ln">4</span><span class="fe-val">&nbsp;&nbsp;- editable</span></div>
-    <div class="fe-line"><span class="fe-ln">5</span><span class="fe-punct">---</span></div>
-    <div class="fe-line"><span class="fe-ln">6</span></div>
-    <div class="fe-line" id="fe-line-header"><span class="fe-ln">7</span><span class="fe-h2">##&nbsp;</span><span id="fe-header-text" class="fe-dyn">lizard lizard lizard</span></div>
-    <div class="fe-line"><span class="fe-ln">8</span></div>
-    <div class="fe-line" id="fe-line-text"><span class="fe-ln">9</span><span class="fe-attr">:::{style="top: </span><span id="fe-text-top" class="fe-dyn">200</span><span class="fe-attr">px"}</span></div>
-    <div class="fe-line"><span class="fe-ln">10</span><span class="fe-text">In today's fast-paced digital</span></div>
-    <div class="fe-line"><span class="fe-ln">11</span><span class="fe-text">landscape, leveraging up-to-date</span></div>
-    <div class="fe-line"><span class="fe-ln">12</span><span class="fe-text">memes is critical.</span></div>
-    <div class="fe-line"><span class="fe-ln">13</span><span class="fe-attr">:::</span></div>
-    <div class="fe-line"><span class="fe-ln">14</span></div>
-    <div class="fe-line" id="fe-line-img"><span class="fe-ln">15</span><span class="fe-img">![lizard](lizard.gif)</span><span class="fe-attr">{width=</span><span id="fe-img-width" class="fe-dyn">300</span><span class="fe-attr">px}</span></div>
-  </div>
-</div>
-
-<div class="collab-scene">
-  <div class="collab-layout">
-    <h2 class="collab-header" id="cblock-header">lizard lizard lizard</h2>
-    <div class="collab-main">
-      <div class="collab-text" id="cblock-text">
-        <p>In today's fast-paced digital landscape, leveraging up-to-date memes is critical. Outdated memes signal cultural irrelevance and erode audience trust within milliseconds.</p>
-        <p>Studies show that meme freshness directly correlates with engagement. Always cite your sources — unless the meme is funnier without them.</p>
-      </div>
-      <div class="collab-image" id="cblock-img">
-        <img src="lizard.gif" alt="lizard">
-      </div>
-    </div>
-  </div>
+<section id="resize-in" class="slide level2">
+<h2>resize-in</h2>
+<div class="fragment resize-in" data-from-width="180" data-cursor="Kari">
+<p><img data-src="lizard.gif" width="360"></p>
 </div>
 </section>
-<section id="section-12" class="slide level2">
-<h2></h2>
-<p>with quartopub we as data people can now colaborate with non-data people, in the manner and interface that suits them best</p>
+<section id="crop-in" class="slide level2">
+<h2>crop-in</h2>
+<div class="fragment crop-in" data-inset="0 26 0 0" data-cursor="John">
+<p><img data-src="lizard.gif" width="360"></p>
+</div>
 </section>
-<section id="section-13" class="slide level2">
-<h2></h2>
-<p>But wait, there is more NOTE: do this as adding things to the pro section</p>
-<p>all of this is based on html editing</p>
+<section id="rotate-handle" class="slide level2">
+<h2>rotate-handle</h2>
+<div class="fragment rotate-handle" data-angle="-8" data-cursor="Hailey">
+<p><img data-src="lizard.gif" width="260"></p>
+</div>
 </section>
-<section id="section-14" class="slide level2">
-<h2></h2>
-<p>Show that it works with all html formats</p>
+<section id="marquee-select" class="slide level2">
+<h2>marquee-select</h2>
+<div class="fragment marquee-select" data-by="80,0" data-cursor="Kari">
+<ul>
+<li>alpha</li>
+<li>beta</li>
+<li>gamma</li>
+</ul>
+</div>
 </section>
-<section id="section-15" class="slide level2">
-<h2></h2>
-<p>thanks</p>
+<section id="reorder" class="slide level2">
+<h2>reorder</h2>
+<div class="fragment reorder" data-item="3" data-to="1" data-cursor="John">
+<ul>
+<li>first</li>
+<li>second</li>
+<li>third, which belongs at the top</li>
+</ul>
+</div>
+</section>
+<section id="duplicate" class="slide level2">
+<h2>duplicate</h2>
+<div class="fragment duplicate" data-times="3" data-gap="18" data-cursor="Hailey">
+<p><img data-src="lizard.gif" width="220"></p>
+</div>
+</section>
+<section id="diff-in" class="slide level2">
+<h2>diff-in</h2>
+<div class="fragment diff-in" data-was="twelve observations">
+<p>forty observations</p>
+</div>
+</section>
+<section id="undo" class="slide level2">
+<h2>undo</h2>
+<div id="undo-target">
+<p>Moved, then unmoved.</p>
+</div>
+<div class="fragment undo" for="#undo-target" data-by="110,30" data-cursor="Kari">
+
+</div>
+</section>
+<section id="comment" class="slide level2">
+<h2>comment</h2>
+<div id="comment-target">
+<p>A claim worth questioning.</p>
+</div>
+<div class="fragment comment" for="#comment-target" data-cursor="Hailey" data-text="Is this the right framing?">
+
+</div>
+</section>
+<section id="argue" class="slide level2">
+<h2>argue</h2>
+<div id="argue-target">
+<p>Contested.</p>
+</div>
+<div class="fragment argue" for="#argue-target" data-cursors="Kari,John" data-winner="right" data-amp="60">
+
+</div>
+</section>
+<section id="drag-from-folder" class="slide level2">
+<h2>drag-from-folder</h2>
+<div class="fragment drag-from-folder" data-files="plot.png,lizard.gif,logo.svg" data-pick="2" data-folder="images">
+<p><img data-src="lizard.gif" width="300"></p>
+</div>
 
 </section>
     </div>
@@ -321,20 +279,20 @@
 </div></div>
 
   <script>window.backupDefine = window.define; window.define = undefined;</script>
-  <script src="index_files/libs/revealjs/dist/reveal.js"></script>
+  <script src="gallery_files/libs/revealjs/dist/reveal.js"></script>
   <!-- reveal.js plugins -->
-  <script src="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
-  <script src="index_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
-  <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
-  <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="index_files/libs/revealjs/plugin/reveal-anime/revealjs-anime.js"></script>
-  <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/reveal-anime/revealjs-anime.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
-  <script src="index_files/libs/revealjs/plugin/notes/notes.js"></script>
-  <script src="index_files/libs/revealjs/plugin/search/search.js"></script>
-  <script src="index_files/libs/revealjs/plugin/zoom/zoom.js"></script>
-  <script src="index_files/libs/revealjs/plugin/math/math.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="gallery_files/libs/revealjs/plugin/math/math.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
@@ -1723,1190 +1681,6 @@
                    duration: 440, easing: 'easeInQuad' }, 2160);
           tl.add({ targets: cursor, translateX: c.x - 220, opacity: 0,
                    duration: 520, easing: 'easeInQuad' }, 2260);
-        },
-      });
-    })();
-    </script>
-    <script type="text/javascript">
-    (function () {
-      'use strict';
-
-      // anime.js is loaded via include-in-header; RevealJS lifecycle wiring comes
-      // from the revealjs-anime plugin (window.RevealAnime).
-
-      // ── Cursor factory ────────────────────────────────────────────────────────
-
-      // `name` is optional — omit it for a bare arrow with no label.
-      function makeCursor(id, name, color) {
-        const el = document.createElement('div');
-        if (id) el.id = id;
-        el.className = 'collab-cursor-node';
-        const tag = name
-          ? `<span class="collab-cursor-name" style="background:${color}">${name}</span>`
-          : '';
-        el.innerHTML = `
-          <svg width="28" height="34" viewBox="0 0 11 14" xmlns="http://www.w3.org/2000/svg"
-               class="collab-cursor-arrow">
-            <path d="M0 0 L0 12 L3.2 8.8 L5.4 14 L7.2 13.3 L5 7.8 L9 7.8 Z"
-                  fill="${color}" stroke="white" stroke-width=".7" stroke-linejoin="round"/>
-          </svg>${tag}`;
-        return el;
-      }
-
-      function ensureCursors(section, defs) {
-        defs.forEach(({ id, name, color }) => {
-          if (!document.getElementById(id)) section.appendChild(makeCursor(id, name, color));
-        });
-      }
-
-      // ── Coordinate helper ─────────────────────────────────────────────────────
-      // RevealAnime.slideCoordsOf converts screen pixels to slide-internal units.
-
-      function posIn(el, section) {
-        const c = RevealAnime.slideCoordsOf(section, el);
-        return { x: c.x, y: c.y, w: c.width, h: c.height };
-      }
-
-      // ── Float behavior factory ─────────────────────────────────────────────────
-
-      function randomPos() {
-        return { x: Math.random() * 1200 + 40, y: Math.random() * 640 + 40 };
-      }
-
-      function makeFloatBehavior(cursorDefs) {
-        let running = false;
-
-        function floatOne(el) {
-          if (!running) return;
-          const start = randomPos();
-          const end   = randomPos();
-
-          // glide to click-start position
-          anime({
-            targets: el,
-            translateX: start.x, translateY: start.y,
-            duration: 2000 + Math.random() * 1500,
-            easing: 'easeInOutQuad',
-            complete() {
-              if (!running) return;
-              // brief hover pause before dragging
-              setTimeout(() => {
-                if (!running) return;
-                anime({
-                  targets: el,
-                  translateX: end.x, translateY: end.y,
-                  duration: 2500 + Math.random() * 2500,
-                  easing: 'easeInOutSine',
-                  complete: () => floatOne(el),
-                });
-              }, 250 + Math.random() * 350);
-            },
-          });
-        }
-
-        return {
-          start(section) {
-            if (running) return;
-            running = true;
-            ensureCursors(section, cursorDefs);
-            cursorDefs.forEach(({ id }) => {
-              const el = document.getElementById(id);
-              const { x, y } = randomPos();
-              anime.set(el, { translateX: x, translateY: y, opacity: 1 });
-              floatOne(el);
-            });
-          },
-          stop() {
-            running = false;
-            const targets = cursorDefs.map(c => document.getElementById(c.id)).filter(Boolean);
-            anime.remove(targets);
-            anime({ targets, opacity: 0, duration: 300, easing: 'easeOutQuad' });
-          },
-        };
-      }
-
-      // ── Cursor definitions ────────────────────────────────────────────────────
-
-      const FLOAT_CURSORS = [
-        { id: 'fc-0',  name: 'Alice',   color: '#e91e8c' },
-        { id: 'fc-1',  name: 'Bob',     color: '#1565c0' },
-        { id: 'fc-2',  name: 'Carol',   color: '#f9a825' },
-        { id: 'fc-3',  name: 'Dave',    color: '#2e7d32' },
-        { id: 'fc-4',  name: 'Eve',     color: '#6a1b9a' },
-        { id: 'fc-5',  name: 'Frank',   color: '#c62828' },
-        { id: 'fc-6',  name: 'Grace',   color: '#00838f' },
-        { id: 'fc-7',  name: 'Hank',    color: '#e65100' },
-        { id: 'fc-8',  name: 'Iris',    color: '#4527a0' },
-        { id: 'fc-9',  name: 'Jack',    color: '#1b5e20' },
-        { id: 'fc-10', name: 'Kari',    color: '#880e4f' },
-        { id: 'fc-11', name: 'Lena',    color: '#01579b' },
-        { id: 'fc-12', name: 'Mike',    color: '#bf360c' },
-        { id: 'fc-13', name: 'Nina',    color: '#33691e' },
-        { id: 'fc-14', name: 'Oscar',   color: '#4a148c' },
-      ];
-
-      const COLLAB_CURSORS = [
-        { id: 'cur-kari',   name: 'Kari',   color: '#e91e8c' },
-        { id: 'cur-john',   name: 'John',   color: '#1565c0' },
-        { id: 'cur-hailey', name: 'Hailey', color: '#f9a825' },
-      ];
-
-      const floatBehavior = makeFloatBehavior(FLOAT_CURSORS);
-
-      // ── Collab slide state ────────────────────────────────────────────────────
-
-      let running   = false;
-      let loopTimer = null;
-      let currentTl = null;
-      let isShifted = false;
-
-      function cleanHeader() {
-        const h  = document.getElementById('cblock-header');
-        const fh = document.getElementById('fe-header-text');
-        if (h  && h.textContent.endsWith('|'))  h.textContent  = h.textContent.slice(0, -1);
-        if (fh && fh.textContent.endsWith('|')) fh.textContent = fh.textContent.slice(0, -1);
-      }
-
-      function stopAnim(flyOut) {
-        running = false;
-        clearTimeout(loopTimer);
-        if (currentTl) { currentTl.pause(); currentTl = null; }
-        cleanHeader();
-        const t = document.getElementById('cblock-text');
-        const i = document.getElementById('cblock-img');
-        if (t) anime.set(t, { translateY: 0, scale: 1 });
-        if (i) anime.set(i, { width: '300px' });
-
-        if (flyOut) {
-          const cursors = COLLAB_CURSORS.map(c => document.getElementById(c.id)).filter(Boolean);
-          if (cursors.length) {
-            anime({ targets: cursors, opacity: 0, translateY: '+=300',
-                    duration: 500, easing: 'easeInQuad' });
-          }
-        }
-      }
-
-      // ── Cursor appearance ─────────────────────────────────────────────────────
-
-      function appearAnim(section) {
-        if (!section) return;
-
-        ensureCursors(section, COLLAB_CURSORS);
-
-        const kari = document.getElementById('cur-kari');
-        const john   = document.getElementById('cur-john');
-        const hailey = document.getElementById('cur-hailey');
-        const kariIdle = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
-        const R = { x: 1100, y: 300 };
-        const B = { x: 640,  y: 660 };
-
-        anime.set(kari, { translateX: isShifted ? 1480 : -200, translateY: kariIdle.y, opacity: 0 });
-        anime.set(john, { translateX: 1480, translateY: R.y, opacity: 0 });
-        anime.set(hailey, { translateX:  640, translateY: 900, opacity: 0 });
-
-        const entry = anime.timeline({ easing: 'easeOutCubic' });
-        currentTl = entry;
-        entry
-          .add({ targets: kari, opacity: 1, translateX: kariIdle.x, translateY: kariIdle.y, duration: 700 }, 0)
-          .add({ targets: john,   opacity: 1, translateX: R.x, translateY: R.y, duration: 700 }, 150)
-          .add({ targets: hailey, opacity: 1, translateX: B.x, translateY: B.y, duration: 700 }, 300);
-      }
-
-      // ── Main animation loop ───────────────────────────────────────────────────
-
-      function runAnim(section) {
-        if (running) return;
-        running = true;
-
-        if (currentTl) { currentTl.pause(); currentTl = null; }
-
-        if (!section) { running = false; return; }
-
-        ensureCursors(section, COLLAB_CURSORS);
-
-        const kari = document.getElementById('cur-kari');
-        const john   = document.getElementById('cur-john');
-        const hailey = document.getElementById('cur-hailey');
-
-        const kariSnap = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
-        anime.set(kari, { opacity: 1, translateX: kariSnap.x, translateY: kariSnap.y });
-        anime.set(john, { opacity: 1, translateX: 1100,        translateY: 300 });
-        anime.set(hailey, { opacity: 1, translateX: 640,         translateY: 660 });
-
-        const textEl   = document.getElementById('cblock-text');
-        const imgEl    = document.getElementById('cblock-img');
-        const headerEl = document.getElementById('cblock-header');
-
-        anime.set(textEl, { translateY: 0, scale: 1 });
-        anime.set(imgEl,  { width: '300px' });
-
-        const tp = posIn(textEl, section);
-        const ip = posIn(imgEl,  section);
-
-        const INITIAL_IMG_CSS = 300;
-        const cssToSlide = ip.w / INITIAL_IMG_CSS;
-
-        let textTY     = 0;
-        let textTopCSS = 200;
-        let imgCSS     = INITIAL_IMG_CSS;
-
-        const NUDGE  = 40;
-        const RESIZE = 120;
-
-        const L = isShifted ? { x: 1050, y: 430 } : { x: 120, y: 340 };
-        const R = { x: 1100, y: 300 };
-        const B = { x: 640,  y: 660 };
-
-        // ── addNudge ──────────────────────────────────────────────────────────────
-        function addNudge(tl, startAt, cursor, el, elBasePos, currentTY, deltaTY, afterPos) {
-          const grabX = elBasePos.x + elBasePos.w * 0.4;
-          const grabY = elBasePos.y + currentTY + elBasePos.h * 0.4;
-
-          tl.add({ targets: cursor, translateX: grabX, translateY: grabY,
-                   duration: 750, easing: 'easeInOutCubic' }, startAt);
-          tl.add({ targets: el, scale: 1.02,
-                   duration: 140, easing: 'easeOutQuad' }, startAt + 750);
-          tl.add({ targets: cursor, translateY: grabY + deltaTY,
-                   duration: 900, easing: 'easeInOutSine' }, startAt + 890);
-          tl.add({ targets: el, translateY: currentTY + deltaTY,
-                   duration: 900, easing: 'easeInOutSine' }, startAt + 890);
-
-          if (el === textEl) {
-            const feTextTop  = document.getElementById('fe-text-top');
-            const feLineText = document.getElementById('fe-line-text');
-            const snapTop    = textTopCSS;
-            const tState     = { n: snapTop };
-            tl.add({ targets: tState, n: snapTop + deltaTY,
-                     duration: 900, easing: 'easeInOutSine',
-                     begin:    () => { feLineText && feLineText.classList.add('fe-line--active'); },
-                     update:   () => { if (feTextTop) feTextTop.textContent = Math.round(tState.n); },
-                     complete: () => { feLineText && feLineText.classList.remove('fe-line--active'); },
-                   }, startAt + 890);
-            textTopCSS += deltaTY;
-          }
-
-          tl.add({ targets: el, scale: 1,
-                   duration: 220, easing: 'easeOutBounce' }, startAt + 1790);
-          tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
-                   duration: 600, easing: 'easeInOutQuad' }, startAt + 2010);
-
-          return startAt + 2100;
-        }
-
-        // ── addResize ─────────────────────────────────────────────────────────────
-        function addResize(tl, startAt, cursor, deltaCSSWidth, afterPos) {
-          const edgeX = ip.x + imgCSS * cssToSlide;
-          const edgeY = ip.y + ip.h * 0.5;
-          const snapImgCSS = imgCSS;
-
-          tl.add({ targets: cursor, translateX: edgeX, translateY: edgeY,
-                   duration: 750, easing: 'easeInOutCubic' }, startAt);
-          tl.add({ targets: imgEl, width: (snapImgCSS + deltaCSSWidth) + 'px',
-                   duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
-          tl.add({ targets: cursor, translateX: edgeX + deltaCSSWidth * cssToSlide,
-                   duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
-
-          const feImgWidth = document.getElementById('fe-img-width');
-          const feLineImg  = document.getElementById('fe-line-img');
-          if (feImgWidth) {
-            const wState = { n: snapImgCSS };
-            tl.add({ targets: wState, n: snapImgCSS + deltaCSSWidth,
-                     duration: 1000, easing: 'easeInOutSine',
-                     begin:    () => { feLineImg && feLineImg.classList.add('fe-line--active'); },
-                     update:   () => { feImgWidth.textContent = Math.round(wState.n); },
-                     complete: () => { feLineImg && feLineImg.classList.remove('fe-line--active'); },
-                   }, startAt + 900);
-          }
-
-          tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
-                   duration: 600, easing: 'easeInOutQuad' }, startAt + 1900);
-
-          imgCSS += deltaCSSWidth;
-          return startAt + 2100;
-        }
-
-        // ── addTextEdit ───────────────────────────────────────────────────────────
-        function addTextEdit(tl, startAt, cursor, fromText, toText, afterPos) {
-          const hp = posIn(headerEl, section);
-          const deleteMs = Math.max(fromText.length * 65, 200);
-          const typeMs   = Math.max(toText.length   * 65, 200);
-
-          tl.add({ targets: cursor, translateX: hp.x + 20, translateY: hp.y + hp.h * 0.5,
-                   duration: 750, easing: 'easeInOutCubic' }, startAt);
-
-          const feHeaderText = document.getElementById('fe-header-text');
-          const feLineHeader = document.getElementById('fe-line-header');
-
-          const del = { n: fromText.length };
-          tl.add({ targets: del, n: 0, duration: deleteMs, easing: 'linear',
-                   begin:  () => { feLineHeader && feLineHeader.classList.add('fe-line--active'); },
-                   update: () => {
-                     const t = fromText.slice(0, Math.round(del.n));
-                     headerEl.textContent = t + '|';
-                     if (feHeaderText) feHeaderText.textContent = t + '|';
-                   },
-                 }, startAt + 900);
-
-          const typ = { n: 0 };
-          tl.add({ targets: typ, n: toText.length, duration: typeMs, easing: 'linear',
-                   update: () => {
-                     const t = toText.slice(0, Math.round(typ.n));
-                     headerEl.textContent = t + '|';
-                     if (feHeaderText) feHeaderText.textContent = t + '|';
-                   },
-                   complete: () => {
-                     headerEl.textContent = toText;
-                     if (feHeaderText) feHeaderText.textContent = toText;
-                     feLineHeader && feLineHeader.classList.remove('fe-line--active');
-                   },
-                 }, startAt + 900 + deleteMs + 80);
-
-          const done = startAt + 900 + deleteMs + 80 + typeMs;
-          tl.add({ targets: cursor, translateX: afterPos.x, translateY: afterPos.y,
-                   duration: 600, easing: 'easeInOutQuad' }, done + 150);
-
-          return done + 400;
-        }
-
-        const ORIGINAL_TEXT = headerEl.textContent;
-        const TEXT_A = 'LIZARD LIZARD LIZARD';
-        const TEXT_B = 'Lizard? Lizard? Lizard?';
-        const TEXT_C = ORIGINAL_TEXT;
-
-        doLoop();
-
-        // ── Self-cancelling 7-move loop ───────────────────────────────────────────
-        // Move 1: Kari   nudges text up             → textTY = -NUDGE
-        // Move 2: John   nudges text back down      → textTY = 0
-        // Move 3: Hailey drags image wider          → imgCSS += RESIZE
-        // Move 4: Kari   drags image back narrower  → imgCSS -= RESIZE
-        // Move 5: John   types TEXT_A
-        // Move 6: Hailey types TEXT_B
-        // Move 7: Kari   types TEXT_C (original)    → header restored
-
-        function doLoop() {
-          if (!running) return;
-
-          const tl = anime.timeline();
-          currentTl = tl;
-          let t = 100;
-
-          t = addNudge(tl, t, kari, textEl, tp, textTY, -NUDGE, L); textTY -= NUDGE;
-          t = addNudge(tl, t, john,   textEl, tp, textTY, +NUDGE, R); textTY += NUDGE;
-          t = addResize(tl, t, hailey, +RESIZE, B);
-          t = addResize(tl, t, kari, -RESIZE, L);
-          t = addTextEdit(tl, t, john,   TEXT_C, TEXT_A, R);
-          t = addTextEdit(tl, t, hailey, TEXT_A, TEXT_B, B);
-          t = addTextEdit(tl, t, kari, TEXT_B, TEXT_C, L);
-
-          tl.finished.then(() => {
-            if (!running) return;
-            loopTimer = setTimeout(doLoop, 300);
-          });
-        }
-      }
-
-      // ── Fragment shift ────────────────────────────────────────────────────────
-
-      function shiftLayout(section, toRight) {
-        isShifted = toRight;
-        stopAnim();
-
-        const cursors = COLLAB_CURSORS.map(c => document.getElementById(c.id)).filter(Boolean);
-        const scene  = section.querySelector('.collab-scene');
-        const editor = document.getElementById('fake-editor');
-
-        anime({
-          targets: cursors, opacity: 0, duration: 250, easing: 'easeOutQuad',
-          complete: () => {
-            scene.classList.toggle('right-half', toRight);
-            anime({ targets: editor, opacity: toRight ? 1 : 0,
-                    duration: 500, easing: 'easeOutQuad' });
-            setTimeout(() => runAnim(section), 700);
-          }
-        });
-      }
-
-      // ── Stop loop only (keep cursors visible) ────────────────────────────────
-
-      function stopLoop() {
-        running = false;
-        clearTimeout(loopTimer);
-        if (currentTl) { currentTl.pause(); currentTl = null; }
-        cleanHeader();
-        const t = document.getElementById('cblock-text');
-        const i = document.getElementById('cblock-img');
-        if (t) anime.set(t, { translateY: 0, scale: 1 });
-        if (i) anime.set(i, { width: '300px' });
-      }
-
-      // ── Drag-in fragments ─────────────────────────────────────────────────────
-      // Any `.fragment.drag-in` element gets hauled onto the slide by a cursor
-      // when its fragment is shown, and hauled back off when it is hidden.
-      // Optional attributes:
-      //
-      //   from="left|right|top|bottom"  edge to enter from
-      //                                 (default: nearest side edge)
-      //   cursor="Kari"                 name shown on the tag
-      //   color="#e91e8c"               cursor color
-      //   duration="900"                haul duration in ms
-      //
-      // Add `fix="Name"` and the first cursor drops the content slightly off its
-      // mark, then a second cursor flies in and nudges it into place:
-      //
-      //   fix="John"                    name of the correcting cursor
-      //   fix-color="#1565c0"           its color
-      //   fix-delay="450"               beat between the drop and the correction
-      //   off="-70,38"                  how wrong the first drop is, "x,y" in
-      //                                 slide px (default: short of the mark,
-      //                                 plus a little cross-axis sloppiness)
-      //
-      // Pandoc passes unknown div attributes straight through to the HTML, so
-      // these need no data- prefix. `data-*` spellings work too.
-
-      const DRAG_MARGIN = 80;
-      const DRAG_PALETTE = ['#e91e8c', '#1565c0', '#f9a825', '#2e7d32', '#6a1b9a'];
-      let dragPaletteAt = 0;
-
-      // Read `name`, falling back to `data-name`.
-      function dragAttr(el, name) {
-        return el.getAttribute(name) || el.getAttribute('data-' + name) || null;
-      }
-
-      function dragCursorFor(el) {
-        if (!el._dragCursor) {
-          const color = dragAttr(el, 'color')
-            || DRAG_PALETTE[dragPaletteAt++ % DRAG_PALETTE.length];
-          el._dragCursor = makeCursor(null, dragAttr(el, 'cursor'), color);
-        }
-        return el._dragCursor;
-      }
-
-      function fixCursorFor(el) {
-        if (!el._fixCursor) {
-          const color = dragAttr(el, 'fix-color')
-            || DRAG_PALETTE[dragPaletteAt++ % DRAG_PALETTE.length];
-          el._fixCursor = makeCursor(null, dragAttr(el, 'fix'), color);
-        }
-        return el._fixCursor;
-      }
-
-      // Every cursor belonging to an element, so cleanup never misses one.
-      function allDragCursors(el) {
-        return [el._dragCursor, el._fixCursor].filter(Boolean);
-      }
-
-      // How badly the first cursor misses. Default: stops short along the axis it
-      // travelled, and drifts a little off it — the way a real sloppy drop reads.
-      function dropOffset(el, dx, dy) {
-        const explicit = dragAttr(el, 'off');
-        if (explicit) {
-          const [x, y] = explicit.split(',').map(n => Number(n.trim()) || 0);
-          return { x, y };
-        }
-        return dx !== 0
-          ? { x: Math.sign(dx) * 70, y: 38 }
-          : { x: 44, y: Math.sign(dy) * 60 };
-      }
-
-      // The element's current translate, so an interrupted haul can carry on from
-      // wherever it actually is instead of snapping.
-      function currentTranslate(el) {
-        const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
-        return { x: m.m41, y: m.m42 };
-      }
-
-      // Offscreen translate offset and grab point, both in slide coordinates.
-      // Must be called while the element sits at rest (no transform applied) —
-      // getBoundingClientRect() includes any transform currently on the element.
-      function dragGeometry(section, el) {
-        const c = posIn(el, section);
-        const from = dragAttr(el, 'from')
-          || (c.x + c.w / 2 < RevealAnime.SLIDE_W / 2 ? 'left' : 'right');
-
-        let dx = 0;
-        let dy = 0;
-        if (from === 'left')   dx = -(c.x + c.w + DRAG_MARGIN);
-        if (from === 'right')  dx = RevealAnime.SLIDE_W - c.x + DRAG_MARGIN;
-        if (from === 'top')    dy = -(c.y + c.h + DRAG_MARGIN);
-        if (from === 'bottom') dy = RevealAnime.SLIDE_H - c.y + DRAG_MARGIN;
-
-        // Grab inside the element but near its top-left corner — holding a wide
-        // block by its middle does not read as dragging.
-        return {
-          dx, dy,
-          gx: c.x + Math.min(c.w * 0.3, 140),
-          gy: c.y + Math.min(c.h * 0.35, 70),
-        };
-      }
-
-      function haulIn(section, el) {
-        const cursor = dragCursorFor(el);
-        if (!cursor.isConnected) section.appendChild(cursor);
-        anime.remove([el, ...allDragCursors(el)]);
-        el.classList.remove('drag-leaving');
-        if (el._fixCursor) anime.set(el._fixCursor, { opacity: 0 });
-
-        anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
-        const { dx, dy, gx, gy } = dragGeometry(section, el);
-        const dur = Number(dragAttr(el, 'duration')) || 900;
-
-        anime.set(el, { translateX: dx, translateY: dy });
-        anime.set(cursor, { translateX: gx + dx, translateY: gy + dy, opacity: 0 });
-
-        // Overshoot as a fraction of the distance travelled. `easeOutBack` would
-        // do this in one tween, but its overshoot is hardcoded at ~13% in anime v3
-        // (the amount parameter is ignored), which reads as a rubber band at these
-        // distances. Explicit keyframes keep it tunable.
-        // Travel distance includes the element's own width, so a full-width block
-        // travels ~1300px and a bare percentage would still fling it. Cap it.
-        const OVERSHOOT = 0.04;
-        const OVERSHOOT_MAX = 18;
-        const past = (v) =>
-          -Math.sign(v) * Math.min(Math.abs(v) * OVERSHOOT, OVERSHOOT_MAX);
-
-        const glide = (to) => [
-          { translateX: to.x + past(dx), translateY: to.y + past(dy),
-            duration: dur * 0.8, easing: 'easeOutQuad' },
-          { translateX: to.x, translateY: to.y,
-            duration: dur * 0.2, easing: 'easeOutQuad' },
-        ];
-
-        // With a `fix` cursor the first drop lands off the mark and gets corrected;
-        // otherwise it lands square on it.
-        const fixName = dragAttr(el, 'fix');
-        const off = fixName ? dropOffset(el, dx, dy) : { x: 0, y: 0 };
-
-        const tl = anime.timeline();
-        el._dragTl = tl;
-        // Element and cursor share the motion, or the cursor visibly lets go
-        // mid-flight.
-        tl.add({ targets: cursor, opacity: 1, duration: 160, easing: 'easeOutQuad' }, 0)
-          .add({ targets: el, keyframes: glide(off) }, 0)
-          .add({ targets: cursor, keyframes: glide({ x: gx + off.x, y: gy + off.y }) }, 0)
-          // release: the cursor lets go and drifts back out the way it came
-          .add({ targets: cursor, translateX: gx + off.x + dx * 0.35,
-                 translateY: gy + off.y + dy * 0.35,
-                 opacity: 0, duration: 520, easing: 'easeInQuad' }, dur + 180);
-
-        if (!fixName) return;
-
-        // ── The correction ──────────────────────────────────────────────────────
-        // Appended to the same timeline rather than scheduled on a timer, so
-        // navigating away mid-sequence cancels it along with everything else.
-
-        const fixer = fixCursorFor(el);
-        if (!fixer.isConnected) section.appendChild(fixer);
-        anime.remove(fixer);
-
-        // The fixer arrives from whichever side of the slide it has room on, so it
-        // never retraces the first cursor's path.
-        const fromRight = gx + off.x < RevealAnime.SLIDE_W / 2;
-        const fixEntryX = fromRight ? RevealAnime.SLIDE_W + 90 : -140;
-        const grabX = gx + off.x;
-        const grabY = gy + off.y;
-
-        anime.set(fixer, { translateX: fixEntryX, translateY: grabY + 70, opacity: 0 });
-
-        const tFix = dur + 180 + (Number(dragAttr(el, 'fix-delay')) || 450);
-
-        tl.add({ targets: fixer, translateX: grabX, translateY: grabY, opacity: 1,
-                 duration: 620, easing: 'easeOutCubic' }, tFix)
-          // grab, then nudge into place: crisp and without overshoot, because this
-          // is the move that reads as "actually correct now"
-          .add({ targets: el, easing: 'easeOutQuad',
-                 keyframes: [{ scale: 1.02, duration: 130 }, { scale: 1, duration: 130 }] },
-                tFix + 620)
-          .add({ targets: el, translateX: 0, translateY: 0,
-                 duration: 520, easing: 'easeInOutQuad' }, tFix + 880)
-          .add({ targets: fixer, translateX: gx, translateY: gy,
-                 duration: 520, easing: 'easeInOutQuad' }, tFix + 880)
-          .add({ targets: fixer, translateX: fixEntryX * 0.6, opacity: 0,
-                 duration: 520, easing: 'easeInQuad' }, tFix + 1560);
-      }
-
-      function haulOut(section, el) {
-        const cursor = dragCursorFor(el);
-        if (!cursor.isConnected) section.appendChild(cursor);
-        anime.remove([el, ...allDragCursors(el)]);
-
-        // A fix cursor may have been mid-flight when we were interrupted; park it.
-        if (el._fixCursor) anime.set(el._fixCursor, { opacity: 0 });
-
-        // Reveal has already dropped the `visible` class, so hold the element on
-        // screen ourselves for the length of the animation.
-        el.classList.add('drag-leaving');
-
-        // Measure at rest, then put the element back where it was: interrupting a
-        // correction leaves it off its mark, and it should leave from there.
-        const at = currentTranslate(el);
-        anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
-        const { dx, dy, gx, gy } = dragGeometry(section, el);
-        anime.set(el, { translateX: at.x, translateY: at.y });
-
-        const dur = Number(dragAttr(el, 'duration')) || 900;
-
-        anime.set(cursor, { translateX: gx + at.x + dx * 0.35,
-                            translateY: gy + at.y + dy * 0.35, opacity: 0 });
-
-        const tl = anime.timeline();
-        el._dragTl = tl;
-        tl.add({ targets: cursor, translateX: gx + at.x, translateY: gy + at.y, opacity: 1,
-                 duration: 420, easing: 'easeOutCubic' }, 0)
-          // grab squeeze — keyframes so the tween reliably lands back on scale 1.
-          // The drag must not start until this finishes: two concurrent tweens on
-          // the same element's transform leave a stale scale behind.
-          .add({ targets: el, easing: 'easeOutQuad',
-                 keyframes: [{ scale: 1.03, duration: 140 }, { scale: 1, duration: 140 }] }, 420)
-          .add({ targets: el, translateX: dx, translateY: dy,
-                 duration: dur, easing: 'easeInCubic' }, 700)
-          .add({ targets: cursor, translateX: gx + dx, translateY: gy + dy,
-                 duration: dur, easing: 'easeInCubic' }, 700)
-          .add({ targets: cursor, opacity: 0, duration: 200, easing: 'linear' },
-                700 + dur - 200);
-
-        tl.finished.then(() => {
-          if (el._dragTl !== tl) return;      // superseded by a new haul
-          el.classList.remove('drag-leaving');
-          anime.set(el, { translateX: 0, translateY: 0, scale: 1 });
-        });
-      }
-
-      // The marker may sit on the fragment itself or on elements inside it.
-      function markedTargets(fragment, cls) {
-        return fragment.classList.contains(cls)
-          ? [fragment]
-          : Array.from(fragment.querySelectorAll('.' + cls));
-      }
-
-      // ── Type-in fragments ─────────────────────────────────────────────────────
-      // A `.fragment.type-in` element has its text typed out by a cursor that
-      // flies in, does the typing, and leaves. Optional attributes:
-      //
-      //   cursor="Kari"   name shown on the tag
-      //   color="#e91e8c" cursor color
-      //   speed="55"      milliseconds per character
-      //   from="left"     edge the cursor arrives from (default: left)
-      //
-      // Plain text only: the element's markup is set aside during typing and put
-      // back at the end, so inline formatting survives but is not typed.
-
-      function typeCursorFor(el) {
-        if (!el._typeCursor) {
-          const color = dragAttr(el, 'color')
-            || DRAG_PALETTE[dragPaletteAt++ % DRAG_PALETTE.length];
-          el._typeCursor = makeCursor(null, dragAttr(el, 'cursor'), color);
-        }
-        return el._typeCursor;
-      }
-
-      function typeReset(el) {
-        if (el._typeOriginal != null) el.innerHTML = el._typeOriginal;
-        el.style.minHeight = '';
-      }
-
-      // Cache the untouched markup, pin the height so the slide does not jump as
-      // text grows, empty the element, and give it a caret. Returns the caret and
-      // the text to type, or null when there is nothing to type.
-      function typePrepare(el) {
-        if (el._typeOriginal == null) {
-          el._typeOriginal = el.innerHTML;
-          // Trimmed: a markdown div's textContent is padded with newlines, and
-          // typing those wastes keystrokes on invisible characters.
-          el._typeText = el.textContent.trim();
-        }
-        typeReset(el);
-
-        const text = el._typeText || '';
-        if (!text) return null;
-
-        // offsetHeight is layout px, unaffected by the transform Reveal puts on
-        // the slide.
-        el.style.minHeight = el.offsetHeight + 'px';
-
-        const caret = document.createElement('span');
-        caret.className = 'type-caret';
-        el.textContent = '';
-        el.appendChild(caret);
-
-        return { caret, text };
-      }
-
-      // Offscreen point a cursor flies in from, given where it is headed.
-      function cursorEntry(from, start) {
-        return from === 'right'  ? { x: RevealAnime.SLIDE_W + 90, y: start.y + 60 }
-             : from === 'top'    ? { x: start.x + 40, y: -140 }
-             : from === 'bottom' ? { x: start.x + 40, y: RevealAnime.SLIDE_H + 140 }
-             :                     { x: -140, y: start.y + 60 };
-      }
-
-      // A caret's position in slide coordinates, where the cursor should sit as if
-      // it had clicked into the text.
-      function caretPoint(section, caret) {
-        const c = posIn(caret, section);
-        return { x: c.x, y: c.y + c.h * 0.55 };
-      }
-
-      function typeIn(section, el) {
-        const cursor = typeCursorFor(el);
-        if (!cursor.isConnected) section.appendChild(cursor);
-        anime.remove([el, cursor]);
-        if (el._typeTl) el._typeTl.pause();
-
-        const prepared = typePrepare(el);
-        if (!prepared) return;
-        const { caret, text } = prepared;
-
-        const speed = Number(dragAttr(el, 'speed')) || 55;
-        const from = dragAttr(el, 'from') || 'left';
-
-        const atCaret = () => caretPoint(section, caret);
-        const start = atCaret();
-        const entry = cursorEntry(from, start);
-
-        anime.set(cursor, { translateX: entry.x, translateY: entry.y, opacity: 0 });
-
-        const typeMs = text.length * speed;
-        const state = { n: 0 };
-
-        const tl = anime.timeline();
-        el._typeTl = tl;
-        tl.add({ targets: cursor, translateX: start.x, translateY: start.y, opacity: 1,
-                 duration: 620, easing: 'easeOutCubic' }, 0)
-          .add({ targets: state, n: text.length, duration: typeMs, easing: 'linear',
-                 update: () => {
-                   el.textContent = text.slice(0, Math.round(state.n));
-                   el.appendChild(caret);
-                   const at = atCaret();
-                   anime.set(cursor, { translateX: at.x, translateY: at.y });
-                 },
-                 complete: () => {
-                   el.textContent = text;
-                   el.appendChild(caret);
-                 },
-               }, 700)
-          // done: caret goes away and the cursor drifts off the way it came
-          .add({ targets: cursor, translateX: entry.x, translateY: entry.y,
-                 opacity: 0, duration: 620, easing: 'easeInQuad',
-                 begin: () => { if (caret.isConnected) caret.remove(); },
-               }, 700 + typeMs + 420);
-
-        tl.finished.then(() => {
-          if (el._typeTl !== tl) return;
-          typeReset(el);
-        });
-      }
-
-      function typeOut(section, el) {
-        const cursor = el._typeCursor;
-        if (el._typeTl) { el._typeTl.pause(); el._typeTl = null; }
-        anime.remove([el, cursor].filter(Boolean));
-        // Restore the text so the element is intact if it is shown again, and park
-        // the cursor. Reveal fades the element out on its own.
-        typeReset(el);
-        if (cursor) anime.set(cursor, { opacity: 0 });
-      }
-
-      // ── Multi-cursor fragments ────────────────────────────────────────────────
-      // A `.fragment.multi-cursor` container has every one of its lines typed at
-      // once, each by its own cursor, all driven from a single tween so the
-      // keystrokes land in lockstep. The thing no WYSIWYG tool can do.
-      //
-      //   cursors="Kari,John,Hailey"  names, cycled if there are fewer than lines
-      //   speed="55"                  milliseconds per character
-      //   from="left"                 edge the cursors arrive from
-      //
-      // Targets are elements marked `.mc-line` if any exist, otherwise the
-      // container's element children, otherwise the container itself.
-
-      // Resolved once and cached: this picks lines by whether they have text, and
-      // typing empties them, so recomputing later would resolve to the wrong
-      // elements and restore nothing.
-      function mcTargets(container) {
-        if (container._mcTargets) return container._mcTargets;
-
-        const marked = container.querySelectorAll('.mc-line');
-        let found;
-        if (marked.length) {
-          found = Array.from(marked);
-        } else {
-          // Descend through single wrappers, so a markdown div holding one <ul>
-          // resolves to the <li> elements rather than to the list as a whole.
-          let node = container;
-          while (node.children.length === 1 && node.children[0].children.length > 0) {
-            node = node.children[0];
-          }
-          const kids = Array.from(node.children).filter(k => k.textContent.trim());
-          found = kids.length ? kids : [node];
-        }
-
-        container._mcTargets = found;
-        return found;
-      }
-
-      function mcCursorFor(el, name, color) {
-        if (!el._mcCursor) el._mcCursor = makeCursor(null, name, color);
-        return el._mcCursor;
-      }
-
-      function multiTypeIn(section, container) {
-        if (container._mcTl) { container._mcTl.pause(); container._mcTl = null; }
-
-        const targets = mcTargets(container);
-        const names = (dragAttr(container, 'cursors') || '')
-          .split(',').map(s => s.trim()).filter(Boolean);
-        const speed = Number(dragAttr(container, 'speed')) || 55;
-        const from = dragAttr(container, 'from') || 'left';
-
-        const items = [];
-        targets.forEach((el, i) => {
-          const prepared = typePrepare(el);
-          if (!prepared) return;
-          const cursor = mcCursorFor(
-            el,
-            names.length ? names[i % names.length] : null,
-            DRAG_PALETTE[i % DRAG_PALETTE.length],
-          );
-          if (!cursor.isConnected) section.appendChild(cursor);
-          anime.remove([el, cursor]);
-
-          const start = caretPoint(section, prepared.caret);
-          const entry = cursorEntry(from, start);
-          anime.set(cursor, { translateX: entry.x, translateY: entry.y, opacity: 0 });
-
-          items.push({ el, cursor, caret: prepared.caret, text: prepared.text,
-                       start, entry, done: false });
-        });
-
-        if (!items.length) return;
-
-        const cursors = items.map(it => it.cursor);
-        const longest = Math.max(...items.map(it => it.text.length));
-        const typeMs = longest * speed;
-        const state = { n: 0 };
-
-        // A line shorter than the longest finishes early: its caret goes away and
-        // its cursor leaves, rather than hovering at a finished line.
-        function retire(it) {
-          it.done = true;
-          it.el.textContent = it.text;
-          if (it.caret.isConnected) it.caret.remove();
-          anime({ targets: it.cursor, translateX: it.entry.x, translateY: it.entry.y,
-                  opacity: 0, duration: 620, easing: 'easeInQuad' });
-        }
-
-        const tl = anime.timeline();
-        container._mcTl = tl;
-        tl.add({ targets: cursors, opacity: 1,
-                 translateX: (t, i) => items[i].start.x,
-                 translateY: (t, i) => items[i].start.y,
-                 duration: 620, easing: 'easeOutCubic',
-                 delay: anime.stagger(70) }, 0)
-          .add({ targets: state, n: longest, duration: typeMs, easing: 'linear',
-                 update: () => {
-                   const n = Math.round(state.n);
-                   items.forEach((it) => {
-                     if (it.done) return;
-                     it.el.textContent = it.text.slice(0, n);
-                     it.el.appendChild(it.caret);
-                     const at = caretPoint(section, it.caret);
-                     anime.set(it.cursor, { translateX: at.x, translateY: at.y });
-                     if (n >= it.text.length) retire(it);
-                   });
-                 },
-                 complete: () => items.forEach(it => { if (!it.done) retire(it); }),
-               }, 760);
-
-        tl.finished.then(() => {
-          if (container._mcTl !== tl) return;
-          items.forEach(it => typeReset(it.el));
-        });
-      }
-
-      function multiTypeOut(section, container) {
-        if (container._mcTl) { container._mcTl.pause(); container._mcTl = null; }
-        mcTargets(container).forEach((el) => {
-          anime.remove([el, el._mcCursor].filter(Boolean));
-          typeReset(el);
-          if (el._mcCursor) anime.set(el._mcCursor, { opacity: 0 });
-        });
-      }
-
-      // ── Find-and-replace fragments ────────────────────────────────────────────
-      // A `.fragment.find-replace` container gets searched: a find bar drops in, a
-      // cursor types the term, every match on the slide highlights at once, and
-      // Replace All swaps them all simultaneously. The gesture is familiar; hitting
-      // every match at once is the part a WYSIWYG tool cannot do.
-      //
-      //   find="lizard"     term to search for (required)
-      //   replace="gecko"   replacement (required)
-      //   cursor="Kari"     name on the cursor tag
-      //   color="#e91e8c"   cursor color
-      //   speed="55"        milliseconds per character in the fields
-      //   bar="top|bottom"  where the find bar sits (default top, like a real
-      //                     editor, but it floats over the content, so use bottom
-      //                     when the text reaches the top-right corner)
-
-      const FR_BAR_HTML = `
-        <div class="fr-row">
-          <span class="fr-label">Find</span>
-          <span class="fr-field"><span class="fr-find"></span></span>
-          <span class="fr-count"></span>
-        </div>
-        <div class="fr-row">
-          <span class="fr-label">Replace</span>
-          <span class="fr-field"><span class="fr-repl"></span></span>
-          <span class="fr-btn">Replace All</span>
-        </div>`;
-
-      function frBarFor(container) {
-        if (!container._frBar) {
-          const bar = document.createElement('div');
-          bar.className = 'fr-bar';
-          bar.innerHTML = FR_BAR_HTML;
-          container._frBar = bar;
-        }
-        return container._frBar;
-      }
-
-      // Wrap every occurrence of `term` in its own span, walking text nodes so
-      // existing markup inside the container survives.
-      function frWrapMatches(container, term) {
-        const hits = [];
-        const lowerTerm = term.toLowerCase();
-
-        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
-        const textNodes = [];
-        while (walker.nextNode()) textNodes.push(walker.currentNode);
-
-        textNodes.forEach((node) => {
-          let cur = node;
-          for (;;) {
-            const i = cur.data.toLowerCase().indexOf(lowerTerm);
-            if (i === -1) break;
-            const match = cur.splitText(i);       // cur keeps the text before it
-            const rest = match.splitText(term.length);
-            const span = document.createElement('span');
-            span.className = 'fr-hit';
-            span.textContent = match.data;        // preserves the original casing
-            match.replaceWith(span);
-            hits.push(span);
-            cur = rest;
-          }
-        });
-
-        return hits;
-      }
-
-      function frReset(container) {
-        if (container._frOriginal != null) container.innerHTML = container._frOriginal;
-        if (container._frBar) container._frBar.remove();
-      }
-
-      function findReplaceIn(section, container) {
-        if (container._frTl) { container._frTl.pause(); container._frTl = null; }
-
-        const term = dragAttr(container, 'find');
-        const replacement = dragAttr(container, 'replace');
-        if (!term || replacement == null) return;
-
-        if (container._frOriginal == null) container._frOriginal = container.innerHTML;
-        frReset(container);
-
-        const speed = Number(dragAttr(container, 'speed')) || 55;
-        const cursor = typeCursorFor(container);
-        if (!cursor.isConnected) section.appendChild(cursor);
-        anime.remove([cursor]);
-
-        const hits = frWrapMatches(container, term);
-        if (!hits.length) return;
-        const hitOriginals = hits.map(h => h.textContent);
-
-        // Bar lives in the section so its coordinates match the cursor's.
-        const bar = frBarFor(container);
-        section.appendChild(bar);
-        const findField = bar.querySelector('.fr-find');
-        const replField = bar.querySelector('.fr-repl');
-        const countEl = bar.querySelector('.fr-count');
-        const btn = bar.querySelector('.fr-btn');
-        findField.textContent = '';
-        replField.textContent = '';
-        countEl.textContent = '';
-        countEl.classList.remove('fr-count--done');
-        btn.classList.remove('fr-btn--pressed');
-
-        const caret = document.createElement('span');
-        caret.className = 'type-caret';
-        findField.appendChild(caret);
-
-        const atBottom = dragAttr(container, 'bar') === 'bottom';
-        bar.classList.toggle('fr-bar--bottom', atBottom);
-        const barHidden = atBottom ? 90 : -90;
-
-        anime.set(bar, { translateY: barHidden, opacity: 0 });
-        anime.set(hits, { backgroundColor: 'rgba(255,213,0,0)' });
-
-        // Points the cursor visits, measured once the bar is laid out.
-        const pointAt = (el, fx, fy) => {
-          const c = posIn(el, section);
-          return { x: c.x + c.w * (fx == null ? 0.5 : fx),
-                   y: c.y + c.h * (fy == null ? 0.6 : fy) };
-        };
-
-        const findMs = term.length * speed;
-        const replMs = replacement.length * speed;
-
-        const tl = anime.timeline();
-        container._frTl = tl;
-
-        // 1. the bar drops in
-        tl.add({ targets: bar, translateY: 0, opacity: 1,
-                 duration: 420, easing: 'easeOutCubic' }, 0);
-
-        // 2. the cursor arrives at the find field. The target is a function so it
-        //    is read after the bar has been laid out, not while it is still
-        //    offscreen; the same trick is used for every later stop.
-        tl.add({ targets: cursor, opacity: 1,
-                 translateX: () => pointAt(findField).x,
-                 translateY: () => pointAt(findField).y,
-                 duration: 620, easing: 'easeOutCubic',
-                 begin: () => {
-                   const p = pointAt(findField);
-                   anime.set(cursor, { translateX: p.x - 220, translateY: p.y + 90,
-                                       opacity: 0 });
-                 } }, 200);
-
-        // 3. the term is typed, cursor tracking the caret
-        const typed = { n: 0 };
-        tl.add({ targets: typed, n: term.length, duration: findMs, easing: 'linear',
-                 update: () => {
-                   findField.textContent = term.slice(0, Math.round(typed.n));
-                   findField.appendChild(caret);
-                   const at = caretPoint(section, caret);
-                   anime.set(cursor, { translateX: at.x, translateY: at.y });
-                 } }, 880);
-
-        // 4. every match lights up, near enough at once to read as one gesture
-        const tHit = 880 + findMs + 120;
-        tl.add({ targets: hits, backgroundColor: 'rgba(255,213,0,0.65)',
-                 duration: 260, easing: 'easeOutQuad', delay: anime.stagger(22),
-                 begin: () => { countEl.textContent = hits.length + ' results'; } },
-               tHit);
-
-        // 5. the replacement is typed
-        const tRepl = tHit + 260 + hits.length * 22 + 320;
-        tl.add({ targets: cursor,
-                 translateX: () => pointAt(replField).x,
-                 translateY: () => pointAt(replField).y,
-                 duration: 460, easing: 'easeInOutQuad',
-                 begin: () => { if (caret.isConnected) caret.remove();
-                                findField.textContent = term;
-                                replField.appendChild(caret); } }, tRepl);
-
-        const typed2 = { n: 0 };
-        tl.add({ targets: typed2, n: replacement.length, duration: replMs, easing: 'linear',
-                 update: () => {
-                   replField.textContent = replacement.slice(0, Math.round(typed2.n));
-                   replField.appendChild(caret);
-                   const at = caretPoint(section, caret);
-                   anime.set(cursor, { translateX: at.x, translateY: at.y });
-                 } }, tRepl + 480);
-
-        // 6. cursor moves to the button and presses it
-        const tBtn = tRepl + 480 + replMs + 260;
-        tl.add({ targets: cursor,
-                 translateX: () => pointAt(btn).x,
-                 translateY: () => pointAt(btn).y,
-                 duration: 460, easing: 'easeInOutQuad',
-                 begin: () => { if (caret.isConnected) caret.remove();
-                                replField.textContent = replacement; } }, tBtn);
-        tl.add({ targets: btn, scale: 0.94, duration: 110, easing: 'easeOutQuad',
-                 begin: () => btn.classList.add('fr-btn--pressed') }, tBtn + 460);
-        tl.add({ targets: btn, scale: 1, duration: 140, easing: 'easeOutQuad',
-                 complete: () => btn.classList.remove('fr-btn--pressed') }, tBtn + 570);
-
-        // 7. every match swaps at once. Driven off one counter rather than a timer
-        //    per hit, so it stays cancellable and the sweep is deterministic.
-        const tSwap = tBtn + 640;
-        const swap = { n: 0 };
-        tl.add({ targets: swap, n: hits.length,
-                 duration: Math.max(hits.length * 26, 220), easing: 'linear',
-                 update: () => {
-                   const k = Math.round(swap.n);
-                   hits.forEach((h, i) => {
-                     const want = i < k ? replacement : hitOriginals[i];
-                     if (h.textContent !== want) h.textContent = want;
-                   });
-                 },
-                 complete: () => {
-                   hits.forEach(h => { h.textContent = replacement; });
-                   countEl.textContent = hits.length + ' replaced';
-                   countEl.classList.add('fr-count--done');
-                 } }, tSwap);
-        tl.add({ targets: hits, backgroundColor: 'rgba(56,193,114,0.6)',
-                 duration: 220, easing: 'easeOutQuad', delay: anime.stagger(26) }, tSwap);
-
-        // 8. highlights fade, bar and cursor leave
-        const tEnd = tSwap + Math.max(hits.length * 26, 220) + 620;
-        tl.add({ targets: hits, backgroundColor: 'rgba(56,193,114,0)',
-                 duration: 520, easing: 'easeOutQuad' }, tEnd);
-        tl.add({ targets: bar, translateY: barHidden, opacity: 0,
-                 duration: 460, easing: 'easeInQuad' }, tEnd + 200);
-        tl.add({ targets: cursor, translateY: () => pointAt(btn).y + 160, opacity: 0,
-                 duration: 520, easing: 'easeInQuad' }, tEnd + 200);
-      }
-
-      function findReplaceOut(section, container) {
-        if (container._frTl) { container._frTl.pause(); container._frTl = null; }
-        anime.remove([container._frBar, container._typeCursor].filter(Boolean));
-        frReset(container);
-        if (container._typeCursor) anime.set(container._typeCursor, { opacity: 0 });
-      }
-
-      // ── RevealJS wiring ───────────────────────────────────────────────────────
-
-      // These fragment styles are not tied to a single slide class, so they wire
-      // straight into Reveal rather than going through defineSlide.
-      (function whenReveal() {
-        if (typeof Reveal === 'undefined' || !Reveal.on) { setTimeout(whenReveal, 50); return; }
-        Reveal.on('fragmentshown', (e) => {
-          const section = e.fragment.closest('section');
-          markedTargets(e.fragment, 'drag-in').forEach(el => haulIn(section, el));
-          markedTargets(e.fragment, 'type-in').forEach(el => typeIn(section, el));
-          markedTargets(e.fragment, 'multi-cursor').forEach(el => multiTypeIn(section, el));
-          markedTargets(e.fragment, 'find-replace').forEach(el => findReplaceIn(section, el));
-        });
-        Reveal.on('fragmenthidden', (e) => {
-          const section = e.fragment.closest('section');
-          markedTargets(e.fragment, 'drag-in').forEach(el => haulOut(section, el));
-          markedTargets(e.fragment, 'multi-cursor').forEach(el => multiTypeOut(section, el));
-          markedTargets(e.fragment, 'find-replace').forEach(el => findReplaceOut(section, el));
-          markedTargets(e.fragment, 'type-in').forEach(el => typeOut(section, el));
-        });
-      })();
-
-      RevealAnime.defineSlide('float-slide', {
-        enter: (section) => {
-          floatBehavior.start(section);
-          return () => floatBehavior.stop();
-        },
-      });
-
-      RevealAnime.defineSlide('collab-slide', {
-        leave: () => stopAnim(),
-        fragments: {
-          'appear-fragment': (section) => {
-            appearAnim(section);
-            return () => stopAnim(true);
-          },
-          'start-fragment': (section) => {
-            runAnim(section);
-            return () => stopLoop();
-          },
-          'layout-fragment': {
-            show: (section) => { shiftLayout(section, true);  },
-            hide: (section) => { shiftLayout(section, false); },
-          },
         },
       });
     })();
