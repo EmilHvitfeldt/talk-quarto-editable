@@ -10,6 +10,8 @@ format:
       - text: |
           <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
     include-after-body:
+      - "fragments.html"
+      - "fragment-styles.html"
       - "all-the-js-code.html"
 pagetitle: Title of Talk
 echo: false
@@ -36,6 +38,40 @@ Slower, from the bottom.
 ![](lizard.gif){.drag-in from="top" width="200"}
 
 [Two things, one keypress.]{.drag-in from="bottom" cursor="Kari"}
+:::
+
+## Corrected
+
+::: {.fragment .drag-in from="left" cursor="Kari" fix="John"}
+Kari drops this a bit short, and John nudges it into place.
+:::
+
+## Typed
+
+::: {.fragment .type-in cursor="Hailey"}
+Hailey types this out, then leaves.
+:::
+
+::: {.fragment .type-in cursor="John" from="right" speed="35"}
+John is a faster typist.
+:::
+
+## Replace all
+
+::: {.fragment .find-replace find="lizard" replace="gecko" cursor="Kari" bar="bottom"}
+The lizard sits on a rock. A second lizard joins the first lizard, and a
+third lizard watches. Every lizard here is a lizard, which is what makes
+the lizard count so high: lizard, lizard, lizard.
+:::
+
+## Five at once
+
+::: {.fragment .multi-cursor cursors="Kari,John,Hailey,Dave,Iris"}
+- setosa
+- versicolor
+- virginica
+- a fourth line
+- and a fifth
 :::
 
 ##
