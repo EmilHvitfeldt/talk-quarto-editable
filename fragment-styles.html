@@ -572,10 +572,12 @@
   S.define('comment', {
     show(ctx) {
       const c = ctx.box();
-      const author = ctx.attr('cursor') || 'Kari';
+      // No `cursor` name means an anonymous comment: bare arrow, and the
+      // bubble drops its author line rather than inventing a collaborator.
+      const author = ctx.attr('cursor');
       const text = ctx.attr('text') || 'Can we tighten this?';
       const bubble = ctx.chrome('bubble', 'fx-comment',
-        `<span class="fx-comment-author">${author}</span>` +
+        (author ? `<span class="fx-comment-author">${author}</span>` : '') +
         `<span class="fx-comment-text">${text}</span>`);
       bubble.style.width = '';
       bubble.style.height = '';
@@ -603,8 +605,12 @@
       const el = ctx.el;
       const c = ctx.box();
       const names = ctx.list('cursors');
-      const left = ctx.cursor('a', names[0] || 'Kari', null);
-      const right = ctx.cursor('b', names[1] || 'John', null);
+      // Names are optional: an unnamed cursor is a bare arrow. `names[0]` is
+      // left undefined when absent so a lone `cursor="Kari"` still labels the
+      // first arguer, while the second stays explicitly bare rather than
+      // picking up the same name.
+      const left = ctx.cursor('a', names[0], null);
+      const right = ctx.cursor('b', names.length > 1 ? names[1] : null, null);
       const amp = ctx.num('amp', 46);
 
       const lg = { x: c.x + 30, y: c.y + c.h * 0.5 };

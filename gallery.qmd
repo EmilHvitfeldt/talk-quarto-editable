@@ -131,6 +131,15 @@ A claim worth questioning.
 ::: {.fragment .comment for="#comment-target" cursor="Hailey" text="Is this the right framing?"}
 :::
 
+## comment, anonymous
+
+::: {#comment-anon-target}
+No byline needed.
+:::
+
+::: {.fragment .comment for="#comment-anon-target" text="Is this the right framing?"}
+:::
+
 ## argue
 
 ::: {#argue-target}
@@ -138,6 +147,15 @@ Contested.
 :::
 
 ::: {.fragment .argue for="#argue-target" cursors="Kari,John" winner="right" amp="60"}
+:::
+
+## argue, anonymous
+
+::: {#argue-anon-target}
+Contested by nobody in particular.
+:::
+
+::: {.fragment .argue for="#argue-anon-target" winner="right" amp="60"}
 :::
 
 ## drag-from-folder

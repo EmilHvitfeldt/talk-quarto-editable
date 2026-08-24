@@ -205,7 +205,9 @@ A line that is already on the slide.
 
 Without `for`, a style acts on the marked element itself, which is what you want for `.paste-in`, `.race-in`, `.duplicate`, `.diff-in`, and `.drag-from-folder`.
 
-Every style takes `cursor` (name on the tag), `color`, and `from` (entry edge). Style-specific attributes:
+Every style takes `cursor` (name on the tag), `color`, and `from` (entry edge). All three are optional: a cursor with no name renders as a bare arrow, which is what you want when the point is that *someone* edited the slide rather than who. No style invents a collaborator name for you. For the multi-cursor styles (`.cursor-idle`, `.race-in`, `.argue`) leave `cursors` off entirely and every arrow is anonymous.
+
+Style-specific attributes:
 
 | Style | What it does | Attributes |
 | --- | --- | --- |
@@ -223,7 +225,7 @@ Every style takes `cursor` (name on the tag), `color`, and `from` (entry edge). 
 | `.duplicate` | Option-drag repeatedly until one plot has become a facet grid. | `times="3"`, `gap` |
 | `.diff-in` | Old text struck through in red, new in green, then settles to just new. | `was="twelve observations"` |
 | `.undo` | Something visibly wrong, then the shortcut, then it snaps back. | `by="110,30"`, `tilt`, `badge` |
-| `.comment` | A cursor drops a sticky comment anchored to the target. | `text`, `cursor` (used as author) |
+| `.comment` | A cursor drops a sticky comment anchored to the target. | `text`, `cursor` (doubles as the author line; omit it and the bubble has no byline) |
 | `.argue` | Two cursors drag the same thing in opposite directions. One wins. | `cursors="Kari,John"`, `amp`, `winner="right"` |
 | `.drag-from-folder` | A folder window opens, a cursor drags a thumbnail out, and the drop becomes the real image. | `files`, `pick`, `folder`, `folder-x`, `folder-y`, `src` |
 
