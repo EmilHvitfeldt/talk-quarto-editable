@@ -117,22 +117,31 @@ outline of the initial algorithm
   - prompts the user to save the document as a file
   - user save it in the same folder with the same name
 
-##
+## How did it go?
 
-list pros and cons
+::: proscons
+::: {#pros .proscons-card .proscons-card--pro}
+[Pros]{.proscons-title}
 
-pros:
-much faster
-intuitive controls
-using quarto as the data person
+- much faster
+- intuitive controls
+- using Quarto as the data person
+:::
 
-cons:
-still slower than powerpoint
-requires regex
-fragile like crazy
-so much more logic to make everything work, espeically with multiple changes
-requires overwriting the source document
-all the bugs
+::: {#cons .proscons-card .proscons-card--con}
+[Cons]{.proscons-title}
+
+- still slower than PowerPoint
+- requires regex
+- fragile like crazy
+- so much more logic to make everything work, especially with multiple changes
+- requires overwriting the source document
+- all the bugs
+:::
+:::
+
+::: {.fragment .move-item for="#cons" to="#pros" item="2" cursor="Kari"}
+:::
 
 ##
 

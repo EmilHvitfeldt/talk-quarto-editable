@@ -599,3 +599,78 @@ section:has(.collab-slide) {
   box-shadow: 0 8px 26px rgba(0, 0, 0, 0.3);
 }
 
+
+/*-- pros & cons columns --*/
+
+.proscons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+  margin-top: 0.4em;
+}
+
+.proscons-card {
+  p:has(.proscons-title) {
+    margin: 0 0 0.5em;
+  }
+
+  .proscons-title {
+    display: block;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    position: relative;
+    padding-left: 1.5em;
+    margin-bottom: 0.35em;
+    line-height: 1.35;
+  }
+
+  li::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+  }
+}
+
+.proscons-card--pro {
+  .proscons-title { color: #1f8a32; }
+  li::before {
+    content: "+";
+    color: #1f8a32;
+  }
+}
+
+.proscons-card--con {
+  .proscons-title { color: #c23b33; }
+  li::before {
+    content: "\2212";
+    color: #c23b33;
+  }
+}
+
+/*-- .move-item ghost --*/
+
+.fx-move-ghost {
+  position: absolute;
+  z-index: 890;
+  pointer-events: none;
+  box-sizing: border-box;
+  padding: 4px 12px;
+  line-height: 1.35;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}

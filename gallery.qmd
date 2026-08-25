@@ -163,3 +163,25 @@ Contested by nobody in particular.
 ::: {.fragment .drag-from-folder files="plot.png,lizard.gif,logo.svg" pick="2" folder="images"}
 ![](lizard.gif){width="300"}
 :::
+
+## move-item
+
+::: proscons
+::: {#move-pros .proscons-card .proscons-card--pro}
+[Pros]{.proscons-title}
+
+- fast
+- intuitive
+:::
+
+::: {#move-cons .proscons-card .proscons-card--con}
+[Cons]{.proscons-title}
+
+- fragile
+- requires regex
+- so many bugs
+:::
+:::
+
+::: {.fragment .move-item for="#move-cons" to="#move-pros" item="2" cursor="Kari"}
+:::

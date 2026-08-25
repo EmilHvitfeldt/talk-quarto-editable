@@ -31,7 +31,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="gallery_files/libs/revealjs/dist/theme/quarto-7437faa8afeab2c8060789daec340116.css">
+  <link rel="stylesheet" href="gallery_files/libs/revealjs/dist/theme/quarto-c063845d4d8e3c040593d1ff165d00b8.css">
   <link href="gallery_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="gallery_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="gallery_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -286,6 +286,29 @@
 <h2>drag-from-folder</h2>
 <div class="fragment drag-from-folder" data-files="plot.png,lizard.gif,logo.svg" data-pick="2" data-folder="images">
 <p><img data-src="lizard.gif" width="300"></p>
+</div>
+</section>
+<section id="move-item" class="slide level2">
+<h2>move-item</h2>
+<div class="proscons">
+<div id="move-pros" class="proscons-card proscons-card--pro">
+<p><span class="proscons-title">Pros</span></p>
+<ul>
+<li>fast</li>
+<li>intuitive</li>
+</ul>
+</div>
+<div id="move-cons" class="proscons-card proscons-card--con">
+<p><span class="proscons-title">Cons</span></p>
+<ul>
+<li>fragile</li>
+<li>requires regex</li>
+<li>so many bugs</li>
+</ul>
+</div>
+</div>
+<div class="fragment move-item" for="#move-cons" data-to="#move-pros" data-item="2" data-cursor="Kari">
+
 </div>
 
 </section>
@@ -1705,6 +1728,151 @@
                    duration: 440, easing: 'easeInQuad' }, 2160);
           tl.add({ targets: cursor, translateX: c.x - 220, opacity: 0,
                    duration: 520, easing: 'easeInQuad' }, 2260);
+        },
+      });
+
+      // ── .move-item ────────────────────────────────────────────────────────────
+      // A cursor lifts one item out of a list and drops it into another list. Built
+      // for the pros/cons slide: an entry that used to be a con turns out to be a
+      // pro. The source list closes the gap, the destination opens one.
+      //
+      //   ::: {.fragment .move-item for="#cons" to="#pros" item="3"}
+      //   :::
+
+      function clearMove(el) {
+        const st = el._fxMove;
+        if (!st) return;
+        if (typeof anime !== 'undefined') anime.remove(st.shifted.concat([st.landed]));
+        st.shifted.forEach((n) => { n.style.transform = ''; n.style.opacity = ''; });
+        st.landed.remove();
+        el._fxMove = null;
+      }
+
+      // One hop of the gesture: a cursor grabs `hold`, a ghost carries it across,
+      // and `park` — an element already sitting in the flow at zero opacity — takes
+      // over on landing. Both directions are the same motion with the two ends
+      // swapped, so forward and reverse share this.
+      //
+      //   shiftTo   where the entries below the source slot should end up
+      //   slotTo    the destination slot's height at rest (opens or closes in step)
+      function carryItem(ctx, o) {
+        const section = ctx.section;
+        const tl = ctx.tl();
+
+        const from = S.posIn(o.hold, section);
+        const to = S.posIn(o.park, section);
+
+        const ghost = ctx.chrome('move-ghost', 'fx-move-ghost', o.hold.innerHTML);
+        S.placeAt(ghost, from.x, from.y);
+        ghost.style.width = from.w + 'px';
+        ghost.style.height = '';
+        anime.set(ghost, { opacity: 0, translateX: 0, translateY: 0 });
+
+        const grab = S.grabPoint(from);
+        const cursor = ctx.cursor();
+
+        const entry = S.flyIn(tl, cursor, ctx.from(), grab, 0);
+        const t = S.squeeze(tl, o.hold, 560);
+
+        // lift: the ghost takes over from the real element
+        tl.add({ targets: ghost, opacity: 1, duration: 140, easing: 'linear' }, t);
+        tl.add({ targets: o.hold, opacity: 0, duration: 140, easing: 'linear' }, t);
+
+        // carry — the cursor travels the ghost's exact delta so it keeps its grip
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        tl.add({ targets: ghost, translateX: dx, translateY: dy, width: to.w + 'px',
+                 duration: o.dur, easing: 'easeInOutQuad' }, t + 140);
+        tl.add({ targets: cursor, translateX: grab.x + dx, translateY: grab.y + dy,
+                 duration: o.dur, easing: 'easeInOutQuad' }, t + 140);
+
+        // both lists reflow while the item is in the air
+        if (o.shifted.length) {
+          tl.add({ targets: o.shifted, translateY: o.shiftTo, duration: o.dur * 0.7,
+                   easing: 'easeInOutQuad', delay: anime.stagger(30) }, t + 200);
+        }
+        tl.add({ targets: o.slot, height: o.slotTo.h, marginBottom: o.slotTo.mb,
+                 duration: o.dur * 0.7, easing: 'easeInOutQuad' }, t + 200);
+
+        // drop: the parked element fades up and the ghost bows out
+        const land = t + 140 + o.dur;
+        tl.add({ targets: ghost, opacity: 0, duration: 200, easing: 'easeOutQuad' }, land);
+        tl.add({ targets: o.park, opacity: [0, 1], scale: [0.96, 1], duration: 300,
+                 easing: 'easeOutQuad', complete: o.onDone }, land);
+
+        S.flyOut(tl, cursor, entry, land + 240);
+      }
+
+      S.define('move-item', {
+        show(ctx) {
+          const section = ctx.section;
+          const src = ctx.el;
+          clearMove(src);                     // a re-show gets the default teardown,
+                                              // which knows nothing about the clone
+                                              // we parked in the other list
+          const sel = ctx.attr('to');
+          const dst = sel && (section.querySelector(sel) || document.querySelector(sel));
+          if (!dst) return;
+
+          // Aim at the list itself: a card that also holds a title would otherwise
+          // resolve to [title, list] rather than to the entries.
+          const items = S.lines(src.querySelector('ul, ol') || src);
+          const i = Math.min(Math.max(1, ctx.num('item', items.length)), items.length) - 1;
+          const moving = items[i];
+          if (!moving) return;
+
+          const dur = ctx.num('duration', 820);
+
+          // Park a real clone in the destination list. It inherits that list's
+          // bullet styling — a con arriving as a pro is the whole point — and being
+          // in the flow means the landing box can be *measured* rather than guessed.
+          const dstList = dst.querySelector('ul, ol') || dst;
+          const landed = moving.cloneNode(true);
+          dstList.appendChild(landed);
+
+          // Measured at natural size, then collapsed: the slot opens during the
+          // carry instead of popping into existence when the fragment fires. Its
+          // top does not depend on its own height, so `to` stays valid.
+          const open = { h: landed.offsetHeight + 'px',
+                         mb: getComputedStyle(landed).marginBottom };
+          landed.style.overflow = 'hidden';
+          landed.style.boxSizing = 'border-box';   // offsetHeight is a border box
+          landed.style.height = '0px';
+          landed.style.marginBottom = '0px';
+          anime.set(landed, { opacity: 0 });
+
+          // The gap the item leaves behind: everything below it in the source.
+          const shifted = items.slice(i + 1);
+          const gap = moving.offsetHeight;
+
+          src._fxMove = { moving, landed, shifted, gap, dur, open };
+
+          carryItem(ctx, {
+            hold: moving, park: landed, shifted, shiftTo: -gap,
+            slot: landed, slotTo: open, dur,
+          });
+        },
+
+        // Stepping back re-runs the gesture the other way: the cursor comes back
+        // for the item and carries it home. `reverse="off"` snaps instead.
+        hide(ctx) {
+          const st = ctx.el._fxMove;
+          const done = () => { clearMove(ctx.el); S.teardown(ctx.el); };
+          if (!st || typeof anime === 'undefined' || ctx.attr('reverse') === 'off') {
+            done();
+            return;
+          }
+
+          // Cancel the forward timeline but keep the markup as it stands: the
+          // reverse starts from wherever the item actually is, and the default
+          // teardown would restore the source list out from under it.
+          S.stop(ctx.el);
+
+          carryItem(ctx, {
+            hold: st.landed, park: st.moving, shifted: st.shifted, shiftTo: 0,
+            slot: st.landed, slotTo: { h: '0px', mb: '0px' }, dur: st.dur,
+            onDone: done,
+          });
         },
       });
     })();

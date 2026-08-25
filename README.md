@@ -228,6 +228,7 @@ Style-specific attributes:
 | `.comment` | A cursor drops a sticky comment anchored to the target. | `text`, `cursor` (doubles as the author line; omit it and the bubble has no byline) |
 | `.argue` | Two cursors drag the same thing in opposite directions. One wins. | `cursors="Kari,John"`, `amp`, `winner="right"` |
 | `.drag-from-folder` | A folder window opens, a cursor drags a thumbnail out, and the drop becomes the real image. | `files`, `pick`, `folder`, `folder-x`, `folder-y`, `src` |
+| `.move-item` | An entry is lifted out of one list and dropped into another. The source closes the gap, the destination opens one, and the item picks up its new list's bullet. Steps backwards by carrying the item home. | `for` (source list), `to` (destination list), `item="2"`, `duration`, `reverse="off"` |
 
 ### Writing a new style
 
