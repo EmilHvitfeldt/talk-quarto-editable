@@ -18,6 +18,60 @@ echo: false
 code-line-numbers: false
 ---
 
+## drag-in
+
+::: {.fragment .drag-in from="left" cursor="Kari"}
+Content that a cursor hauls in from the left.
+:::
+
+::: {.fragment .drag-in from="right" cursor="John"}
+And another one, from the right.
+:::
+
+::: {.fragment .drag-in from="bottom" cursor="Hailey" duration="1200"}
+Slower, from the bottom.
+:::
+
+::: fragment
+![](lizard.gif){.drag-in from="top" width="200"}
+
+[Two things, one keypress.]{.drag-in from="bottom" cursor="Kari"}
+:::
+
+## drag-in, with fix
+
+::: {.fragment .drag-in from="left" cursor="Kari" fix="John"}
+Kari drops this a bit short, and John nudges it into place.
+:::
+
+## type-in
+
+::: {.fragment .type-in cursor="Hailey"}
+Hailey types this out, then leaves.
+:::
+
+::: {.fragment .type-in cursor="John" from="right" speed="35"}
+John is a faster typist.
+:::
+
+## find-replace
+
+::: {.fragment .find-replace find="lizard" replace="gecko" cursor="Kari" bar="bottom"}
+The lizard sits on a rock. A second lizard joins the first lizard, and a
+third lizard watches. Every lizard here is a lizard, which is what makes
+the lizard count so high: lizard, lizard, lizard.
+:::
+
+## multi-cursor
+
+::: {.fragment .multi-cursor cursors="Kari,John,Hailey,Dave,Iris"}
+- setosa
+- versicolor
+- virginica
+- a fourth line
+- and a fifth
+:::
+
 ## retype
 
 ::: {#retype-target}
