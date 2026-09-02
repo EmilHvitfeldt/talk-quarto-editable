@@ -359,6 +359,70 @@
     },
   });
 
+  // ── .add-item ─────────────────────────────────────────────────────────────
+  // A cursor appends a new entry to a list and types it out. The counterpart
+  // to `.delete-items`: the list grows a row that was never in the markup.
+  //
+  //   ::: {.fragment .add-item for="#cons" text="we are all alone"}
+  //   :::
+
+  S.define('add-item', {
+    show(ctx) {
+      const text = ctx.attr('text');
+      if (!text) return;
+
+      const list = ctx.el.querySelector('ul, ol') || ctx.el;
+      const items = S.lines(list);
+      const last = items[items.length - 1];
+
+      // Clone the last entry so the new one inherits its markup and styling,
+      // then empty it: measuring it full gives the height the slot opens to.
+      const row = last ? last.cloneNode(false) : document.createElement('li');
+      ctx.marker._fxRow = row;
+      row.textContent = text;
+      list.appendChild(row);
+      const open = row.offsetHeight + 'px';
+      const mb = getComputedStyle(row).marginBottom;
+      row.textContent = '';
+      row.style.overflow = 'hidden';
+      row.style.boxSizing = 'border-box';
+      row.style.height = '0px';
+      row.style.marginBottom = '0px';
+
+      const cursor = ctx.cursor();
+      const tl = ctx.tl();
+
+      // Aim at where the row will be, which is the bottom of the list as it
+      // stands: the slot opens downward from there.
+      const c = S.posIn(list, ctx.section);
+      const at = { x: c.x + 24, y: c.y + c.h + 8 };
+      const entry = S.flyIn(tl, cursor, ctx.from(), at, 0);
+
+      tl.add({ targets: row, height: open, marginBottom: mb,
+               duration: 320, easing: 'easeOutQuad' }, 600);
+
+      let t = 940;
+      t += S.typeInto(tl, {
+        section: ctx.section, host: row, text, cursor,
+        offset: t, speed: ctx.num('speed', 55),
+      });
+
+      tl.add({ targets: row, opacity: [1, 1], duration: 1, easing: 'linear',
+               begin: () => { row.style.height = ''; row.style.overflow = ''; } }, t);
+
+      S.flyOut(tl, cursor, entry, t + 240);
+    },
+
+    // Undo just the row: the list this fragment appended to may be the way a
+    // different fragment left it, and a full restore would revert that too.
+    hide(ctx) {
+      S.sweep(ctx.el);
+      const row = ctx.marker._fxRow;
+      if (row) row.remove();
+      ctx.marker._fxRow = null;
+    },
+  });
+
   // ── .marquee-select ───────────────────────────────────────────────────────
 
   S.define('marquee-select', {
@@ -404,6 +468,85 @@
 
       tl.add({ targets: rect, opacity: 0, duration: 300, easing: 'easeOutQuad' }, 2000);
       S.flyOut(tl, cursor, entry, 2000);
+    },
+  });
+
+  // ── .delete-items ─────────────────────────────────────────────────────────
+  // A cursor drags a selection over several entries in a list and deletes
+  // them; the list closes up around the survivors. `keep` names the entries
+  // that stay, `items` the ones that go — give one or the other.
+  //
+  //   ::: {.fragment .delete-items for="#cons" keep="6"}
+  //   :::
+
+  S.define('delete-items', {
+    show(ctx) {
+      const list = ctx.el.querySelector('ul, ol') || ctx.el;
+      const items = S.lines(list);
+      if (!items.length) return;
+
+      const nums = (n) => ctx.list(n).map(Number).filter((v) => v >= 1);
+      const pick = nums('items');
+      const keep = nums('keep');
+      const doomed = items.filter((_, i) => (pick.length ? pick.includes(i + 1)
+                                                         : !keep.includes(i + 1)));
+      if (!doomed.length) return;
+
+      // Bounding box of everything being removed, so one sweep covers the lot
+      // even when the doomed entries are not contiguous.
+      const boxes = doomed.map((el) => S.posIn(el, ctx.section));
+      const pad = 8;
+      const x = Math.min(...boxes.map(b => b.x)) - pad;
+      const y = Math.min(...boxes.map(b => b.y)) - pad;
+      const w = Math.max(...boxes.map(b => b.x + b.w)) - x + pad;
+      const h = Math.max(...boxes.map(b => b.y + b.h)) - y + pad;
+
+      const rect = ctx.chrome('marquee', 'fx-marquee');
+      S.placeAt(rect, x, y);
+      const st = { w: 0, h: 0 };
+      const apply = () => { rect.style.width = st.w + 'px'; rect.style.height = st.h + 'px'; };
+      apply();
+
+      const badge = ctx.chrome('badge', 'fx-badge', ctx.attr('badge') || '⌫');
+      badge.style.width = '';
+      badge.style.height = '';
+      S.placeAt(badge, x + w + 16, y + h - 20);
+      anime.set(badge, { opacity: 0, scale: 0.85 });
+
+      const cursor = ctx.cursor();
+      const tl = ctx.tl();
+      const entry = S.flyIn(tl, cursor, ctx.from(), { x, y }, 0);
+
+      // drag the selection open, cursor pinned to the trailing corner
+      tl.add({ targets: st, w, h, duration: 620, easing: 'easeOutQuad',
+               update: () => {
+                 apply();
+                 anime.set(cursor, { translateX: x + st.w, translateY: y + st.h });
+               } }, 600);
+
+      tl.add({ targets: rect, opacity: [1, 1], duration: 1, easing: 'linear',
+               begin: () => doomed.forEach(el => el.classList.add('fx-selected')) }, 1240);
+
+      tl.add({ targets: badge, opacity: 1, scale: 1,
+               duration: 220, easing: 'easeOutBack' }, 1340);
+
+      // The entries collapse their own height, so the survivors reflow upward
+      // on their own rather than needing transforms of their own.
+      tl.add({ targets: doomed, opacity: 0, duration: 240, easing: 'easeInQuad',
+               begin: () => doomed.forEach((el) => {
+                 el.style.overflow = 'hidden';
+                 el.style.boxSizing = 'border-box';
+                 el.style.height = el.offsetHeight + 'px';
+               }) }, 1560);
+
+      tl.add({ targets: doomed, height: 0, marginTop: 0, marginBottom: 0,
+               paddingTop: 0, paddingBottom: 0,
+               duration: 480, easing: 'easeInOutQuad',
+               delay: anime.stagger(40) }, 1660);
+
+      tl.add({ targets: rect, opacity: 0, duration: 240, easing: 'easeOutQuad' }, 1660);
+      tl.add({ targets: badge, opacity: 0, duration: 240, easing: 'easeInQuad' }, 1760);
+      S.flyOut(tl, cursor, entry, 1860);
     },
   });
 
@@ -737,6 +880,9 @@
   //
   //   ::: {.fragment .move-item for="#cons" to="#pros" item="3"}
   //   :::
+  //
+  // With `text`, the item is also rewritten once it lands, so an entry can
+  // change its wording along with its column.
 
   function clearMove(el) {
     const st = el._fxMove;
@@ -799,7 +945,32 @@
     tl.add({ targets: o.park, opacity: [0, 1], scale: [0.96, 1], duration: 300,
              easing: 'easeOutQuad', complete: o.onDone }, land);
 
-    S.flyOut(tl, cursor, entry, land + 240);
+    let out = land + 240;
+
+    // The item lands, then gets rewritten in place: the same cursor deletes the
+    // wording it arrived with and types the wording it deserves in its new home.
+    if (o.retext) {
+      const old = (o.park.textContent || '').trim();
+      let t2 = land + 340;
+
+      // The slot was animated to a measured height with overflow hidden; the
+      // replacement wording is a different length, so hand the box back to the
+      // layout before touching the text.
+      tl.add({ targets: o.park, opacity: 1, duration: 1, begin: () => {
+        o.park.style.height = '';
+        o.park.style.marginBottom = '';
+        o.park.style.overflow = '';
+      } }, land + 300);
+
+      t2 += S.deleteFrom(tl, { section, host: o.park, text: old, cursor,
+                               offset: t2, speed: 26 });
+      t2 += 100;
+      t2 += S.typeInto(tl, { section, host: o.park, text: o.retext, cursor,
+                             offset: t2, speed: 45 });
+      out = t2 + 240;
+    }
+
+    S.flyOut(tl, cursor, entry, out);
   }
 
   S.define('move-item', {
@@ -848,7 +1019,7 @@
 
       carryItem(ctx, {
         hold: moving, park: landed, shifted, shiftTo: -gap,
-        slot: landed, slotTo: open, dur,
+        slot: landed, slotTo: open, dur, retext: ctx.attr('text'),
       });
     },
 

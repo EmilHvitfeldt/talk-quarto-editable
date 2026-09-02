@@ -147,6 +147,28 @@ The slide feels inhabited.
 - gamma
 :::
 
+## delete-items
+
+::: {#delete-target}
+- keep the first one
+- but not this
+- nor this
+- and definitely not this
+:::
+
+::: {.fragment .delete-items for="#delete-target" keep="1" cursor="John"}
+:::
+
+## add-item
+
+::: {#add-target}
+- first
+- second
+:::
+
+::: {.fragment .add-item for="#add-target" text="third, typed on arrival" cursor="Kari"}
+:::
+
 ## reorder
 
 ::: {.fragment .reorder item="3" to="1" cursor="John"}

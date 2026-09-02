@@ -20,58 +20,166 @@ code-line-numbers: false
 
 ## {.float-slide}
 
-##
-
-fine-control of elements of slides are hard
-
-Small changes takes a lot of time.
-feels like 100x slower than in other slidecrafting tools
+Slideware Is Dead - Long Live Quarto
 
 ##
 
-It starts with the bluesky post from Chelsea
-will need to be doctored a little bit
+![](chelsea.png)
 
-https://bsky.app/profile/chelseaparlett.bsky.social/post/3loufhkxnkc2x
-
+::: notes
 she is right, this sucks, can we fix it?
-
-if start with post, still show the pain
+:::
 
 ##
 
-Maybe show my reply?
+TODO: Video of someone modifying quarto source code a bit, wait for a re-render, repeat
+
+
+::: notes
+or an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat
+
+Getting content on your quarto slides is a breeze
+
+Making sure it looks right is time consuming
+
 nevertheless, it sparked an idea
+:::
 
 ##
 
-try an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat
+My goal: make quarto superior to keynote, powerpoint, and google slides
 
 ##
 
-The first draft of editable
+Introducting quarto-revealjs-editable :tada:
 
-outline of the initial algorithm
+::: fragment
 
-- inject all of source document into the slides
+::: {.columns}
+
+::: {.column}
+
+User has to:
+
 - add class to image
-- have code so it can be moved around, tracking the values
-- have save button
-  - it parses the source document (using regex)
-  - finds all moved images
-  - updates the source document with new x and y
-  - prompts the user to save the document as a file
-  - user save it in the same folder with the same name
+- move it around
+- click save button
+- save and overwrite file
+- hit render
 
-## How did it go?
+:::
+
+::: {.column}
+
+Editable has to:
+
+0. inject all of source document into the slides
+1. finds all moved images
+2. updates the source document with new x and y
+
+1 & 2 done using regex
+
+:::
+
+:::
+
+:::
+
+##
+
+TODO: add video of us using this
+
+##
 
 ::: proscons
 ::: {#pros .proscons-card .proscons-card--pro}
 [Pros]{.proscons-title}
 
+- We are using Quarto
+- [much faster]{.fragment .type-in}
+- [intuitive controls]{.fragment .type-in from="right"}
+:::
+
+::: {#cons .proscons-card .proscons-card--con}
+[Cons]{.proscons-title}
+
+- still slower than PowerPoint
+- Needed to tag elements
+- requires regex
+- fragile like crazy
+- so much more logic to make everything work, especially with multiple changes
+- requires overwriting the source document
+- all the bugs
+:::
+:::
+
+##
+
+Did we beat powerpoint? No
+
+the loop is still too slow
+
+Need to tag elements
+
+##
+
+TODO: add video of us using this
+
+##
+
+::: proscons
+::: {#pros .proscons-card .proscons-card--pro}
+[Pros]{.proscons-title}
+
+- We are using Quarto
 - much faster
 - intuitive controls
-- using Quarto as the data person
+:::
+
+::: {#cons .proscons-card .proscons-card--con}
+[Cons]{.proscons-title}
+
+- still slower than PowerPoint
+- Needed to tag elements
+- requires regex
+- fragile like crazy
+- so much more logic to make everything work, especially with multiple changes
+- requires overwriting the source document
+- all the bugs
+:::
+:::
+
+::: {.fragment .move-item for="#cons" to="#pros" item="2" text="knows what can be changed"}
+:::
+
+##
+
+It is still too slow, the feedback loop is too long and the bottleneck is quarto
+
+Mention q2
+
+Mention quartohub
+
+Mention automerge
+
+::: notes
+seems right (we can mention that there are dual implementaitons depending on the quarto version)
+:::
+
+##
+
+Show video of this
+
+##
+
+::: proscons
+::: {#pros .proscons-card .proscons-card--pro}
+[Pros]{.proscons-title}
+
+- We are using Quarto
+- much faster
+- intuitive controls
+- knows what can be changed
 :::
 
 ::: {#cons .proscons-card .proscons-card--con}
@@ -86,22 +194,22 @@ outline of the initial algorithm
 :::
 :::
 
-::: {.fragment .move-item for="#cons" to="#pros" item="2" cursor="Kari"}
+::: {.fragment .delete-items for="#cons" keep="6"}
 :::
 
-##
+::: notes
+Now since quarto renders so much faster
 
-mention quartohub here?
-seems right (we can mention that there are dual implementaitons depending on the quarto version)
-
-##
-
-Now since quarto renders so much faster,
 and we have the automerge stuff
+
 we get almost instant changes because it renders so fast
+
 the logic is so much smaller because we don't have to keep all changes, they happen one at a time
+
 and it only modifies the part of the document it needs,
+
 instead of modifing the whole thing
+:::
 
 ##
 
@@ -114,33 +222,51 @@ Show other things
 
 ##
 
-Show that we no longer needs to tag something as editable
+::: proscons
+::: {#pros .proscons-card .proscons-card--pro}
+[Pros]{.proscons-title}
 
-(we are basically at parity with powerpoint now)
+- We are using Quarto
+- much faster
+- intuitive controls
+- knows what can be changed
+:::
+
+::: {#cons .proscons-card .proscons-card--con}
+[Cons]{.proscons-title}
+
+- all the bugs
+:::
+:::
+
+::: {.fragment .add-item for="#cons" text="we are all alone"}
+:::
+
 
 ## {.collab-slide}
 
+{{< include _collab-slide.qmd >}}
+
+::: notes
 Show that since we have quartopub,
 we are not limited to just one person
 
-{{< include _collab-slide.qmd >}}
-
-##
-
 with quartopub we as data people can now colaborate with non-data people, in the manner and interface that suits them best
 
-##
-
-But wait, there is more
-NOTE: do this as adding things to the pro section
-
-all of this is based on html editing
+:::
 
 ##
+
+Why stop at slides?
 
 Show that it works with all html formats
+
+## 
+
+what tools should i use
 
 ##
 
 thanks
 
+circle back to chelsea

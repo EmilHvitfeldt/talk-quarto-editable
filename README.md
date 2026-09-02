@@ -222,13 +222,15 @@ Style-specific attributes:
 | `.rotate-handle` | A cursor turns the element by its rotation handle, with an angle readout. | `angle="-8"` |
 | `.marquee-select` | A marquee is dragged around several items, then they move as a group. | `by="80,0"` |
 | `.reorder` | One item is dragged up the list and the others move aside. | `item="3"`, `to="1"` |
+| `.add-item` | A cursor appends a new entry to a list and types it out. | `text`, `speed` |
+| `.delete-items` | A cursor drags a selection over several list entries and deletes them; the list closes up around the survivors. | `keep="6"` or `items="1,2,3"` (1-indexed), `badge="⌫"` |
 | `.duplicate` | Option-drag repeatedly until one plot has become a facet grid. | `times="3"`, `gap` |
 | `.diff-in` | Old text struck through in red, new in green, then settles to just new. | `was="twelve observations"` |
 | `.undo` | Something visibly wrong, then the shortcut, then it snaps back. | `by="110,30"`, `tilt`, `badge` |
 | `.comment` | A cursor drops a sticky comment anchored to the target. | `text`, `cursor` (doubles as the author line; omit it and the bubble has no byline) |
 | `.argue` | Two cursors drag the same thing in opposite directions. One wins. | `cursors="Kari,John"`, `amp`, `winner="right"` |
 | `.drag-from-folder` | A folder window opens, a cursor drags a thumbnail out, and the drop becomes the real image. | `files`, `pick`, `folder`, `folder-x`, `folder-y`, `src` |
-| `.move-item` | An entry is lifted out of one list and dropped into another. The source closes the gap, the destination opens one, and the item picks up its new list's bullet. Steps backwards by carrying the item home. | `for` (source list), `to` (destination list), `item="2"`, `duration`, `reverse="off"` |
+| `.move-item` | An entry is lifted out of one list and dropped into another. The source closes the gap, the destination opens one, and the item picks up its new list's bullet. Steps backwards by carrying the item home. With `text`, the cursor also rewrites the item once it lands. | `for` (source list), `to` (destination list), `item="2"`, `text`, `duration`, `reverse="off"` |
 
 ### Writing a new style
 

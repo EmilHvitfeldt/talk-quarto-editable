@@ -119,12 +119,16 @@ window.SlideFx = (function () {
 
   // Cursors are pooled per element under a key, so re-showing a fragment
   // reuses the same node instead of littering the slide.
+  // The pool key carries the name and color: two fragments acting on the same
+  // element are two different collaborators, and reusing one node would give
+  // the second one the first one's tag.
   function cursorFor(el, section, key, name, color) {
     el._fxCursors = el._fxCursors || {};
-    if (!el._fxCursors[key]) {
-      el._fxCursors[key] = makeCursor({ name: name, color: color });
+    const id = [key, name || '', color || ''].join('|');
+    if (!el._fxCursors[id]) {
+      el._fxCursors[id] = makeCursor({ name: name, color: color });
     }
-    const c = el._fxCursors[key];
+    const c = el._fxCursors[id];
     if (!c.isConnected) section.appendChild(c);
     return c;
   }
@@ -218,13 +222,20 @@ window.SlideFx = (function () {
     el._fxLoops.push(fn);
   }
 
-  function teardown(el) {
+  // Everything a teardown does apart from putting the markup back: timelines
+  // cancelled, cursors parked, chrome removed. A style that reverses itself
+  // by hand wants this rather than the full restore.
+  function sweep(el) {
     stop(el);
-    restore(el);
     allCursors(el).forEach((c) => {
       if (typeof anime !== 'undefined') anime.set(c, { opacity: 0 });
     });
     Object.values(el._fxChrome || {}).forEach(n => n.remove());
+  }
+
+  function teardown(el) {
+    sweep(el);
+    restore(el);
   }
 
   // ── Cursor helpers shared by several styles ───────────────────────────────
@@ -423,6 +434,29 @@ window.SlideFx = (function () {
     };
   }
 
+  // Two fragments can aim at the same element — delete some list entries, then
+  // add one — and the blanket teardown that gives a fragment its clean slate
+  // would undo the earlier one. So a marker registers as a holder of the
+  // element it acts on, and while an earlier holder is still shown the markup
+  // is left exactly as that holder left it. Only the last holder to leave
+  // restores the original.
+  function shown(marker) {
+    const frag = marker.closest('.fragment') || marker;
+    return frag.classList.contains('visible');
+  }
+
+  function heldByOthers(el, marker) {
+    return (el._fxHolders || []).some(m => m !== marker && m.isConnected && shown(m));
+  }
+
+  function hold(el, marker) {
+    el._fxHolders = (el._fxHolders || []).filter(m => m !== marker).concat([marker]);
+  }
+
+  function release(el, marker) {
+    el._fxHolders = (el._fxHolders || []).filter(m => m !== marker);
+  }
+
   function run(frag, phase) {
     const section = frag.closest('section');
     if (!section || typeof anime === 'undefined') return;
@@ -431,13 +465,19 @@ window.SlideFx = (function () {
         const ctx = contextFor(section, frag, marker);
         if (phase === 'show') {
           cache(ctx.el);
-          teardown(ctx.el);          // clean slate, in case of a re-show
-          cache(ctx.el);             // teardown restored markup; re-cache is a no-op
+          if (heldByOthers(ctx.el, marker)) {
+            sweep(ctx.el);           // keep what the other fragment did
+          } else {
+            teardown(ctx.el);        // clean slate, in case of a re-show
+            cache(ctx.el);           // teardown restored markup; re-cache is a no-op
+          }
+          hold(ctx.el, marker);
           if (spec.show) spec.show(ctx);
-        } else if (spec.hide) {
-          spec.hide(ctx);
         } else {
-          teardown(ctx.el);
+          release(ctx.el, marker);
+          if (spec.hide) spec.hide(ctx);
+          else if (heldByOthers(ctx.el, marker)) sweep(ctx.el);
+          else teardown(ctx.el);
         }
       });
     });
@@ -463,7 +503,7 @@ window.SlideFx = (function () {
     posIn, grabPoint, currentTranslate, cursorEntry,
     makeCursor, cursorFor, nextColor, PALETTE,
     chrome, placeOver, placeAt,
-    cache, restore, stop, timeline, onStop, teardown,
+    cache, restore, stop, timeline, onStop, teardown, sweep,
     flyIn, flyOut, squeeze, typeInto, deleteFrom, wrapMatches, lines,
     define,
   };
