@@ -31,7 +31,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-c063845d4d8e3c040593d1ff165d00b8.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-86cf6618d818ee90817f6d2511c519ed.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -132,7 +132,8 @@
 
 <section id="section" class="slide level2 float-slide">
 <h2></h2>
-<p>Slideware Is Dead - Long Live Quarto</p>
+<p><span class="absolute" style="font-size: 100px;top: 300px; left: 0px; ">Slideware Is Dead</span></p>
+<p><span class="absolute" style="font-size: 100px;top: 400px; left: 0px; ">Long Live Quarto</span></p>
 </section>
 <section id="section-1" class="slide level2">
 <h2></h2>
@@ -153,9 +154,12 @@
 </section>
 <section id="section-2" class="slide level2">
 <h2></h2>
-<p>TODO: Video of someone modifying quarto source code a bit, wait for a re-render, repeat</p>
+<video data-src="before.mp4">
+</video>
+<div class="fragment video-play">
+
+</div>
 <aside class="notes">
-<p>or an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat</p>
 <p>Getting content on your quarto slides is a breeze</p>
 <p>Making sure it looks right is time consuming</p>
 <p>nevertheless, it sparked an idea</p>
@@ -171,75 +175,64 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="section-3" class="slide level2">
+<section id="my-new-life-goal" class="slide level2">
+<h2>My new life goal</h2>
+<p><span class="fragment type-in">make Quarto superior to Keynote, Powerpoint, and Google Slides for the data people</span></p>
+</section>
+<section id="section-3" class="slide level2 center" style="text-align: center;">
 <h2></h2>
-<p>My goal: make quarto superior to keynote, powerpoint, and google slides</p>
+<p>Introducting</p>
+<p>quarto-revealjs-editable</p>
 </section>
 <section id="section-4" class="slide level2">
 <h2></h2>
-<p>Introducting quarto-revealjs-editable :tada:</p>
-<div class="fragment">
-<div class="columns">
-<div class="column">
-<p>User has to:</p>
-<ul>
-<li>add class to image</li>
-<li>move it around</li>
-<li>click save button</li>
-<li>save and overwrite file</li>
-<li>hit render</li>
-</ul>
-</div><div class="column">
-<p>Editable has to:</p>
-<ol start="0" type="1">
-<li>inject all of source document into the slides</li>
-<li>finds all moved images</li>
-<li>updates the source document with new x and y</li>
-</ol>
-<p>1 &amp; 2 done using regex</p>
-</div></div>
+<video data-src="v1.mp4">
+</video>
+<div class="fragment video-play">
+
 </div>
 </section>
 <section id="section-5" class="slide level2">
-<h2></h2>
-<p>TODO: add video of us using this</p>
-</section>
-<section id="section-6" class="slide level2">
 <h2></h2>
 <div class="proscons">
 <div id="pros" class="proscons-card proscons-card--pro">
 <p><span class="proscons-title">Pros</span></p>
 <ul>
-<li>We are using Quarto</li>
+<li><span class="fragment type-in">We are using Quarto</span></li>
 <li><span class="fragment type-in">much faster</span></li>
 <li><span class="fragment type-in" data-from="right">intuitive controls</span></li>
 </ul>
 </div>
 <div id="cons" class="proscons-card proscons-card--con">
 <p><span class="proscons-title">Cons</span></p>
+<div class="fragment">
 <ul>
-<li>still slower than PowerPoint</li>
-<li>Needed to tag elements</li>
-<li>requires regex</li>
-<li>fragile like crazy</li>
-<li>so much more logic to make everything work, especially with multiple changes</li>
-<li>requires overwriting the source document</li>
-<li>all the bugs</li>
+<li><span class="type-in" data-from="right">still slower</span></li>
+<li><span class="type-in" data-from="right">Needed to tag elements</span></li>
+<li><span class="type-in" data-from="right">requires regex</span></li>
+<li><span class="type-in" data-from="right">fragile like crazy</span></li>
+<li><span class="type-in" data-from="right">so much more code</span></li>
+<li><span class="type-in" data-from="right">inject source</span></li>
+<li><span class="type-in" data-from="right">all the bugs</span></li>
 </ul>
 </div>
 </div>
+</div>
+</section>
+<section id="section-6" class="slide level2 center" style="text-align: center;">
+<h2></h2>
+<p>Did we beat Powerpoint?</p>
+<p><span class="fragment drag-in">No</span></p>
 </section>
 <section id="section-7" class="slide level2">
 <h2></h2>
-<p>Did we beat powerpoint? No</p>
-<p>the loop is still too slow</p>
-<p>Need to tag elements</p>
+<video data-src="v9.mp4">
+</video>
+<div class="fragment video-play">
+
+</div>
 </section>
 <section id="section-8" class="slide level2">
-<h2></h2>
-<p>TODO: add video of us using this</p>
-</section>
-<section id="section-9" class="slide level2">
 <h2></h2>
 <div class="proscons">
 <div id="pros" class="proscons-card proscons-card--pro">
@@ -253,12 +246,12 @@
 <div id="cons" class="proscons-card proscons-card--con">
 <p><span class="proscons-title">Cons</span></p>
 <ul>
-<li>still slower than PowerPoint</li>
+<li>still slower</li>
 <li>Needed to tag elements</li>
 <li>requires regex</li>
 <li>fragile like crazy</li>
-<li>so much more logic to make everything work, especially with multiple changes</li>
-<li>requires overwriting the source document</li>
+<li>so much more code</li>
+<li>inject source</li>
 <li>all the bugs</li>
 </ul>
 </div>
@@ -267,12 +260,17 @@
 
 </div>
 </section>
-<section id="section-10" class="slide level2">
+<section id="section-9" class="slide level2">
 <h2></h2>
-<p>It is still too slow, the feedback loop is too long and the bottleneck is quarto</p>
-<p>Mention q2</p>
-<p>Mention quartohub</p>
-<p>Mention automerge</p>
+<video data-src="v9-more.mp4">
+</video>
+<div class="fragment video-play">
+
+</div>
+</section>
+<section id="section-10" class="slide level2 center" style="text-align: center;">
+<h2></h2>
+<p>It is still too slow</p>
 <aside class="notes">
 <p>seems right (we can mention that there are dual implementaitons depending on the quarto version)</p>
 <style type="text/css">
@@ -289,7 +287,11 @@
 </section>
 <section id="section-11" class="slide level2">
 <h2></h2>
-<p>Show video of this</p>
+<video data-src="quarto-hub.mp4">
+</video>
+<div class="fragment video-play">
+
+</div>
 </section>
 <section id="section-12" class="slide level2">
 <h2></h2>
@@ -306,11 +308,11 @@
 <div id="cons" class="proscons-card proscons-card--con">
 <p><span class="proscons-title">Cons</span></p>
 <ul>
-<li>still slower than PowerPoint</li>
+<li>still slower</li>
 <li>requires regex</li>
 <li>fragile like crazy</li>
-<li>so much more logic to make everything work, especially with multiple changes</li>
-<li>requires overwriting the source document</li>
+<li>so much more code</li>
+<li>inject source</li>
 <li>all the bugs</li>
 </ul>
 </div>
@@ -339,16 +341,6 @@
 </section>
 <section id="section-13" class="slide level2">
 <h2></h2>
-<p>Show other things</p>
-<ul>
-<li>text editing</li>
-<li>image reszing, cropping</li>
-<li>arrows</li>
-<li>other things that will be implemented by then</li>
-</ul>
-</section>
-<section id="section-14" class="slide level2">
-<h2></h2>
 <div class="proscons">
 <div id="pros" class="proscons-card proscons-card--pro">
 <p><span class="proscons-title">Pros</span></p>
@@ -370,7 +362,7 @@
 
 </div>
 </section>
-<section id="section-15" class="slide level2 collab-slide">
+<section id="section-14" class="slide level2 collab-slide">
 <h2></h2>
 <span class="fragment" id="appear-fragment" style="position:absolute;pointer-events:none"></span>
 <span class="fragment" id="start-fragment" style="position:absolute;pointer-events:none"></span>
@@ -429,14 +421,22 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="section-16" class="slide level2">
+<section id="section-15" class="slide level2 center" style="text-align: center;">
 <h2></h2>
 <p>Why stop at slides?</p>
-<p>Show that it works with all html formats</p>
+</section>
+<section id="section-16" class="slide level2">
+<h2></h2>
+<video data-src="quarto-hub-html.mp4">
+</video>
+<div class="fragment video-play">
+
+</div>
 </section>
 <section id="section-17" class="slide level2">
 <h2></h2>
-<p>thanks</p>
+
+<img data-src="chelsea.png" class="r-stretch"><p><span class="fragment">I won’t let you down!</span></p>
 
 </section>
     </div>
@@ -454,6 +454,7 @@
   <script src="index_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
   <script src="index_files/libs/revealjs/plugin/reveal-anime/revealjs-anime.js"></script>
+  <script src="index_files/libs/revealjs/plugin/reveal-video-fragments/video-fragments.js"></script>
   <script src="index_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -646,7 +647,7 @@
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealAnime, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealAnime, RevealVideoFragments, QuartoSupport,
 
           RevealMath,
           RevealNotes,
@@ -2055,8 +2056,15 @@
       function clearMove(el) {
         const st = el._fxMove;
         if (!st) return;
-        if (typeof anime !== 'undefined') anime.remove(st.shifted.concat([st.landed]));
+        if (typeof anime !== 'undefined') {
+          anime.remove(st.shifted.concat([st.landed, st.moving]));
+        }
         st.shifted.forEach((n) => { n.style.transform = ''; n.style.opacity = ''; });
+        st.moving.style.height = '';
+        st.moving.style.marginBottom = '';
+        st.moving.style.overflow = '';
+        st.moving.style.boxSizing = '';
+        st.moving.style.opacity = '';
         st.landed.remove();
         el._fxMove = null;
       }
@@ -2079,6 +2087,7 @@
         S.placeAt(ghost, from.x, from.y);
         ghost.style.width = from.w + 'px';
         ghost.style.height = '';
+        ghost.style.fontSize = getComputedStyle(o.hold).fontSize;
         anime.set(ghost, { opacity: 0, translateX: 0, translateY: 0 });
 
         const grab = S.grabPoint(from);
@@ -2099,13 +2108,16 @@
         tl.add({ targets: cursor, translateX: grab.x + dx, translateY: grab.y + dy,
                  duration: o.dur, easing: 'easeInOutQuad' }, t + 140);
 
-        // both lists reflow while the item is in the air
-        if (o.shifted.length) {
-          tl.add({ targets: o.shifted, translateY: o.shiftTo, duration: o.dur * 0.7,
-                   easing: 'easeInOutQuad', delay: anime.stagger(30) }, t + 200);
-        }
+        // The destination list reflows while the item is in the air. The source
+        // list's siblings need no transform of their own: `altSlot` collapsing (or
+        // growing) the moved item's real box already pushes them via normal
+        // layout, animated smoothly because it happens one frame at a time.
         tl.add({ targets: o.slot, height: o.slotTo.h, marginBottom: o.slotTo.mb,
                  duration: o.dur * 0.7, easing: 'easeInOutQuad' }, t + 200);
+        if (o.altSlot) {
+          tl.add({ targets: o.altSlot, height: o.altTo.h, marginBottom: o.altTo.mb,
+                   duration: o.dur * 0.7, easing: 'easeInOutQuad' }, t + 200);
+        }
 
         // drop: the parked element fades up and the ghost bows out
         const land = t + 140 + o.dur;
@@ -2183,11 +2195,21 @@
           const shifted = items.slice(i + 1);
           const gap = moving.offsetHeight;
 
-          src._fxMove = { moving, landed, shifted, gap, dur, open };
+          // Measured before it is hidden, so the source slot can be collapsed in
+          // step with the destination opening, instead of leaving a dead gap the
+          // size of the moved item behind in the source list.
+          const movingOpen = { h: moving.offsetHeight + 'px',
+                                mb: getComputedStyle(moving).marginBottom };
+          moving.style.overflow = 'hidden';
+          moving.style.boxSizing = 'border-box';
+
+          src._fxMove = { moving, landed, shifted, gap, dur, open, movingOpen };
 
           carryItem(ctx, {
             hold: moving, park: landed, shifted, shiftTo: -gap,
-            slot: landed, slotTo: open, dur, retext: ctx.attr('text'),
+            slot: landed, slotTo: open,
+            altSlot: moving, altTo: { h: '0px', mb: '0px' },
+            dur, retext: ctx.attr('text'),
           });
         },
 
@@ -2208,7 +2230,9 @@
 
           carryItem(ctx, {
             hold: st.landed, park: st.moving, shifted: st.shifted, shiftTo: 0,
-            slot: st.landed, slotTo: { h: '0px', mb: '0px' }, dur: st.dur,
+            slot: st.landed, slotTo: { h: '0px', mb: '0px' },
+            altSlot: st.moving, altTo: st.movingOpen,
+            dur: st.dur,
             onDone: done,
           });
         },
@@ -2942,7 +2966,7 @@
         if (el._typeTl) el._typeTl.pause();
 
         const prepared = typePrepare(el);
-        if (!prepared) return;
+        if (!prepared) return Promise.resolve();
         const { caret, text } = prepared;
 
         const speed = Number(dragAttr(el, 'speed')) || 55;
@@ -2979,7 +3003,7 @@
                  begin: () => { if (caret.isConnected) caret.remove(); },
                }, 700 + typeMs + 420);
 
-        tl.finished.then(() => {
+        return tl.finished.then(() => {
           if (el._typeTl !== tl) return;
           typeReset(el);
         });

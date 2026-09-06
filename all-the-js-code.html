@@ -725,7 +725,7 @@
     if (el._typeTl) el._typeTl.pause();
 
     const prepared = typePrepare(el);
-    if (!prepared) return;
+    if (!prepared) return Promise.resolve();
     const { caret, text } = prepared;
 
     const speed = Number(dragAttr(el, 'speed')) || 55;
@@ -762,7 +762,7 @@
              begin: () => { if (caret.isConnected) caret.remove(); },
            }, 700 + typeMs + 420);
 
-    tl.finished.then(() => {
+    return tl.finished.then(() => {
       if (el._typeTl !== tl) return;
       typeReset(el);
     });

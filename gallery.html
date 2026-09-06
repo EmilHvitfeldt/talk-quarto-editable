@@ -31,7 +31,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="gallery_files/libs/revealjs/dist/theme/quarto-c063845d4d8e3c040593d1ff165d00b8.css">
+  <link rel="stylesheet" href="gallery_files/libs/revealjs/dist/theme/quarto-86cf6618d818ee90817f6d2511c519ed.css">
   <link href="gallery_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="gallery_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="gallery_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -2003,8 +2003,15 @@
       function clearMove(el) {
         const st = el._fxMove;
         if (!st) return;
-        if (typeof anime !== 'undefined') anime.remove(st.shifted.concat([st.landed]));
+        if (typeof anime !== 'undefined') {
+          anime.remove(st.shifted.concat([st.landed, st.moving]));
+        }
         st.shifted.forEach((n) => { n.style.transform = ''; n.style.opacity = ''; });
+        st.moving.style.height = '';
+        st.moving.style.marginBottom = '';
+        st.moving.style.overflow = '';
+        st.moving.style.boxSizing = '';
+        st.moving.style.opacity = '';
         st.landed.remove();
         el._fxMove = null;
       }
@@ -2027,6 +2034,7 @@
         S.placeAt(ghost, from.x, from.y);
         ghost.style.width = from.w + 'px';
         ghost.style.height = '';
+        ghost.style.fontSize = getComputedStyle(o.hold).fontSize;
         anime.set(ghost, { opacity: 0, translateX: 0, translateY: 0 });
 
         const grab = S.grabPoint(from);
@@ -2047,13 +2055,16 @@
         tl.add({ targets: cursor, translateX: grab.x + dx, translateY: grab.y + dy,
                  duration: o.dur, easing: 'easeInOutQuad' }, t + 140);
 
-        // both lists reflow while the item is in the air
-        if (o.shifted.length) {
-          tl.add({ targets: o.shifted, translateY: o.shiftTo, duration: o.dur * 0.7,
-                   easing: 'easeInOutQuad', delay: anime.stagger(30) }, t + 200);
-        }
+        // The destination list reflows while the item is in the air. The source
+        // list's siblings need no transform of their own: `altSlot` collapsing (or
+        // growing) the moved item's real box already pushes them via normal
+        // layout, animated smoothly because it happens one frame at a time.
         tl.add({ targets: o.slot, height: o.slotTo.h, marginBottom: o.slotTo.mb,
                  duration: o.dur * 0.7, easing: 'easeInOutQuad' }, t + 200);
+        if (o.altSlot) {
+          tl.add({ targets: o.altSlot, height: o.altTo.h, marginBottom: o.altTo.mb,
+                   duration: o.dur * 0.7, easing: 'easeInOutQuad' }, t + 200);
+        }
 
         // drop: the parked element fades up and the ghost bows out
         const land = t + 140 + o.dur;
@@ -2131,11 +2142,21 @@
           const shifted = items.slice(i + 1);
           const gap = moving.offsetHeight;
 
-          src._fxMove = { moving, landed, shifted, gap, dur, open };
+          // Measured before it is hidden, so the source slot can be collapsed in
+          // step with the destination opening, instead of leaving a dead gap the
+          // size of the moved item behind in the source list.
+          const movingOpen = { h: moving.offsetHeight + 'px',
+                                mb: getComputedStyle(moving).marginBottom };
+          moving.style.overflow = 'hidden';
+          moving.style.boxSizing = 'border-box';
+
+          src._fxMove = { moving, landed, shifted, gap, dur, open, movingOpen };
 
           carryItem(ctx, {
             hold: moving, park: landed, shifted, shiftTo: -gap,
-            slot: landed, slotTo: open, dur, retext: ctx.attr('text'),
+            slot: landed, slotTo: open,
+            altSlot: moving, altTo: { h: '0px', mb: '0px' },
+            dur, retext: ctx.attr('text'),
           });
         },
 
@@ -2156,7 +2177,9 @@
 
           carryItem(ctx, {
             hold: st.landed, park: st.moving, shifted: st.shifted, shiftTo: 0,
-            slot: st.landed, slotTo: { h: '0px', mb: '0px' }, dur: st.dur,
+            slot: st.landed, slotTo: { h: '0px', mb: '0px' },
+            altSlot: st.moving, altTo: st.movingOpen,
+            dur: st.dur,
             onDone: done,
           });
         },

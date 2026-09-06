@@ -1,0 +1,26 @@
+{
+  "video-fragments:play": {
+    "prefix": "video-fragments:play",
+    "description": "Fragment that plays the slide video from the beginning.",
+    "body": [
+      "::: {.fragment .video-play}",
+      ":::"
+    ]
+  },
+  "video-fragments:clip": {
+    "prefix": "video-fragments:clip",
+    "description": "Fragment that plays a clip range from start to end timestamp.",
+    "body": [
+      "::: {.fragment .video-play data-video-start=\"${1:0}\" data-video-end=\"${2:10}\"}",
+      ":::"
+    ]
+  },
+  "video-fragments:from": {
+    "prefix": "video-fragments:from",
+    "description": "Fragment that seeks to a timestamp then plays.",
+    "body": [
+      "::: {.fragment .video-play data-video-start=\"${1:10}\"}",
+      ":::"
+    ]
+  }
+}

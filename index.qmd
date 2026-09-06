@@ -6,6 +6,7 @@ format:
     height: 720
     revealjs-plugins:
       - revealjs-anime
+      - quarto-revealjs-video-fragments
     include-in-header:
       - text: |
           <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
@@ -20,7 +21,9 @@ code-line-numbers: false
 
 ## {.float-slide}
 
-Slideware Is Dead - Long Live Quarto
+[Slideware Is Dead]{.absolute top=300 left=0 style="font-size: 100px;"}
+
+[Long Live Quarto]{.absolute top=400 left=0 style="font-size: 100px;"}
 
 ##
 
@@ -32,12 +35,12 @@ she is right, this sucks, can we fix it?
 
 ##
 
-TODO: Video of someone modifying quarto source code a bit, wait for a re-render, repeat
+<video data-src="before.mp4"></video>
 
+::: {.fragment .video-play}
+:::
 
 ::: notes
-or an anime.js session of something going back and forth with the rendering loop, modifying a few numbers, rerendering the docuement, repeat
-
 Getting content on your quarto slides is a breeze
 
 Making sure it looks right is time consuming
@@ -45,49 +48,22 @@ Making sure it looks right is time consuming
 nevertheless, it sparked an idea
 :::
 
-##
+## My new life goal
 
-My goal: make quarto superior to keynote, powerpoint, and google slides
+[make Quarto superior to Keynote, Powerpoint, and Google Slides for the data people]{.fragment .type-in}
 
-##
+## {.center style="text-align: center;"}
 
-Introducting quarto-revealjs-editable :tada:
+Introducting
 
-::: fragment
-
-::: {.columns}
-
-::: {.column}
-
-User has to:
-
-- add class to image
-- move it around
-- click save button
-- save and overwrite file
-- hit render
-
-:::
-
-::: {.column}
-
-Editable has to:
-
-0. inject all of source document into the slides
-1. finds all moved images
-2. updates the source document with new x and y
-
-1 & 2 done using regex
-
-:::
-
-:::
-
-:::
+quarto-revealjs-editable
 
 ##
 
-TODO: add video of us using this
+<video data-src="v1.mp4"></video>
+
+::: {.fragment .video-play}
+:::
 
 ##
 
@@ -95,7 +71,7 @@ TODO: add video of us using this
 ::: {#pros .proscons-card .proscons-card--pro}
 [Pros]{.proscons-title}
 
-- We are using Quarto
+- [We are using Quarto]{.fragment .type-in}
 - [much faster]{.fragment .type-in}
 - [intuitive controls]{.fragment .type-in from="right"}
 :::
@@ -103,27 +79,30 @@ TODO: add video of us using this
 ::: {#cons .proscons-card .proscons-card--con}
 [Cons]{.proscons-title}
 
-- still slower than PowerPoint
-- Needed to tag elements
-- requires regex
-- fragile like crazy
-- so much more logic to make everything work, especially with multiple changes
-- requires overwriting the source document
-- all the bugs
+::: fragment
+- [still slower]{.type-in from="right"}
+- [Needed to tag elements]{.type-in from="right"}
+- [requires regex]{.type-in from="right"}
+- [fragile like crazy]{.type-in from="right"}
+- [so much more code]{.type-in from="right"}
+- [inject source]{.type-in from="right"}
+- [all the bugs]{.type-in from="right"}
 :::
 :::
+:::
+
+## {.center style="text-align: center;"}
+
+Did we beat Powerpoint?
+
+[No]{.fragment .drag-in}
 
 ##
 
-Did we beat powerpoint? No
+<video data-src="v9.mp4"></video>
 
-the loop is still too slow
-
-Need to tag elements
-
-##
-
-TODO: add video of us using this
+::: {.fragment .video-play}
+:::
 
 ##
 
@@ -139,12 +118,12 @@ TODO: add video of us using this
 ::: {#cons .proscons-card .proscons-card--con}
 [Cons]{.proscons-title}
 
-- still slower than PowerPoint
+- still slower
 - Needed to tag elements
 - requires regex
 - fragile like crazy
-- so much more logic to make everything work, especially with multiple changes
-- requires overwriting the source document
+- so much more code
+- inject source
 - all the bugs
 :::
 :::
@@ -154,13 +133,14 @@ TODO: add video of us using this
 
 ##
 
-It is still too slow, the feedback loop is too long and the bottleneck is quarto
+<video data-src="v9-more.mp4"></video>
 
-Mention q2
+::: {.fragment .video-play}
+:::
 
-Mention quartohub
+## {.center style="text-align: center;"}
 
-Mention automerge
+It is still too slow
 
 ::: notes
 seems right (we can mention that there are dual implementaitons depending on the quarto version)
@@ -168,7 +148,10 @@ seems right (we can mention that there are dual implementaitons depending on the
 
 ##
 
-Show video of this
+<video data-src="quarto-hub.mp4"></video>
+
+::: {.fragment .video-play}
+:::
 
 ##
 
@@ -185,11 +168,11 @@ Show video of this
 ::: {#cons .proscons-card .proscons-card--con}
 [Cons]{.proscons-title}
 
-- still slower than PowerPoint
+- still slower
 - requires regex
 - fragile like crazy
-- so much more logic to make everything work, especially with multiple changes
-- requires overwriting the source document
+- so much more code
+- inject source
 - all the bugs
 :::
 :::
@@ -210,15 +193,6 @@ and it only modifies the part of the document it needs,
 
 instead of modifing the whole thing
 :::
-
-##
-
-Show other things
-
-- text editing
-- image reszing, cropping
-- arrows
-- other things that will be implemented by then
 
 ##
 
@@ -255,18 +229,19 @@ with quartopub we as data people can now colaborate with non-data people, in the
 
 :::
 
-##
+## {.center style="text-align: center;"}
 
 Why stop at slides?
 
-Show that it works with all html formats
+##
 
-## 
+<video data-src="quarto-hub-html.mp4"></video>
 
-what tools should i use
+::: {.fragment .video-play}
+:::
 
 ##
 
-thanks
+![](chelsea.png)
 
-circle back to chelsea
+[I won't let you down!]{.fragment}

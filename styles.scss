@@ -13,6 +13,7 @@ $colors: (
 
 $body-bg: theme-color("white");
 $body-color: theme-color("black");
+$presentation-font-size-root: 80px;
 
 /*-- scss:rules --*/
 
@@ -611,6 +612,8 @@ section:has(.collab-slide) {
 }
 
 .proscons-card {
+  font-size: 50px;
+
   p:has(.proscons-title) {
     margin: 0 0 0.5em;
   }
@@ -642,6 +645,10 @@ section:has(.collab-slide) {
     top: 0;
     font-weight: 700;
   }
+
+  li:has(> .fragment.type-in:not(.visible))::before {
+    opacity: 0;
+  }
 }
 
 .proscons-card--pro {
@@ -669,8 +676,4 @@ section:has(.collab-slide) {
   box-sizing: border-box;
   padding: 4px 12px;
   line-height: 1.35;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  border-radius: 6px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }

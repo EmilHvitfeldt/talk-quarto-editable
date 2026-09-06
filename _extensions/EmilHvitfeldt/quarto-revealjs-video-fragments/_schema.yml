@@ -1,0 +1,12 @@
+$schema: "https://raw.githubusercontent.com/mcanouil/quarto-wizard/main/schema/schema-1.0.json"
+
+classes:
+  video-play:
+    description: "Fragment that controls video playback on the current slide. Combine with `.fragment`."
+    attributes:
+      - name: data-video-start
+        type: number
+        description: "Seek to this timestamp (in seconds) before playing."
+      - name: data-video-end
+        type: number
+        description: "Pause automatically when playback reaches this timestamp (in seconds)."
