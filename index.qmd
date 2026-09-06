@@ -7,6 +7,8 @@ format:
     revealjs-plugins:
       - revealjs-anime
       - quarto-revealjs-video-fragments
+    filters:
+      - redacted
     include-in-header:
       - text: |
           <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
@@ -212,7 +214,6 @@ instead of modifing the whole thing
 - all the bugs
 :::
 :::
-
 ::: {.fragment .add-item for="#cons" text="we are all alone"}
 :::
 

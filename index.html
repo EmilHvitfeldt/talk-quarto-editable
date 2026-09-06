@@ -6,7 +6,8 @@
 <script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-f48cb789c6bab3b4303eaeba73647581.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-f48cb789c6bab3b4303eaeba73647581.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="index_files/libs/quarto-contrib/redacted-0.1.0/redacted.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.9.35">
 
   <title>Title of Talk</title>
@@ -31,7 +32,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-86cf6618d818ee90817f6d2511c519ed.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-1a376c3e1865c9e586a1b24432df4c5e.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -383,9 +384,9 @@
     <div class="fe-line" id="fe-line-header"><span class="fe-ln">7</span><span class="fe-h2">##&nbsp;</span><span id="fe-header-text" class="fe-dyn">lizard lizard lizard</span></div>
     <div class="fe-line"><span class="fe-ln">8</span></div>
     <div class="fe-line" id="fe-line-text"><span class="fe-ln">9</span><span class="fe-attr">:::{style="top: </span><span id="fe-text-top" class="fe-dyn">200</span><span class="fe-attr">px"}</span></div>
-    <div class="fe-line"><span class="fe-ln">10</span><span class="fe-text">In today's fast-paced digital</span></div>
-    <div class="fe-line"><span class="fe-ln">11</span><span class="fe-text">landscape, leveraging up-to-date</span></div>
-    <div class="fe-line"><span class="fe-ln">12</span><span class="fe-text">memes is critical.</span></div>
+    <div class="fe-line"><span class="fe-ln">10</span><span class="fe-text redacted-script">In today's fast-paced digital</span></div>
+    <div class="fe-line"><span class="fe-ln">11</span><span class="fe-text redacted-script">landscape, leveraging up-to-date</span></div>
+    <div class="fe-line"><span class="fe-ln">12</span><span class="fe-text redacted-script">memes is critical.</span></div>
     <div class="fe-line"><span class="fe-ln">13</span><span class="fe-attr">:::</span></div>
     <div class="fe-line"><span class="fe-ln">14</span></div>
     <div class="fe-line" id="fe-line-img"><span class="fe-ln">15</span><span class="fe-img">![lizard](lizard.gif)</span><span class="fe-attr">{width=</span><span id="fe-img-width" class="fe-dyn">300</span><span class="fe-attr">px}</span></div>
@@ -396,7 +397,7 @@
   <div class="collab-layout">
     <h2 class="collab-header" id="cblock-header">lizard lizard lizard</h2>
     <div class="collab-main">
-      <div class="collab-text" id="cblock-text">
+      <div class="collab-text redacted-script" id="cblock-text">
         <p>In today's fast-paced digital landscape, leveraging up-to-date memes is critical. Outdated memes signal cultural irrelevance and erode audience trust within milliseconds.</p>
         <p>Studies show that meme freshness directly correlates with engagement. Always cite your sources — unless the meme is funnier without them.</p>
       </div>
@@ -2506,16 +2507,29 @@
         }
 
         // ── addResize ─────────────────────────────────────────────────────────────
+        // The cursor grabs the image's bottom-left corner and rides it down/up as
+        // the width (and, proportionally, the height) animates.
         function addResize(tl, startAt, cursor, deltaCSSWidth, afterPos) {
-          const edgeX = ip.x + imgCSS * cssToSlide;
-          const edgeY = ip.y + ip.h * 0.5;
+          // The arrow's rendered tip sits a little below its bounding box's
+          // mathematical top-left corner (anti-aliasing/stroke bleed), so nudge
+          // the tracked target up to line the visible tip up with the corner.
+          const TIP_OFFSET_Y = -15;
+          const heightPerWidthCSS = ip.h / INITIAL_IMG_CSS;
+          // .collab-text is flex:1, so it absorbs whatever width the image gives
+          // up — the image's left edge slides right as it shrinks, left as it
+          // grows back. Track that instead of assuming a fixed left edge.
+          const leftEdgeX = (w) => ip.x - (w - INITIAL_IMG_CSS) * cssToSlide;
           const snapImgCSS = imgCSS;
+          const cornerX = leftEdgeX(snapImgCSS);
+          const cornerY = ip.y + imgCSS * heightPerWidthCSS + TIP_OFFSET_Y;
 
-          tl.add({ targets: cursor, translateX: edgeX, translateY: edgeY,
+          tl.add({ targets: cursor, translateX: cornerX, translateY: cornerY,
                    duration: 750, easing: 'easeInOutCubic' }, startAt);
           tl.add({ targets: imgEl, width: (snapImgCSS + deltaCSSWidth) + 'px',
                    duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
-          tl.add({ targets: cursor, translateX: edgeX + deltaCSSWidth * cssToSlide,
+          tl.add({ targets: cursor,
+                   translateX: leftEdgeX(snapImgCSS + deltaCSSWidth),
+                   translateY: ip.y + (snapImgCSS + deltaCSSWidth) * heightPerWidthCSS + TIP_OFFSET_Y,
                    duration: 1000, easing: 'easeInOutSine' }, startAt + 900);
 
           const feImgWidth = document.getElementById('fe-img-width');
@@ -2588,10 +2602,10 @@
         doLoop();
 
         // ── Self-cancelling 7-move loop ───────────────────────────────────────────
-        // Move 1: Kari   nudges text up             → textTY = -NUDGE
-        // Move 2: John   nudges text back down      → textTY = 0
-        // Move 3: Hailey drags image wider          → imgCSS += RESIZE
-        // Move 4: Kari   drags image back narrower  → imgCSS -= RESIZE
+        // Move 1: Kari   nudges text down           → textTY = +NUDGE
+        // Move 2: John   nudges text back up        → textTY = 0
+        // Move 3: Hailey drags image narrower       → imgCSS -= RESIZE
+        // Move 4: Kari   drags image back wider     → imgCSS += RESIZE
         // Move 5: John   types TEXT_A
         // Move 6: Hailey types TEXT_B
         // Move 7: Kari   types TEXT_C (original)    → header restored
@@ -2603,10 +2617,10 @@
           currentTl = tl;
           let t = 100;
 
-          t = addNudge(tl, t, kari, textEl, tp, textTY, -NUDGE, L); textTY -= NUDGE;
-          t = addNudge(tl, t, john,   textEl, tp, textTY, +NUDGE, R); textTY += NUDGE;
-          t = addResize(tl, t, hailey, +RESIZE, B);
-          t = addResize(tl, t, kari, -RESIZE, L);
+          t = addNudge(tl, t, kari, textEl, tp, textTY, +NUDGE, L); textTY += NUDGE;
+          t = addNudge(tl, t, john,   textEl, tp, textTY, -NUDGE, R); textTY -= NUDGE;
+          t = addResize(tl, t, hailey, -RESIZE, B);
+          t = addResize(tl, t, kari, +RESIZE, L);
           t = addTextEdit(tl, t, john,   TEXT_C, TEXT_A, R);
           t = addTextEdit(tl, t, hailey, TEXT_A, TEXT_B, B);
           t = addTextEdit(tl, t, kari, TEXT_B, TEXT_C, L);
@@ -2622,11 +2636,19 @@
 
       function shiftLayout(section, toRight) {
         isShifted = toRight;
-        stopAnim();
+        running = false;
+        clearTimeout(loopTimer);
+        if (currentTl) { currentTl.pause(); currentTl = null; }
+        cleanHeader();
 
         const cursors = COLLAB_CURSORS.map(c => document.getElementById(c.id)).filter(Boolean);
         const scene  = section.querySelector('.collab-scene');
         const editor = document.getElementById('fake-editor');
+        const t = document.getElementById('cblock-text');
+        const i = document.getElementById('cblock-img');
+
+        if (t) anime({ targets: t, translateY: 0, scale: 1, duration: 150, easing: 'easeOutQuad' });
+        if (i) anime({ targets: i, width: '300px', duration: 150, easing: 'easeOutQuad' });
 
         anime({
           targets: cursors, opacity: 0, duration: 250, easing: 'easeOutQuad',
@@ -2634,7 +2656,7 @@
             scene.classList.toggle('right-half', toRight);
             anime({ targets: editor, opacity: toRight ? 1 : 0,
                     duration: 500, easing: 'easeOutQuad' });
-            setTimeout(() => runAnim(section), 700);
+            setTimeout(() => runAnim(section), 1000);
           }
         });
       }

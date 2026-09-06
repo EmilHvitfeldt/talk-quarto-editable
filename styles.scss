@@ -52,16 +52,25 @@ section:has(.collab-slide) {
 .collab-layout {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   width: 700px;
+  height: 447px;
   gap: 24px;
-  transition: width 0.6s ease;
+  box-sizing: border-box;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+  transform-origin: left center;
+  transition: transform 0.6s ease;
 }
 
 .right-half .collab-layout {
-  width: 560px;
+  transform: scale(0.8);
 }
 
-.collab-header {
+h2.collab-header {
   font-size: 40px;
   font-weight: 700;
   color: #222;
@@ -71,8 +80,10 @@ section:has(.collab-slide) {
 
 .collab-main {
   display: flex;
+  flex: 1;
   gap: 48px;
   align-items: flex-start;
+  overflow: hidden;
 }
 
 .collab-text {
