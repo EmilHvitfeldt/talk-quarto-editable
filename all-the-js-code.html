@@ -40,23 +40,59 @@
 
   // ── Float behavior factory ─────────────────────────────────────────────────
 
-  function randomPos() {
-    return { x: Math.random() * 1200 + 40, y: Math.random() * 640 + 40 };
+  const WANDER_RADIUS = 100;
+
+  // Each cursor gets a fixed personality so the flock doesn't move in
+  // lockstep: some dawdle with tiny hops, some dart around in big ones.
+  function makePersonality() {
+    return {
+      speed: 0.7 + Math.random() * 0.8,   // glide-duration multiplier
+      pause: 0.5 + Math.random() * 1.6,   // rest-duration multiplier
+      radius: 0.6 + Math.random() * 0.9,  // wander-radius multiplier
+    };
   }
 
-  function makeFloatBehavior(cursorDefs) {
-    let running = false;
+  function randomPos(avoidBox, from, radius) {
+    // Most of the time, steer clear of avoidBox (e.g. the title card) so the
+    // cursors read as dodging it. Occasionally let one wander underneath
+    // anyway (it's z-indexed below the card, so it just glides out of sight).
+    const dodge = !avoidBox || Math.random() < 0.95;
+    const r = radius || WANDER_RADIUS;
+    let fallback = null;
+    for (let i = 0; i < 30; i++) {
+      const p = from
+        ? {
+            x: from.x + (Math.random() * 2 - 1) * r,
+            y: from.y + (Math.random() * 2 - 1) * r,
+          }
+        : { x: Math.random() * 1200 + 40, y: Math.random() * 640 + 40 };
+      p.x = Math.min(1240, Math.max(40, p.x));
+      p.y = Math.min(680, Math.max(40, p.y));
+      if (!fallback) fallback = p;
+      if (!dodge) return p;
+      const pad = 60;
+      const clear = p.x < avoidBox.x - pad || p.x > avoidBox.x + avoidBox.w + pad ||
+                    p.y < avoidBox.y - pad || p.y > avoidBox.y + avoidBox.h + pad;
+      if (clear) return p;
+    }
+    return fallback;
+  }
 
-    function floatOne(el) {
+  function makeFloatBehavior(cursorDefs, avoidSelector) {
+    let running = false;
+    let avoidBox = null;
+
+    function floatOne(el, from, personality) {
       if (!running) return;
-      const start = randomPos();
-      const end   = randomPos();
+      const radius = WANDER_RADIUS * personality.radius;
+      const start = randomPos(avoidBox, from, radius);
+      const end   = randomPos(avoidBox, start, radius);
 
       // glide to click-start position
       anime({
         targets: el,
         translateX: start.x, translateY: start.y,
-        duration: 2000 + Math.random() * 1500,
+        duration: (900 + Math.random() * 600) * personality.speed,
         easing: 'easeInOutQuad',
         complete() {
           if (!running) return;
@@ -66,11 +102,16 @@
             anime({
               targets: el,
               translateX: end.x, translateY: end.y,
-              duration: 2500 + Math.random() * 2500,
+              duration: (1000 + Math.random() * 900) * personality.speed,
               easing: 'easeInOutSine',
-              complete: () => floatOne(el),
+              complete() {
+                if (!running) return;
+                // short rest before picking a new pair of waypoints
+                setTimeout(() => floatOne(el, end, personality),
+                  (300 + Math.random() * 500) * personality.pause);
+              },
             });
-          }, 250 + Math.random() * 350);
+          }, (250 + Math.random() * 350) * personality.pause);
         },
       });
     }
@@ -80,11 +121,15 @@
         if (running) return;
         running = true;
         ensureCursors(section, cursorDefs);
+        const avoidEl = avoidSelector && section.querySelector(avoidSelector);
+        avoidBox = avoidEl ? posIn(avoidEl, section) : null;
         cursorDefs.forEach(({ id }) => {
           const el = document.getElementById(id);
-          const { x, y } = randomPos();
+          const personality = makePersonality();
+          const { x, y } = randomPos(avoidBox);
           anime.set(el, { translateX: x, translateY: y, opacity: 1 });
-          floatOne(el);
+          // stagger each cursor's first move so they don't all kick off in sync
+          setTimeout(() => floatOne(el, { x, y }, personality), Math.random() * 1200);
         });
       },
       stop() {
@@ -122,7 +167,7 @@
     { id: 'cur-hailey', name: 'Hailey', color: '#f9a825' },
   ];
 
-  const floatBehavior = makeFloatBehavior(FLOAT_CURSORS);
+  const floatBehavior = makeFloatBehavior(FLOAT_CURSORS, '.title-card');
 
   // ── Collab slide state ────────────────────────────────────────────────────
 
@@ -769,8 +814,6 @@
              update: () => {
                el.textContent = text.slice(0, Math.round(state.n));
                el.appendChild(caret);
-               const at = atCaret();
-               anime.set(cursor, { translateX: at.x, translateY: at.y });
              },
              complete: () => {
                el.textContent = text;

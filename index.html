@@ -32,7 +32,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-1a376c3e1865c9e586a1b24432df4c5e.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-993cfc311b58535163d402a1cc9467a5.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -133,10 +133,12 @@
 
 <section id="section" class="slide level2 float-slide">
 <h2></h2>
-<p><span class="absolute" style="font-size: 100px;top: 300px; left: 0px; ">Slideware Is Dead</span></p>
-<p><span class="absolute" style="font-size: 100px;top: 400px; left: 0px; ">Long Live Quarto</span></p>
+<div class="title-card absolute" style="width: 1000px; padding-top: 50px; padding-bottom: 50px; transform: translate(-50%, -50%);top: 50%; left: 50%; ">
+<p><span style="font-size: 100px;">Slideware Is Dead</span></p>
+<p><span style="font-size: 100px;">Long Live Quarto</span></p>
+</div>
 </section>
-<section id="section-1" class="slide level2">
+<section id="section-1" class="slide level2 center" style="text-align: center;">
 <h2></h2>
 
 <img data-src="chelsea.png" class="r-stretch"><aside class="notes">
@@ -182,6 +184,9 @@
 </section>
 <section id="section-3" class="slide level2 center" style="text-align: center;">
 <h2></h2>
+<div class="emoji-burst">
+<p><span class="emoji-pop" style="--dx: -448px; --dy: -302px; animation-delay: 0s;">🎉</span> <span class="emoji-pop" style="--dx: 448px; --dy: -274px; animation-delay: 0.6s;">🎉</span> <span class="emoji-pop" style="--dx: -435px; --dy: 202px; animation-delay: 1.1s;">🎉</span> <span class="emoji-pop" style="--dx: 435px; --dy: 216px; animation-delay: 0.3s;">🎉</span> <span class="emoji-pop" style="--dx: 0px; --dy: -317px; animation-delay: 1.6s;">🎉</span> <span class="emoji-pop" style="--dx: 0px; --dy: 230px; animation-delay: 2.1s;">🎉</span> <span class="emoji-pop" style="--dx: -589px; --dy: -144px; animation-delay: 1.4s;">🎉</span> <span class="emoji-pop" style="--dx: 589px; --dy: -144px; animation-delay: 0.9s;">🎉</span></p>
+</div>
 <p>Introducting</p>
 <p>quarto-revealjs-editable</p>
 </section>
@@ -209,7 +214,7 @@
 <div class="fragment">
 <ul>
 <li><span class="type-in" data-from="right">still slower</span></li>
-<li><span class="type-in" data-from="right">Needed to tag elements</span></li>
+<li><span class="type-in" data-from="right">Need to tag elements</span></li>
 <li><span class="type-in" data-from="right">requires regex</span></li>
 <li><span class="type-in" data-from="right">fragile like crazy</span></li>
 <li><span class="type-in" data-from="right">so much more code</span></li>
@@ -223,7 +228,7 @@
 <section id="section-6" class="slide level2 center" style="text-align: center;">
 <h2></h2>
 <p>Did we beat Powerpoint?</p>
-<p><span class="fragment drag-in">No</span></p>
+<p><span class="fragment drag-in">Not yet</span></p>
 </section>
 <section id="section-7" class="slide level2">
 <h2></h2>
@@ -248,7 +253,7 @@
 <p><span class="proscons-title">Cons</span></p>
 <ul>
 <li>still slower</li>
-<li>Needed to tag elements</li>
+<li>Need to tag elements</li>
 <li>requires regex</li>
 <li>fragile like crazy</li>
 <li>so much more code</li>
@@ -285,6 +290,18 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+</section>
+<section id="in-development" class="slide level2">
+<h2>In development</h2>
+<div id="quarto2-target" class="fragment drag-in" data-from="left">
+<p>Quarto 2</p>
+</div>
+<div class="fragment retype" for="#quarto2-target" data-word="Quarto 2" data-to="q2">
+
+</div>
+<div class="fragment paste-in">
+<p>Quarto Hub</p>
+</div>
 </section>
 <section id="section-11" class="slide level2">
 <h2></h2>
@@ -434,7 +451,7 @@
 
 </div>
 </section>
-<section id="section-17" class="slide level2">
+<section id="section-17" class="slide level2 center" style="text-align: center;">
 <h2></h2>
 
 <img data-src="chelsea.png" class="r-stretch"><p><span class="fragment">I won’t let you down!</span></p>
@@ -2282,23 +2299,59 @@
 
       // ── Float behavior factory ─────────────────────────────────────────────────
 
-      function randomPos() {
-        return { x: Math.random() * 1200 + 40, y: Math.random() * 640 + 40 };
+      const WANDER_RADIUS = 100;
+
+      // Each cursor gets a fixed personality so the flock doesn't move in
+      // lockstep: some dawdle with tiny hops, some dart around in big ones.
+      function makePersonality() {
+        return {
+          speed: 0.7 + Math.random() * 0.8,   // glide-duration multiplier
+          pause: 0.5 + Math.random() * 1.6,   // rest-duration multiplier
+          radius: 0.6 + Math.random() * 0.9,  // wander-radius multiplier
+        };
       }
 
-      function makeFloatBehavior(cursorDefs) {
-        let running = false;
+      function randomPos(avoidBox, from, radius) {
+        // Most of the time, steer clear of avoidBox (e.g. the title card) so the
+        // cursors read as dodging it. Occasionally let one wander underneath
+        // anyway (it's z-indexed below the card, so it just glides out of sight).
+        const dodge = !avoidBox || Math.random() < 0.95;
+        const r = radius || WANDER_RADIUS;
+        let fallback = null;
+        for (let i = 0; i < 30; i++) {
+          const p = from
+            ? {
+                x: from.x + (Math.random() * 2 - 1) * r,
+                y: from.y + (Math.random() * 2 - 1) * r,
+              }
+            : { x: Math.random() * 1200 + 40, y: Math.random() * 640 + 40 };
+          p.x = Math.min(1240, Math.max(40, p.x));
+          p.y = Math.min(680, Math.max(40, p.y));
+          if (!fallback) fallback = p;
+          if (!dodge) return p;
+          const pad = 60;
+          const clear = p.x < avoidBox.x - pad || p.x > avoidBox.x + avoidBox.w + pad ||
+                        p.y < avoidBox.y - pad || p.y > avoidBox.y + avoidBox.h + pad;
+          if (clear) return p;
+        }
+        return fallback;
+      }
 
-        function floatOne(el) {
+      function makeFloatBehavior(cursorDefs, avoidSelector) {
+        let running = false;
+        let avoidBox = null;
+
+        function floatOne(el, from, personality) {
           if (!running) return;
-          const start = randomPos();
-          const end   = randomPos();
+          const radius = WANDER_RADIUS * personality.radius;
+          const start = randomPos(avoidBox, from, radius);
+          const end   = randomPos(avoidBox, start, radius);
 
           // glide to click-start position
           anime({
             targets: el,
             translateX: start.x, translateY: start.y,
-            duration: 2000 + Math.random() * 1500,
+            duration: (900 + Math.random() * 600) * personality.speed,
             easing: 'easeInOutQuad',
             complete() {
               if (!running) return;
@@ -2308,11 +2361,16 @@
                 anime({
                   targets: el,
                   translateX: end.x, translateY: end.y,
-                  duration: 2500 + Math.random() * 2500,
+                  duration: (1000 + Math.random() * 900) * personality.speed,
                   easing: 'easeInOutSine',
-                  complete: () => floatOne(el),
+                  complete() {
+                    if (!running) return;
+                    // short rest before picking a new pair of waypoints
+                    setTimeout(() => floatOne(el, end, personality),
+                      (300 + Math.random() * 500) * personality.pause);
+                  },
                 });
-              }, 250 + Math.random() * 350);
+              }, (250 + Math.random() * 350) * personality.pause);
             },
           });
         }
@@ -2322,11 +2380,15 @@
             if (running) return;
             running = true;
             ensureCursors(section, cursorDefs);
+            const avoidEl = avoidSelector && section.querySelector(avoidSelector);
+            avoidBox = avoidEl ? posIn(avoidEl, section) : null;
             cursorDefs.forEach(({ id }) => {
               const el = document.getElementById(id);
-              const { x, y } = randomPos();
+              const personality = makePersonality();
+              const { x, y } = randomPos(avoidBox);
               anime.set(el, { translateX: x, translateY: y, opacity: 1 });
-              floatOne(el);
+              // stagger each cursor's first move so they don't all kick off in sync
+              setTimeout(() => floatOne(el, { x, y }, personality), Math.random() * 1200);
             });
           },
           stop() {
@@ -2364,7 +2426,7 @@
         { id: 'cur-hailey', name: 'Hailey', color: '#f9a825' },
       ];
 
-      const floatBehavior = makeFloatBehavior(FLOAT_CURSORS);
+      const floatBehavior = makeFloatBehavior(FLOAT_CURSORS, '.title-card');
 
       // ── Collab slide state ────────────────────────────────────────────────────
 
@@ -3011,8 +3073,6 @@
                  update: () => {
                    el.textContent = text.slice(0, Math.round(state.n));
                    el.appendChild(caret);
-                   const at = atCaret();
-                   anime.set(cursor, { translateX: at.x, translateY: at.y });
                  },
                  complete: () => {
                    el.textContent = text;
