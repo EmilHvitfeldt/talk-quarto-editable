@@ -7,14 +7,13 @@ format:
     revealjs-plugins:
       - revealjs-anime
       - quarto-revealjs-video-fragments
+      - slidefx
     filters:
       - redacted
     include-in-header:
       - text: |
           <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
     include-after-body:
-      - "fragments.html"
-      - "fragment-styles.html"
       - "all-the-js-code.html"
 pagetitle: Title of Talk
 echo: false

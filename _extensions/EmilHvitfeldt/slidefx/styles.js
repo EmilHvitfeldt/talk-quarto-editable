@@ -1,4 +1,3 @@
-<script type="text/javascript">
 // Fragment styles built on SlideFx. Each one is registered with
 // SlideFx.define(class, { show(ctx) }), and gets caching, restore-on-hide and
 // timeline cancellation from the registry for free.
@@ -1069,4 +1068,3 @@
     },
   });
 })();
-</script>

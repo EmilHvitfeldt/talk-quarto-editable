@@ -1,4 +1,3 @@
-<script type="text/javascript">
 // SlideFx — a small library of cursor-driven RevealJS fragment styles.
 //
 // Every style here follows the same contract, which the registry enforces so
@@ -498,6 +497,10 @@ window.SlideFx = (function () {
   boot();
 
   return {
+    // boot() wires itself up via Reveal.on regardless of plugin registration;
+    // id/init are here only so RevealJS accepts this as a well-formed plugin.
+    id: 'SlideFx',
+    init() {},
     SLIDE_W, SLIDE_H,
     attr, num, pair, list,
     posIn, grabPoint, currentTranslate, cursorEntry,
@@ -508,4 +511,3 @@ window.SlideFx = (function () {
     define,
   };
 })();
-</script>
