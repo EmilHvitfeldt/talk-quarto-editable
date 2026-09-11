@@ -10,6 +10,7 @@ format:
       - cursor-fragments
     filters:
       - redacted
+      - diagrams
     include-in-header:
       - text: |
           <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
@@ -38,6 +39,39 @@ progress: false
 she is right, this sucks, can we fix it?
 :::
 
+## {.center style="text-align: center;"}
+
+::: {style="transform: scale(1.4); transform-origin: center;"}
+:::: {.venn .outside-labels}
+::: {.item color="#dfe8ed" outline-color="#2e6b8a" outline-width="3"}
+LaTeX
+
+::: {.icon .fragment data-fragment-index="0" style="transition-delay: 0s;"}
+![](icons/overleaf.svg){width=64px}
+:::
+:::
+::: {.item color="#f5e5e4" outline-color="#c0584f" outline-width="3"}
+Code generated plots
+:::
+::: {.item color="#e6eee8" outline-color="#5a9367" outline-width="3"}
+UI controls
+
+::: {.icon .fragment data-fragment-index="0" style="transition-delay: 0.5s;"}
+![](icons/googleslides.svg){width=50px}![](icons/keynote.png){width=50px}\
+\ \ \ \ \ \ \ \ ![](icons/canva.svg){width=80px}
+:::
+:::
+
+::: {.overlap .ac .fragment data-fragment-index="0" style="transition-delay: 1s;"}
+![](icons/powerpoint.svg){width=50px}
+:::
+
+::: {.overlap .ab .fragment data-fragment-index="0" style="transition-delay: 1.5s;"}
+![](icons/quarto.svg){width=50px}
+:::
+::::
+:::
+
 ##
 
 <video data-src="before.mp4"></video>
@@ -52,6 +86,7 @@ Making sure it looks right is time consuming
 
 nevertheless, it sparked an idea
 :::
+
 
 ## My new life goal
 
