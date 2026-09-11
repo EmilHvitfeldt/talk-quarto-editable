@@ -1,7 +1,0 @@
----
-format: revealjs
----
-
-## How I feel right now
-
-![](lizard.png)
