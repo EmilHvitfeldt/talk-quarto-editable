@@ -7,11 +7,9 @@ Slides for a talk about editable Quarto documents. Built with Quarto revealjs an
 | Path | What it is |
 | --- | --- |
 | `index.qmd` | The slides. |
-| `gallery.qmd` | A deck with one slide per fragment style. Render it to see everything, and to check nothing broke. |
-| `fragments.html` | `SlideFx`: the fragment framework. Utilities plus a registry that gives every style caching, restore, and cancellation. |
-| `fragment-styles.html` | The library of fragment styles built on `SlideFx`. |
-| `all-the-js-code.html` | The float and collaborative-editing slides, plus the four original fragment styles that predate `SlideFx`. |
+| `all-the-js-code.html` | The float and collaborative-editing slides, plus the four original fragment styles (`.drag-in`, `.type-in`, `.multi-cursor`, `.find-replace`) that predate `SlideFx`. |
 | `styles.scss` | Theme, animated-slide layout, cursor, and fragment chrome styles. |
+| `_extensions/EmilHvitfeldt/cursor-fragments/` | The [quarto-revealjs-cursor-fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments) extension: `SlideFx`, the registry-based fragment framework, and its library of styles. See that repo's README (and its `gallery.qmd`) for the full style catalogue. |
 | `_extensions/revealjs-anime/` | Small plugin that binds animations to RevealJS slide and fragment lifecycle events. Bring your own animation library. |
 | `_collab-slide.qmd` | Markup for the collaborative-editing slide. |
 
@@ -188,77 +186,7 @@ The sequence runs about 5.5 seconds: bar in, cursor to the find field, type the 
 
 ## The rest of the fragment library
 
-The seventeen styles below are built on `SlideFx` (`fragments.html`) and defined in `fragment-styles.html`. Every one of them gets the same guarantees from the registry: original markup and inline styles are cached before anything is touched and restored when the fragment is hidden, timelines are cancelled on hide and on re-show, and cursors and chrome are pooled per element and cleaned up. `gallery.qmd` has a slide for each.
-
-### Acting on content already on screen
-
-Most of these animate something that is *already* visible, so the fragment carrying the class is an empty trigger and `for="#selector"` points at the target:
-
-```markdown
-::: {#headline}
-A line that is already on the slide.
-:::
-
-::: {.fragment .nudge for="#headline" by="26,0" cursor="Kari"}
-:::
-```
-
-Without `for`, a style acts on the marked element itself, which is what you want for `.paste-in`, `.race-in`, `.duplicate`, `.diff-in`, and `.drag-from-folder`.
-
-Every style takes `cursor` (name on the tag), `color`, and `from` (entry edge). All three are optional: a cursor with no name renders as a bare arrow, which is what you want when the point is that *someone* edited the slide rather than who. No style invents a collaborator name for you. For the multi-cursor styles (`.cursor-idle`, `.race-in`, `.argue`) leave `cursors` off entirely and every arrow is anonymous.
-
-Style-specific attributes:
-
-| Style | What it does | Attributes |
-| --- | --- | --- |
-| `.retype` | Selects one wrong word, deletes it, types the replacement. | `word`, `to`, `speed` |
-| `.nudge` | Shifts something a few px, then fusses over it again. | `by="26,0"` |
-| `.paste-in` | A cursor moves to where the content belongs, the shortcut badge appears at the cursor, and the content pops in. | `badge="⌘V"` |
-| `.approve` | Someone else's cursor arrives and reacts. | `mark="✓"` |
-| `.cursor-idle` | Named cursors linger and drift so the slide feels inhabited. Loops until hidden. | `cursors`, `count` |
-| `.race-in` | Everything arrives at once from different edges, each with its own cursor. | `cursors`, `stagger`, `duration` |
-| `.resize-in` | Arrives at the wrong size; a cursor drags the corner handle to fix it. | `from-width="180"` |
-| `.crop-in` | A cursor drags a crop edge inward. | `inset="0 26 0 0"` (top right bottom left, %) |
-| `.rotate-handle` | A cursor turns the element by its rotation handle, with an angle readout. | `angle="-8"` |
-| `.marquee-select` | A marquee is dragged around several items, then they move as a group. | `by="80,0"` |
-| `.reorder` | One item is dragged up the list and the others move aside. | `item="3"`, `to="1"` |
-| `.add-item` | A cursor appends a new entry to a list and types it out. | `text`, `speed` |
-| `.delete-items` | A cursor drags a selection over several list entries and deletes them; the list closes up around the survivors. | `keep="6"` or `items="1,2,3"` (1-indexed), `badge="⌫"` |
-| `.duplicate` | Option-drag repeatedly until one plot has become a facet grid. | `times="3"`, `gap` |
-| `.diff-in` | Old text struck through in red, new in green, then settles to just new. | `was="twelve observations"` |
-| `.undo` | Something visibly wrong, then the shortcut, then it snaps back. | `by="110,30"`, `tilt`, `badge` |
-| `.comment` | A cursor drops a sticky comment anchored to the target. | `text`, `cursor` (doubles as the author line; omit it and the bubble has no byline) |
-| `.argue` | Two cursors drag the same thing in opposite directions. One wins. | `cursors="Kari,John"`, `amp`, `winner="right"` |
-| `.drag-from-folder` | A folder window opens, a cursor drags a thumbnail out, and the drop becomes the real image. | `files`, `pick`, `folder`, `folder-x`, `folder-y`, `src` |
-| `.move-item` | An entry is lifted out of one list and dropped into another. The source closes the gap, the destination opens one, and the item picks up its new list's bullet. Steps backwards by carrying the item home. With `text`, the cursor also rewrites the item once it lands. | `for` (source list), `to` (destination list), `item="2"`, `text`, `duration`, `reverse="off"` |
-
-### Writing a new style
-
-```js
-SlideFx.define('my-style', {
-  show(ctx) {
-    const box = ctx.box();                 // target's box in slide coordinates
-    const cursor = ctx.cursor();           // pooled, cleaned up for you
-    const tl = ctx.tl();                   // tracked, cancelled for you
-    const entry = SlideFx.flyIn(tl, cursor, ctx.from(), box, 0);
-    // ... add tweens ...
-    SlideFx.flyOut(tl, cursor, entry, 1200);
-  },
-});
-```
-
-`ctx` also gives you `attr`, `num`, `pair`, `list` for reading attributes off the marker, `chrome(key, cls, html)` for creating tracked UI, and `el` / `section` / `frag`. Omit `hide` to get the default teardown, which is right for almost everything.
-
-### Notes
-
-Things worth knowing before writing a style, all of which caused a real bug here:
-
-- **anime.js resolves a tween's start value when the tween is created**, which for a timeline is at build time. Setting a start position in a `begin` callback is too late, and the element animates from wherever it was parked. Use explicit `[from, to]` arrays, which is what `flyIn` does.
-- **Never set `position: relative` on a hosting section.** Reveal positions sections absolutely; overriding it drops them into normal flow and every later slide renders in the wrong place.
-- **`getBoundingClientRect()` includes the element's current transform.** Measure at rest, then reapply the offset.
-- **A grab squeeze must not overlap a translate on the same element.** Two concurrent tweens on one transform leave a stale scale behind. `SlideFx.squeeze` returns the time it ends so the next tween can start after it.
-- **`SlideFx.lines(el)` descends through single wrappers**, so a markdown div holding one `<ul>` resolves to the `<li>` elements. Do not cache the result: hiding a fragment restores `innerHTML`, which replaces those nodes.
-- **`easeOutBack` ignores its overshoot argument** in anime v3 (it is fixed at about 13%). Use keyframes when the overshoot has to be tunable, and cap it in px, since travel distance includes the element's own width.
+The other twenty styles used in `index.qmd` (`.retype`, `.nudge`, `.paste-in`, `.move-item`, and so on) are built on the same `SlideFx` registry, but they now live in the [quarto-revealjs-cursor-fragments](https://github.com/EmilHvitfeldt/quarto-revealjs-cursor-fragments) extension rather than in this repo. See that repo's README for the full attribute reference and its `gallery.qmd` for a demo slide of each style, and see its source for notes on writing a new style.
 
 ## Hand-written animated slides
 
