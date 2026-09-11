@@ -18,6 +18,8 @@ format:
 pagetitle: Title of Talk
 echo: false
 code-line-numbers: false
+menu: false
+progress: false
 ---
 
 ## {.float-slide}
