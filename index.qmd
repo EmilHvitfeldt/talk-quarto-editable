@@ -206,6 +206,8 @@ Quarto Hub
 
 ::: {.fragment .delete-items for="#cons" keep="6"}
 :::
+::: {.fragment .add-item for="#cons" text="we are all alone"}
+:::
 
 ::: notes
 Now since quarto renders so much faster
@@ -220,28 +222,6 @@ and it only modifies the part of the document it needs,
 
 instead of modifing the whole thing
 :::
-
-##
-
-::: proscons
-::: {#pros .proscons-card .proscons-card--pro}
-[Pros]{.proscons-title}
-
-- We are using Quarto
-- much faster
-- intuitive controls
-- knows what can be changed
-:::
-
-::: {#cons .proscons-card .proscons-card--con}
-[Cons]{.proscons-title}
-
-- all the bugs
-:::
-:::
-::: {.fragment .add-item for="#cons" text="we are all alone"}
-:::
-
 
 ## {.collab-slide}
 
