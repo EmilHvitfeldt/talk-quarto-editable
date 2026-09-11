@@ -7,7 +7,7 @@ format:
     revealjs-plugins:
       - revealjs-anime
       - quarto-revealjs-video-fragments
-      - slidefx
+      - cursor-fragments
     filters:
       - redacted
     include-in-header:

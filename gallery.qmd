@@ -6,7 +6,7 @@ format:
     width: 1280
     height: 720
     revealjs-plugins:
-      - slidefx
+      - cursor-fragments
 pagetitle: Fragment gallery
 echo: false
 code-line-numbers: false
