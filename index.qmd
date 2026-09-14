@@ -203,9 +203,6 @@ seems right (we can mention that there are dual implementaitons depending on the
 Quarto 2
 :::
 
-::: {.fragment .retype for="#quarto2-target" word="Quarto 2" to="q2"}
-:::
-
 ::: {.fragment .paste-in}
 Quarto Hub
 :::
